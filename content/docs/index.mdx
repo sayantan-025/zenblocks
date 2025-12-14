@@ -1,5 +1,169 @@
 ---
-title: Installation
-description: How to install Zenblocks and get started quickly.
+title: "Installation"
+description: "Get started with ZenBlocks — a production-ready UI component library for modern React applications."
 icon: ListStart
 ---
+
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+
+## Overview
+
+ZenBlocks is a **copy-paste friendly, CLI-powered UI library** built on top of:
+
+- **Tailwind CSS v4**
+- **shadcn/ui**
+
+All components are installed **directly into your codebase**, giving you:
+
+- Full ownership of the code
+- Zero runtime lock-in
+- Complete styling control
+
+---
+
+## 1. Prerequisites
+
+Before installing ZenBlocks components, ensure your project includes:
+
+- **Tailwind CSS v4**  
+  https://tailwindcss.com/docs/installation/framework-guides/nextjs
+- A working **React or Next.js** setup
+
+---
+
+## 2. Install shared utilities
+
+Some ZenBlocks components rely on shared utilities such as the `cn` helper.  
+You only need to install these **once per project**.
+
+<Tabs items={["bun", "npx", "pnpm"]}>
+
+```bash tab="bun"
+bunx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json
+```
+
+```bash tab="npx"
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json
+```
+
+```bash tab="pnpm"
+pnpm dlx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json
+```
+
+</Tabs>
+
+---
+
+## 3. Install a component
+
+Each ZenBlocks component can be installed individually using the
+**shadcn/ui CLI**.
+
+Example: installing the **Navbar** component.
+
+<Tabs items={["bun", "npx", "pnpm"]}>
+
+```bash tab="bun"
+bunx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
+```
+
+```bash tab="npx"
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
+```
+
+```bash tab="pnpm"
+pnpm dlx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
+```
+
+</Tabs>
+
+The CLI will automatically:
+
+- Copy the component into your project
+- Install required `shadcn/ui` primitives
+- Install external dependencies when needed
+
+> While a copy button is available, **using the CLI is strongly recommended**
+> to ensure all dependencies and files are correctly installed.
+
+---
+
+## 4. Use the component
+
+Once installed, import the component directly from your codebase.
+
+```tsx
+import Navbar from "@/components/zenblocks/navbar";
+
+export default function Page() {
+  return <Navbar />;
+}
+```
+
+---
+
+## 5. Blocks (multi-file components)
+
+**Blocks** are higher-level, feature-complete UI sections composed of
+multiple components and utilities.
+
+Because they include multiple files, **Blocks must be installed using the CLI**.
+
+<Tabs items={["bun", "npx", "pnpm"]}>
+
+```bash tab="bun"
+bunx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
+```
+
+```bash tab="npx"
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
+```
+
+```bash tab="pnpm"
+pnpm dlx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
+```
+
+</Tabs>
+
+---
+
+## 6. Optional dependencies
+
+Some components rely on additional third-party libraries
+(such as `framer-motion` or `next-themes`).
+
+These dependencies are listed at the **bottom of each component’s documentation**.
+
+---
+
+## 7. Monorepo support
+
+<Tabs items={["bun", "npx", "pnpm"]}>
+
+```bash tab="bun"
+bunx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json -c ./apps/www
+```
+
+```bash tab="npx"
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json -c ./apps/www
+```
+
+```bash tab="pnpm"
+pnpm dlx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json -c ./apps/www
+```
+
+</Tabs>
+
+---
+
+## Philosophy
+
+ZenBlocks follows an **ownership-first** approach:
+
+- No hidden abstractions
+- No locked-in styles
+- No runtime dependencies
+
+You install the code.  
+You control it.  
+You ship it.

@@ -30,6 +30,7 @@ const config = {
   experimental: {
     mdxRs: true,
   },
+  productionBrowserSourceMaps: false,
 };
 
 const withMDX = createMDX({

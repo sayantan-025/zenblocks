@@ -1,25 +1,31 @@
 ---
-title: Navbar
-description: A compact, animated, responsive navbar with sliding tabs, theme toggle, and mobile support.
+title: "Navbar"
+description: "A compact, animated, and responsive navigation bar with sliding tabs, theme toggle, and mobile support."
+icon: Menu
 ---
 
-import Navbar from "../../../components/zenblocks/navbar";
+import Navbar from "@/components/zenblocks/navbar";
 import { Preview } from "@/components/mdx/preview";
 
-## Navbar
+## Overview
 
-A **compact SaaS-style navigation bar** designed for modern websites and dashboards.  
-Includes a **sliding pill hover effect**, **dark mode toggle**, **mobile menu**, and **animated logo**.
+The **Navbar** is a compact, SaaS-style navigation component designed for
+modern websites and dashboards.
+
+It features a **sliding pill hover effect**, **dark mode toggle**, **mobile
+navigation**, and **motion-aware animations**, while remaining easy to
+customize and extend.
 
 ---
 
 ## Features
 
 - 🎯 Centered navigation with animated sliding pill
-- 🌙 Light / Dark theme toggle (`next-themes`)
+- 🌙 Light / Dark theme toggle using `next-themes`
 - 📱 Fully responsive with mobile drawer
-- 🎞️ Framer Motion animations (respects reduced motion)
-- 🧠 Accessible (`aria-label`, keyboard focus support)
+- 🎞️ Smooth animations powered by Framer Motion  
+  _(respects reduced-motion preferences)_
+- 🧠 Accessible by default (keyboard navigation, ARIA labels)
 - ⚡ Optimized for Next.js App Router
 
 ---
@@ -27,7 +33,7 @@ Includes a **sliding pill hover effect**, **dark mode toggle**, **mobile menu**,
 ## Preview
 
 <Preview link="navbar">
-  <div className="relative w-full h-40 rounded-xl border bg-background p-4 overflow-hidden">
+  <div className="relative w-full h-40 overflow-hidden rounded-xl border bg-background p-4">
     <Navbar position="relative" />
   </div>
 </Preview>
@@ -36,6 +42,68 @@ Includes a **sliding pill hover effect**, **dark mode toggle**, **mobile menu**,
 
 ## Installation
 
+Install the component using the **ZenBlocks CLI** (recommended):
+
+```bash
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
+```
+
+This will:
+
+- Copy the Navbar component into your project
+- Install required dependencies automatically
+
+---
+
+## Manual dependencies
+
+If you are installing manually, make sure the following packages are installed:
+
 ```bash
 npm install framer-motion lucide-react next-themes
 ```
+
+---
+
+## Usage
+
+Import the component directly from your codebase:
+
+```tsx
+import Navbar from "@/components/zenblocks/navbar";
+
+export default function Page() {
+  return <Navbar />;
+}
+```
+
+The component is fully editable and intended to be customized to fit your
+design system.
+
+---
+
+## API
+
+### Props
+
+| Prop     | Type                    | Default   | Description                          |
+| -------- | ----------------------- | --------- | ------------------------------------ |
+| position | `"fixed" \| "relative"` | `"fixed"` | Controls navbar positioning behavior |
+
+---
+
+## Notes
+
+- Designed as a **single-file component** for easy ownership and customization
+- No runtime lock-in or external abstractions
+- Safe to modify animations, layout, and styles directly
+
+---
+
+## Philosophy
+
+ZenBlocks components follow an **ownership-first** approach:
+
+- You install the code
+- You control the implementation
+- You ship without constraints

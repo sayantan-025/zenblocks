@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
 
 // Arrays to categorize components
-const CENTERED_COMPONENTS = ["navbar"];
+const CENTERED_COMPONENTS = [
+  "blocks/navbar",
+  // Add more small components here
+];
 
 // const FULL_WIDTH_COMPONENTS = ["hero"];
 
@@ -19,7 +22,7 @@ export default async function PreviewPage({
   try {
     const Component = dynamic(
       () =>
-        import(`@/components/zenblocks/${componentName}`).catch(() =>
+        import(`@/components/codesnippetui/${componentName}`).catch(() =>
           notFound()
         ),
       { ssr: true }

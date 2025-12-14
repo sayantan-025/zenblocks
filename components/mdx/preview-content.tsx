@@ -8,13 +8,13 @@ import {
   useRef,
   type RefObject,
 } from "react";
-
+import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Copy, CheckCheck, Terminal } from "lucide-react";
 import { copyComponent } from "@/lib/action";
 import { cn } from "@/lib/utils";
 import { OpenInV0Button } from "../open-in-v0-button";
 import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "../ui/button";
+
 export default function PreviewContent({
   link,
   prePath,
@@ -54,7 +54,7 @@ export default function PreviewContent({
 
   const handleTerminalClick = () => {
     const [folder, filename] = link.split("/");
-    const COPY = `bunx shadcn@latest add ${prePath}/r/${
+    const COPY = `npx shadcn@latest add ${prePath}/r/${
       filename ? filename : folder
     }.json`;
     navigator.clipboard.writeText(COPY);
