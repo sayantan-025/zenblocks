@@ -5,45 +5,65 @@ import Link from "next/link";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion, useReducedMotion } from "framer-motion";
-import { ZenBlocksLogo } from "../branding/zenblocks-logo";
 
 /* -------------------------------------------------------------------------- */
-/*                                   HEADER                                   */
+/*                                   TYPES                                    */
 /* -------------------------------------------------------------------------- */
 
-export function Header() {
+type NavbarProps = {
+  position?: "fixed" | "relative";
+};
+
+/* -------------------------------------------------------------------------- */
+/*                                   NAVBAR                                   */
+/* -------------------------------------------------------------------------- */
+
+export default function Navbar({ position = "fixed" }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const prefersReduced = useReducedMotion();
-  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
+    if (position === "relative") return;
+
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [position]);
 
   const navLinks = [
-    { label: "Components", href: "/docs" },
+    { label: "Docs", href: "/docs" },
+    { label: "Components", href: "/docs/components" },
     { label: "Templates", href: "/templates" },
+    { label: "Pricing", href: "/pricing" },
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-3 mt-3 pointer-events-none">
+    <div
+      className={`z-50 px-3 mt-3 pointer-events-none ${
+        position === "fixed"
+          ? "fixed top-0 left-0 right-0 flex justify-center"
+          : "relative w-full"
+      }`}
+    >
       <nav
         aria-label="Main Navigation"
-        className={`pointer-events-auto w-full max-w-3xl rounded-2xl px-4 py-2 backdrop-blur border transition-all
+        className={`pointer-events-auto w-full rounded-2xl px-4 py-2 backdrop-blur border transition-all
+        ${position === "fixed" ? "max-w-3xl mx-auto" : "max-w-full"}
         ${
-          scrolled
+          scrolled && position === "fixed"
             ? "bg-white/95 dark:bg-zinc-900/90 shadow-lg border-black/10 dark:border-white/10"
             : "bg-white/90 dark:bg-zinc-900/80 shadow-md border-black/5 dark:border-white/5"
         }`}
       >
         <div className="relative flex items-center h-10">
           {/* LOGO */}
-          <div className="absolute left-0 flex items-center">
+          <div className="absolute left-0 flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2">
-              <ZenBlocksLogo />
+              <CompactLogo prefersReduced={!!prefersReduced} />
+              <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-white">
+                ZENBLOCKS
+              </span>
             </Link>
           </div>
 
@@ -52,14 +72,14 @@ export function Header() {
             <div className="hidden sm:block">
               <SlideTabs
                 navLinks={navLinks}
-                prefersReduced={prefersReduced ?? false}
+                prefersReduced={!!prefersReduced}
               />
             </div>
           </div>
 
           {/* RIGHT CONTROLS */}
           <div className="absolute right-0 flex items-center gap-2">
-            <ThemeButton theme={theme} setTheme={setTheme} />
+            <ThemeButton />
 
             <button
               onClick={() => setMobileMenuOpen((s) => !s)}
@@ -96,30 +116,55 @@ export function Header() {
 }
 
 /* -------------------------------------------------------------------------- */
+/*                                   LOGO                                     */
+/* -------------------------------------------------------------------------- */
+
+function CompactLogo({ prefersReduced }: { prefersReduced: boolean }) {
+  const blocks = [
+    "bg-neutral-900 dark:bg-neutral-300",
+    "bg-neutral-600 dark:bg-neutral-500",
+    "bg-neutral-400 dark:bg-neutral-700",
+  ];
+
+  return (
+    <div className="flex gap-0.5 w-5 h-5 items-center">
+      {blocks.map((cls, i) => (
+        <motion.div
+          key={i}
+          className={`w-2 h-2 rounded-sm ${cls}`}
+          animate={prefersReduced ? undefined : { y: [0, -3, 0] }}
+          transition={{
+            duration: 1.1,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.12,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /*                               THEME BUTTON                                 */
 /* -------------------------------------------------------------------------- */
 
-function ThemeButton({
-  theme,
-  setTheme,
-}: {
-  theme: string | undefined;
-  setTheme: (t: string) => void;
-}) {
+function ThemeButton() {
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // ✅ CRITICAL: prevents hydration mismatch
+  // Prevent hydration mismatch
   if (!mounted) {
     return (
-      <div className="w-7 h-7 rounded-md border border-black/10 dark:border-white/10" />
+      <div className="w-8 h-8 rounded-md border border-black/10 dark:border-white/10" />
     );
   }
 
-  const isDark = theme === "dark";
+  const isDark = resolvedTheme === "dark";
 
   return (
     <button
@@ -172,7 +217,6 @@ function SlideTabs({
         </CompactTab>
       ))}
 
-      {/* SLIDING PILL */}
       <motion.li
         aria-hidden
         animate={position}
@@ -191,20 +235,22 @@ function SlideTabs({
 /*                                  TAB ITEM                                  */
 /* -------------------------------------------------------------------------- */
 
-function CompactTab({
-  children,
-  href,
-  containerRef,
-  setPosition,
-}: {
+interface CompactTabProps {
   children: React.ReactNode;
   href: string;
   containerRef: React.RefObject<HTMLUListElement | null>;
   setPosition: React.Dispatch<
     React.SetStateAction<{ left: number; width: number; opacity: number }>
   >;
-}) {
-  const ref = useRef<HTMLAnchorElement>(null);
+}
+
+function CompactTab({
+  children,
+  href,
+  containerRef,
+  setPosition,
+}: CompactTabProps) {
+  const ref = useRef<HTMLAnchorElement | null>(null);
 
   const update = () => {
     if (!ref.current || !containerRef.current) return;

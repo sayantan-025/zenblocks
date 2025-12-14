@@ -1,0 +1,8 @@
+{
+  "title": "Components",
+  "description": "The headless library",
+  "icon": "Dna",
+  "root": true,
+  "defaultOpen": true,
+  "pages": ["---Get Started---", "index", "---Blocks---", "blocks/navbar"]
+}

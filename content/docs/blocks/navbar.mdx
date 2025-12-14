@@ -1,0 +1,41 @@
+---
+title: Navbar
+description: A compact, animated, responsive navbar with sliding tabs, theme toggle, and mobile support.
+---
+
+import Navbar from "../../../components/zenblocks/navbar";
+import { Preview } from "@/components/mdx/preview";
+
+## Navbar
+
+A **compact SaaS-style navigation bar** designed for modern websites and dashboards.  
+Includes a **sliding pill hover effect**, **dark mode toggle**, **mobile menu**, and **animated logo**.
+
+---
+
+## Features
+
+- 🎯 Centered navigation with animated sliding pill
+- 🌙 Light / Dark theme toggle (`next-themes`)
+- 📱 Fully responsive with mobile drawer
+- 🎞️ Framer Motion animations (respects reduced motion)
+- 🧠 Accessible (`aria-label`, keyboard focus support)
+- ⚡ Optimized for Next.js App Router
+
+---
+
+## Preview
+
+<Preview link="navbar">
+  <div className="relative w-full h-40 rounded-xl border bg-background p-4 overflow-hidden">
+    <Navbar position="relative" />
+  </div>
+</Preview>
+
+---
+
+## Installation
+
+```bash
+npm install framer-motion lucide-react next-themes
+```
