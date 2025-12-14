@@ -4,95 +4,93 @@ import path from "path";
 import type { z } from "zod";
 import type { registryItemFileSchema } from "@/registry/schema";
 
-const REGISTRY_BASE_PATH = process.cwd();
-const PUBLIC_FOLDER_BASE_PATH = "public/r";
+const ROOT = process.cwd();
+const OUT_DIR = "public/r";
 
 type File = z.infer<typeof registryItemFileSchema>;
+
+// bun run scripts/build-registry.ts
 
 /* -------------------------------------------------------------------------- */
 /*                                   UTILS                                    */
 /* -------------------------------------------------------------------------- */
 
-async function writeFileRecursive(filePath: string, data: string) {
-  const dir = path.dirname(filePath);
-  await fs.mkdir(dir, { recursive: true });
+async function writeFile(filePath: string, data: string) {
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
   await fs.writeFile(filePath, data, "utf-8");
-  console.log(`✔ Written ${filePath}`);
+  console.log(`✔ ${filePath}`);
 }
 
 /* -------------------------------------------------------------------------- */
-/*                         REGISTRY FILE TRANSFORMER                           */
+/*                           REGISTRY FILE BUILDER                             */
 /* -------------------------------------------------------------------------- */
 
-const getComponentFiles = async (files: File[], registryType: string) => {
+async function buildFiles(files: File[], registryType: string) {
   return Promise.all(
-    (files ?? []).map(async (file) => {
+    files.map(async (file) => {
       const rawPath = typeof file === "string" ? file : file.path;
 
-      // 🔒 REGISTRY PATH (MUST BE RELATIVE)
+      // 🔒 REGISTRY PATH (RELATIVE ONLY)
       const registryPath = rawPath.replace(/^\/+/, "");
 
-      // ✅ FILESYSTEM PATH (ABSOLUTE)
-      const fsPath = path.join(REGISTRY_BASE_PATH, registryPath);
+      // 📁 FILESYSTEM PATH
+      const fsPath = path.join(ROOT, registryPath);
 
       const content = await fs.readFile(fsPath, "utf-8");
       const fileName = path.basename(registryPath);
 
-      const resolveTarget = (type: string) => {
-        switch (type) {
-          case "registry:hook":
-            return `hooks/${fileName}`;
-          case "registry:lib":
-            return `lib/${fileName}`;
-          case "registry:block":
-            return `blocks/${fileName}`;
-          default:
-            return `components/zenblocks/${fileName}`;
-        }
-      };
+      let target: string;
 
-      const fileType =
-        typeof file === "string" ? registryType : file.type ?? registryType;
+      // 🔥 FORCE components under components/zenblocks
+      if (
+        registryType === "registry:component" ||
+        registryType === "registry:block"
+      ) {
+        target = `components/zenblocks/${fileName}`;
+      } else if (registryType === "registry:hook") {
+        target = `hooks/${fileName}`;
+      } else if (registryType === "registry:lib") {
+        target = `lib/${fileName}`;
+      } else {
+        target = `components/zenblocks/${fileName}`;
+      }
 
       return {
-        type: fileType,
-        path: registryPath, // 🚨 NEVER STARTS WITH /
-        target:
-          typeof file === "string"
-            ? resolveTarget(registryType)
-            : (file.target ?? resolveTarget(fileType)).replace(/^\/+/, ""),
+        type:
+          typeof file === "string" ? registryType : file.type ?? registryType,
+        path: registryPath, // ✅ SAFE
+        target, // ✅ FORCED
         content,
       };
     })
   );
-};
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                   BUILD                                    */
 /* -------------------------------------------------------------------------- */
 
 async function main() {
-  for (const component of registry) {
-    if (!component.files) {
-      throw new Error(`No files defined for ${component.name}`);
+  for (const item of registry) {
+    if (!item.files?.length) {
+      throw new Error(`No files for ${item.name}`);
     }
 
-    const files = await getComponentFiles(component.files, component.type);
+    const files = await buildFiles(item.files, item.type);
 
-    const json = JSON.stringify(
+    const output = JSON.stringify(
       {
-        ...component,
+        ...item,
         files,
       },
       null,
       2
     );
 
-    const outPath = `${PUBLIC_FOLDER_BASE_PATH}/${component.name}.json`;
-    await writeFileRecursive(outPath, json);
+    await writeFile(`${OUT_DIR}/${item.name}.json`, output);
   }
 
-  console.log("✅ Registry build complete");
+  console.log("✅ Registry built successfully");
 }
 
 main().catch((err) => {
