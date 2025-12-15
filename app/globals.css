@@ -5,6 +5,18 @@
 @import "fumadocs-ui/css/preset.css";
 @import "fumadocs-ui/css/shadcn.css";
 
+html,
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-mono), monospace;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

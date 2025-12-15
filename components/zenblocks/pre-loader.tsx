@@ -118,13 +118,22 @@ const PreLoader: React.FC<PreLoaderProps> = ({
     <div
       ref={screenRef}
       className={cn(
-        "loading-screen z-50 pointer-events-none bg-black text-white flex items-center justify-center",
-        embedded ? "absolute inset-0" : "fixed inset-0"
+        "z-50 pointer-events-none flex items-center justify-center",
+        embedded ? "absolute inset-0" : "fixed inset-0",
+
+        /* Surface */
+        "bg-white text-zinc-900",
+        "dark:bg-black dark:text-white"
       )}
     >
+      {/* Main Letter */}
       <div
         ref={textRef}
-        className="text-[200px] sm:text-[300px] md:text-[400px] font-black tracking-tight"
+        className={cn(
+          "text-[200px] sm:text-[300px] md:text-[400px]",
+          "font-black tracking-tight",
+          "text-zinc-900 dark:text-white"
+        )}
         style={{ fontFamily: "var(--font-amiamie)" }}
       >
         S
@@ -133,7 +142,12 @@ const PreLoader: React.FC<PreLoaderProps> = ({
       {/* Percentage counter */}
       <div
         ref={percentRef}
-        className="absolute bottom-8 right-8 text-4xl sm:text-5xl md:text-6xl font-light italic text-white/80"
+        className={cn(
+          "absolute bottom-6 right-6",
+          "text-4xl sm:text-5xl md:text-6xl",
+          "font-light italic",
+          "text-zinc-600 dark:text-white/80"
+        )}
         style={{ fontFamily: "var(--font-amiamie)" }}
       >
         0%

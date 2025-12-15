@@ -33,8 +33,12 @@ customize and extend.
 ## Preview
 
 <Preview link="navbar">
-  <div className="relative w-full h-96 overflow-hidden rounded-xl border bg-background p-4">
+  <div className="relative w-full overflow-hidden rounded-xl border bg-background">
     <Navbar position="relative" />
+
+    {/* Spacer content so navbar doesn’t feel cramped */}
+    <div className="h-32 md:h-48" />
+
   </div>
 </Preview>
 
