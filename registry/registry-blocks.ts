@@ -13,4 +13,16 @@ export const block: Registry = [
       },
     ],
   },
+  {
+    name: "pre-loader",
+    type: "registry:block",
+    dependencies: ["framer-motion", "gsap"],
+    registryDependencies: [],
+    files: [
+      {
+        path: "components/zenblocks/pre-loader.tsx",
+        type: "registry:component",
+      },
+    ],
+  },
 ];
