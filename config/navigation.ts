@@ -1,9 +1,13 @@
+/* -------------------------------------------------------------------------- */
+/*                                   TYPES                                    */
+/* -------------------------------------------------------------------------- */
+
 export interface NavItem {
-  id: string | number;
+  id: string;
   title: string;
   href: string;
   description?: string;
-  count?: number | string;
+  count?: number;
   isComingSoon?: boolean;
   isNew?: boolean;
   isLab?: boolean;
@@ -11,31 +15,44 @@ export interface NavItem {
 
 export interface NavSection {
   title: string;
-  items: NavItem[];
+  items: readonly NavItem[];
 }
 
-export const navigationSections: NavSection[] = [
+/* -------------------------------------------------------------------------- */
+/*                               NAVIGATION DATA                              */
+/* -------------------------------------------------------------------------- */
+
+export const navigationSections = [
   {
     title: "Getting Started",
     items: [
       {
-        id: "intro",
+        id: "installation",
         title: "Installation",
         href: "/docs",
         description: "Introduction and usage guidelines",
       },
     ],
   },
+
   {
     title: "Blocks",
     items: [
       {
-        id: 1,
+        id: "navbar",
         title: "Navbar",
         href: "/docs/blocks/navbar",
         description: "A responsive navigation bar component",
         count: 1,
       },
+      {
+        id: "preloader",
+        title: "PreLoader",
+        href: "/docs/blocks/pre-loader",
+        description: "A preloader component with GSAP animations",
+        count: 1,
+        isNew: true,
+      },
     ],
   },
-];
+] as const satisfies readonly NavSection[];

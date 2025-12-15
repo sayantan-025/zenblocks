@@ -1,0 +1,139 @@
+---
+title: "PreLoader"
+description: "A full-screen animated preloader with GSAP-powered transitions and a percentage counter."
+icon: Loader
+---
+
+import PreLoader from "@/components/zenblocks/pre-loader";
+import { Preview } from "@/components/mdx/preview";
+
+## Overview
+
+The **PreLoader** is a GSAP-powered loading overlay designed to create a strong,
+intentional first impression while your application initializes.
+
+It combines **entrance and exit animations**, an **animated percentage counter**,
+and a controlled fade-out to ensure the main UI is revealed only after the loading
+sequence completes.
+
+---
+
+## Features
+
+- 🎬 Entrance and exit animations powered by GSAP
+- 🔢 Animated percentage counter (0 → 100)
+- 🌀 Scale- and rotation-based motion staging
+- 🧠 Minimal API with `onComplete` callback
+- ⚡ Optimized for Next.js App Router
+- 🛠️ Preview-safe rendering via `embedded` mode
+
+---
+
+## Preview
+
+The preview uses **embedded mode** so the loader stays inside the preview frame
+instead of taking over the entire page.
+
+<Preview link="pre-loader">
+  <div className="relative h-96 w-full overflow-hidden rounded-lg">
+    <PreLoader embedded />
+  </div>
+</Preview>
+
+---
+
+## Installation
+
+Install the component using the **ZenBlocks CLI** (recommended):
+
+```bash
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/pre-loader.json
+```
+
+This will:
+
+- Copy the `PreLoader` component into your project
+- Install required dependencies automatically
+
+---
+
+## Manual dependencies
+
+If installing manually, ensure the following packages are installed:
+
+```bash
+npm install gsap @gsap/react
+```
+
+---
+
+## Usage
+
+### Basic usage (fullscreen)
+
+By default, the PreLoader renders as a **full-screen overlay**.
+
+```tsx
+import PreLoader from "@/components/zenblocks/pre-loader";
+
+export default function Page() {
+  return <PreLoader />;
+}
+```
+
+---
+
+### Running logic after load
+
+Use the `onComplete` callback to run logic after the exit animation finishes:
+
+```tsx
+<PreLoader onComplete={() => setReady(true)} />
+```
+
+---
+
+### Embedded / preview usage
+
+When rendering inside documentation, previews, or constrained containers, enable
+`embedded` mode:
+
+```tsx
+<PreLoader embedded />
+```
+
+This switches positioning from `fixed` → `absolute`, keeping the loader scoped to
+its parent container.
+
+---
+
+## API
+
+### Props
+
+| Prop       | Type         | Default | Description                                              |
+| ---------- | ------------ | ------- | -------------------------------------------------------- |
+| onComplete | `() => void` | —       | Called after the exit animation completes                |
+| embedded   | `boolean`    | `false` | Renders inside a container instead of fullscreen overlay |
+
+---
+
+## Notes
+
+- Fullscreen mode uses `fixed inset-0`
+- Embedded mode uses `absolute inset-0`
+- `pointer-events-none` prevents interaction blocking post-exit
+- GSAP easing, durations, and animation order are fully customizable
+- Custom fonts are optional and easily replaceable
+
+---
+
+## Philosophy
+
+ZenBlocks components follow an **ownership-first** approach:
+
+- You install the source code
+- You control the animations
+- You decide how it behaves in production and previews
+
+No wrappers. No lock-in. Just clean, production-ready UI.

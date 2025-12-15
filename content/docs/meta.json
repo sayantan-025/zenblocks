@@ -4,5 +4,11 @@
   "icon": "Dna",
   "root": true,
   "defaultOpen": true,
-  "pages": ["---Get Started---", "index", "---Blocks---", "blocks/navbar"]
+  "pages": [
+    "---Get Started---",
+    "index",
+    "---Blocks---",
+    "blocks/navbar",
+    "blocks/pre-loader"
+  ]
 }
