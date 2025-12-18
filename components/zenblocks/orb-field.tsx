@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useEffect, useState } from "react";
 import {
   Clock,
@@ -24,8 +26,7 @@ import {
 } from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
-import { Observer } from "gsap/Observer";
-import { gsap } from "gsap";
+import { gsap, Observer } from "gsap/all";
 import { motion, useInView, MotionProps } from "framer-motion";
 import { JSX } from "react";
 
@@ -136,9 +137,9 @@ class OrbFieldScene {
 
   render: () => void = this.#render.bind(this);
   onBeforeRender: (state: { elapsed: number; delta: number }) => void =
-    () => {};
-  onAfterRender: (state: { elapsed: number; delta: number }) => void = () => {};
-  onAfterResize: (size: SizeData) => void = () => {};
+    () => { };
+  onAfterRender: (state: { elapsed: number; delta: number }) => void = () => { };
+  onAfterResize: (size: SizeData) => void = () => { };
   isDisposed: boolean = false;
 
   constructor(config: OrbFieldConfig) {
@@ -773,10 +774,10 @@ function createPointerData(
     nPosition: new Vector2(),
     hover: false,
     touching: false,
-    onEnter: () => {},
-    onMove: () => {},
-    onClick: () => {},
-    onLeave: () => {},
+    onEnter: () => { },
+    onMove: () => { },
+    onClick: () => { },
+    onLeave: () => { },
     ...options,
   };
   if (!pointerMap.has(options.domElement)) {

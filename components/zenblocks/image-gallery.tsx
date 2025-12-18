@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useRef, useMemo, useEffect } from 'react';
-import { gsap } from 'gsap';
-import { Observer } from 'gsap/Observer';
+import { gsap, Observer } from 'gsap/all';
 import { useGSAP } from '@gsap/react';
 import { cn } from "@/lib/utils";
 
@@ -106,9 +105,9 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ className }) => {
         const observer = Observer.create({
             target: containerRef.current,
             type: "wheel,touch,pointer",
-            onPress: (self) => (self.target as HTMLElement).style.cursor = 'grabbing',
-            onRelease: (self) => (self.target as HTMLElement).style.cursor = 'grab',
-            onChange: (self) => {
+            onPress: (self: any) => (self.target as HTMLElement).style.cursor = 'grabbing',
+            onRelease: (self: any) => (self.target as HTMLElement).style.cursor = 'grab',
+            onChange: (self: any) => {
                 const delta = self.deltaX || self.deltaY;
                 isMoving = true;
 
