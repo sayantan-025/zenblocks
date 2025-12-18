@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+// import Link from "next/link"; // Replaced for SPA compatibility
+
 import { Moon, Sun, Menu, X } from "lucide-react";
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes"; // Replaced for SPA compatibility
 import { motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
+import { useTheme } from "next-themes";
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPES                                    */
@@ -48,12 +51,12 @@ export default function Navbar({ position = "fixed" }: NavbarProps) {
     >
       <nav
         aria-label="Main Navigation"
-        className={`pointer-events-auto w-full rounded-2xl px-4 py-2 backdrop-blur border transition-all
+        className={`pointer-events-auto w-full rounded-2xl px-4 py-2 border transition-all duration-300
         ${position === "fixed" ? "max-w-3xl mx-auto" : "max-w-full"}
         ${
           scrolled && position === "fixed"
-            ? "bg-white/95 dark:bg-zinc-900/90 shadow-lg border-black/10 dark:border-white/10"
-            : "bg-white/90 dark:bg-zinc-900/80 shadow-md border-black/5 dark:border-white/5"
+            ? "bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl shadow-md border-zinc-200/50 dark:border-white/10"
+            : "bg-white/10 dark:bg-zinc-900/10 backdrop-blur-lg border-zinc-900/5 dark:border-white/5"
         }`}
       >
         <div className="relative flex items-center h-10">
@@ -97,7 +100,7 @@ export default function Navbar({ position = "fixed" }: NavbarProps) {
 
         {/* MOBILE MENU */}
         {mobileMenuOpen && (
-          <div className="sm:hidden mt-3 pt-3 border-t border-black/10 dark:border-white/10 flex flex-col gap-2">
+          <div className="sm:hidden mt-3 pt-3 border-t border-black/10 dark:border-white/10 flex flex-col gap-2 bg-transparent">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -244,12 +247,12 @@ interface CompactTabProps {
   >;
 }
 
-function CompactTab({
+const CompactTab: React.FC<CompactTabProps> = ({
   children,
   href,
   containerRef,
   setPosition,
-}: CompactTabProps) {
+}) => {
   const ref = useRef<HTMLAnchorElement | null>(null);
 
   const update = () => {
@@ -282,4 +285,4 @@ function CompactTab({
       </Link>
     </li>
   );
-}
+};
