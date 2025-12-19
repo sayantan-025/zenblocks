@@ -1,7 +1,7 @@
 ---
-title: "PreLoader"
-description: "A full-screen animated preloader with GSAP-powered transitions and a percentage counter."
-icon: Loader
+title: "Pre-Loader"
+description: "A cinematic GSAP-powered loading screen with percentage counter and rotation animations."
+icon: LoaderCircle
 ---
 
 import PreLoader from "@/components/zenblocks/pre-loader";
@@ -9,34 +9,38 @@ import { Preview } from "@/components/mdx/preview";
 
 ## Overview
 
-The **PreLoader** is a GSAP-powered loading overlay designed to create a strong,
-intentional first impression while your application initializes.
+The **Pre-Loader** is a full-screen loading animation that uses **GSAP** for precise, timeline-based sequencing. It features a bold typographic reveal with rotation effects and a live percentage counter that animates from 0% to 100%.
 
-It combines **entrance and exit animations**, an **animated percentage counter**,
-and a controlled fade-out to ensure the main UI is revealed only after the loading
-sequence completes.
+Perfect for **app initialization**, **route transitions**, or **content loading states**.
 
 ---
 
 ## Features
 
-- 🎬 Entrance and exit animations powered by GSAP
-- 🔢 Animated percentage counter (0 → 100)
-- 🌀 Scale- and rotation-based motion staging
-- 🧠 Minimal API with `onComplete` callback
-- ⚡ Optimized for Next.js App Router
-- 🛠️ Preview-safe rendering via `embedded` mode
+- **GSAP Timeline**: Choreographed animation sequence with precise timing control.
+- **Percentage Counter**: Animated number that counts from 0 to 100 with smooth easing.
+- **Rotation Effects**: Spring-loaded rotation animations for visual impact.
+- **Callback Support**: Fires an `onComplete` callback when the animation finishes.
+- **Embedded Mode**: Can render inside a container for previews/demos instead of fullscreen.
+- **Dark Mode Ready**: Fully themed for both light and dark environments.
 
 ---
 
 ## Preview
 
-The preview uses **embedded mode** so the loader stays inside the preview frame
-instead of taking over the entire page.
-
 <Preview link="pre-loader">
-  <div className="relative h-96 w-full overflow-hidden rounded-lg">
-    <PreLoader embedded />
+  <div className="relative w-full h-[400px] bg-zinc-100 dark:bg-zinc-950 rounded-xl overflow-hidden flex items-center justify-center">
+    <div className="text-center space-y-4">
+      <div className="text-sm font-mono text-zinc-500 dark:text-zinc-400 mb-8">
+        Animation plays once on page load
+      </div>
+      <PreLoader embedded />
+      <div className="absolute bottom-6 left-0 right-0 text-center">
+        <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">
+          Reload page to see animation again
+        </span>
+      </div>
+    </div>
   </div>
 </Preview>
 
@@ -44,96 +48,300 @@ instead of taking over the entire page.
 
 ## Installation
 
-Install the component using the **ZenBlocks CLI** (recommended):
+### Method 1: CLI (Recommended)
+
+Install via the ZenBlocks CLI to automatically handle dependencies:
 
 ```bash
 npx shadcn@latest add https://zenblocks-three.vercel.app/r/pre-loader.json
 ```
 
-This will:
+### Method 2: Manual
 
-- Copy the `PreLoader` component into your project
-- Install required dependencies automatically
+1.  **Install Dependencies**
 
----
+    ```bash
+    npm install gsap @gsap/react clsx tailwind-merge
+    ```
 
-## Manual dependencies
+2.  **Copy the Source Code**
 
-If installing manually, ensure the following packages are installed:
+    Copy the code below into `components/zenblocks/pre-loader.tsx`.
 
-```bash
-npm install gsap @gsap/react
-```
+    <details>
+    <summary>Click to expand source</summary>
+
+    ```tsx
+    "use client";
+
+    import React, { useRef } from "react";
+    import { useGSAP } from "@gsap/react";
+    import gsap from "gsap";
+    import { cn } from "@/lib/utils";
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   TYPES                                    */
+    /* -------------------------------------------------------------------------- */
+
+    type PreLoaderProps = {
+      onComplete?: () => void;
+      /**
+       * When true, renders inside a container instead of fullscreen.
+       * Used for docs / previews.
+       */
+      embedded?: boolean;
+    };
+
+    /* -------------------------------------------------------------------------- */
+    /*                                PRELOADER                                   */
+    /* -------------------------------------------------------------------------- */
+
+    const PreLoader: React.FC<PreLoaderProps> = ({
+      onComplete,
+      embedded = false,
+    }) => {
+      const screenRef = useRef<HTMLDivElement | null>(null);
+      const textRef = useRef<HTMLDivElement | null>(null);
+      const percentRef = useRef<HTMLDivElement | null>(null);
+
+      useGSAP(
+        () => {
+          if (!screenRef.current || !textRef.current || !percentRef.current) return;
+
+          /* ---------------------------- Initial State ---------------------------- */
+
+          gsap.set(textRef.current, {
+            scale: 0,
+            rotation: 180,
+          });
+
+          gsap.set(percentRef.current, {
+            opacity: 0,
+            y: 20,
+          });
+
+          /* ------------------------------ Animate In ----------------------------- */
+
+          gsap.to(textRef.current, {
+            scale: 1,
+            rotation: 0,
+            duration: 1,
+            ease: "back.out(1.7)",
+          });
+
+          gsap.to(percentRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            delay: 0.5,
+            ease: "power2.out",
+          });
+
+          /* ------------------------- Percentage Counter -------------------------- */
+
+          gsap.to(percentRef.current, {
+            innerHTML: 100,
+            duration: 2.5,
+            delay: 1,
+            ease: "power2.inOut",
+            snap: { innerHTML: 1 },
+            onUpdate() {
+              const el = this.targets()[0] as HTMLElement;
+              const value = Math.round(Number(el.innerHTML));
+              el.innerHTML = `${value}%`;
+            },
+          });
+
+          /* ------------------------------ Pulse Hold ----------------------------- */
+
+          gsap.to(textRef.current, {
+            scale: 1.1,
+            duration: 0.5,
+            delay: 1,
+            yoyo: true,
+            repeat: 1,
+            ease: "power2.inOut",
+          });
+
+          /* ------------------------------ Animate Out ----------------------------- */
+
+          gsap.to(textRef.current, {
+            scale: 0,
+            rotation: -180,
+            duration: 0.8,
+            delay: 2.5,
+            ease: "back.in(1.7)",
+          });
+
+          /* ---------------------------- Screen Fade ------------------------------ */
+
+          gsap.to(screenRef.current, {
+            opacity: 0,
+            duration: 0.5,
+            delay: 3.3,
+            ease: "power1.inOut",
+            onComplete: () => {
+              onComplete?.();
+            },
+          });
+        },
+        { dependencies: [onComplete] }
+      );
+
+      return (
+        <div
+          ref={screenRef}
+          className={cn(
+            "z-50 pointer-events-none flex items-center justify-center",
+            embedded ? "absolute inset-0" : "fixed inset-0",
+
+            /* Surface */
+            "bg-white text-zinc-900",
+            "dark:bg-black dark:text-white"
+          )}
+        >
+          {/* Main Letter */}
+          <div
+            ref={textRef}
+            className={cn(
+              "text-[200px] sm:text-[300px] md:text-[400px]",
+              "font-black tracking-tight",
+              "text-zinc-900 dark:text-white"
+            )}
+            style={{ fontFamily: "var(--font-amiamie)" }}
+          >
+            S
+          </div>
+
+          {/* Percentage counter */}
+          <div
+            ref={percentRef}
+            className={cn(
+              "absolute bottom-6 right-6",
+              "text-4xl sm:text-5xl md:text-6xl",
+              "font-light italic",
+              "text-zinc-600 dark:text-white/80"
+            )}
+            style={{ fontFamily: "var(--font-amiamie)" }}
+          >
+            0%
+          </div>
+        </div>
+      );
+    };
+
+    export default PreLoader;
+    ```
+
+    </details>
 
 ---
 
 ## Usage
 
-### Basic usage (fullscreen)
+### Basic Implementation
 
-By default, the PreLoader renders as a **full-screen overlay**.
+Use the pre-loader at the root of your application to show during initial load:
 
 ```tsx
+"use client";
+
+import { useState, useEffect } from "react";
 import PreLoader from "@/components/zenblocks/pre-loader";
 
-export default function Page() {
-  return <PreLoader />;
+export default function RootLayout({ children }) {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <>
+      {loading && <PreLoader onComplete={() => setLoading(false)} />}
+      {!loading && children}
+    </>
+  );
+}
+```
+
+### Route Transitions
+
+Trigger the loader on route changes:
+
+```tsx
+"use client";
+
+import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import PreLoader from "@/components/zenblocks/pre-loader";
+
+export function RouteLoader() {
+  const pathname = usePathname();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 3500);
+    return () => clearTimeout(timer);
+  }, [pathname]);
+
+  return loading ? <PreLoader /> : null;
 }
 ```
 
 ---
 
-### Running logic after load
+## Configuration
 
-Use the `onComplete` callback to run logic after the exit animation finishes:
+### Customizing the Letter
+
+Replace the `"S"` with your own brand initial or logo:
 
 ```tsx
-<PreLoader onComplete={() => setReady(true)} />
+{/* Inside PreLoader component */}
+<div ref={textRef} className="...">
+  Y  {/* Your brand letter */}
+</div>
 ```
+
+### Adjusting Animation Timing
+
+Modify the GSAP timeline durations and delays inside the `useGSAP` hook:
+
+```tsx
+// Faster animation
+gsap.to(textRef.current, {
+  scale: 1,
+  rotation: 0,
+  duration: 0.6,  // Reduced from 1
+  ease: "back.out(1.7)",
+});
+```
+
+### Custom Font
+
+The component uses `var(--font-amiamie)` by default. Update this to your custom font variable or remove the inline style to use your default font stack.
 
 ---
 
-### Embedded / preview usage
-
-When rendering inside documentation, previews, or constrained containers, enable
-`embedded` mode:
-
-```tsx
-<PreLoader embedded />
-```
-
-This switches positioning from `fixed` → `absolute`, keeping the loader scoped to
-its parent container.
-
----
-
-## API
+## API Reference
 
 ### Props
 
-| Prop       | Type         | Default | Description                                              |
-| ---------- | ------------ | ------- | -------------------------------------------------------- |
-| onComplete | `() => void` | —       | Called after the exit animation completes                |
-| embedded   | `boolean`    | `false` | Renders inside a container instead of fullscreen overlay |
+| Prop         | Type         | Default | Description                                                                 |
+| :----------- | :----------- | :------ | :-------------------------------------------------------------------------- |
+| `onComplete` | `() => void` | —       | Callback function fired when the animation sequence completes.              |
+| `embedded`   | `boolean`    | `false` | When `true`, renders in a container (`absolute`) instead of fullscreen (`fixed`). |
 
 ---
 
-## Notes
+## Customization
 
-- Fullscreen mode uses `fixed inset-0`
-- Embedded mode uses `absolute inset-0`
-- `pointer-events-none` prevents interaction blocking post-exit
-- GSAP easing, durations, and animation order are fully customizable
-- Custom fonts are optional and easily replaceable
+-   **Colors**: Update the background and text colors in the `className` prop of the main container.
+-   **Typography**: The component uses extremely large font sizes (`text-[200px]` to `text-[400px]`). Adjust these for different visual impact.
+-   **Animation Easing**: GSAP provides many easing options. Explore [GSAP Ease Visualizer](https://gsap.com/docs/v3/Eases/) to find the perfect feel.
 
 ---
 
-## Philosophy
+## Troubleshooting
 
-ZenBlocks components follow an **ownership-first** approach:
-
-- You install the source code
-- You control the animations
-- You decide how it behaves in production and previews
-
-No wrappers. No lock-in. Just clean, production-ready UI.
+-   **Animation not playing?** Ensure GSAP and `@gsap/react` are properly installed and the `useGSAP` hook is being called.
+-   **Font not loading?** Make sure your custom font variable is defined in your global CSS or Tailwind config.
+-   **Callback not firing?** Check that the `onComplete` prop is passed correctly and the animation duration matches your expectations.

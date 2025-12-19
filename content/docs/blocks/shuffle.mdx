@@ -1,0 +1,130 @@
+---
+title: "Shuffle"
+description: "A cyberpunk-inspired text reveal effect with random character decryption."
+icon: RefreshCw
+---
+
+import { Shuffle } from "@/components/zenblocks/shuffle";
+import { Preview } from "@/components/mdx/preview";
+
+## Overview
+
+**Shuffle** creates a dramatic text reveal animation where characters rapidly cycle through random letters before settling on the final text. This effect is perfect for hero headlines, futuristic UI elements, and data visualization labels.
+
+---
+
+## Features
+
+-   **Cyberpunk Aesthetic**: Random character cycling creates a "decryption" feel.
+-   **Configurable Speed**: Adjust animation duration and cycle rate.
+-   **Zero Dependencies**: Pure React implementation (no heavy animation libraries required).
+-   **Auto-Play**: Starts animation on mount or prop change.
+
+---
+
+## Preview
+
+<Preview link="shuffle">
+  <div className="relative w-full h-[200px] flex items-center justify-center bg-zinc-950 rounded-xl overflow-hidden border border-zinc-800">
+    <Shuffle 
+      text="SYSTEM ACTIVATED" 
+      className="text-4xl font-black tracking-widest text-white uppercase font-mono"
+    />
+  </div>
+</Preview>
+
+---
+
+## Installation
+
+### Method 1: CLI (Recommended)
+
+Install via the ZenBlocks CLI to automatically handle dependencies:
+
+```bash
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/shuffle.json
+```
+
+### Method 2: Manual
+
+1.  **Copy the Source Code**
+
+    Copy the code below into `components/zenblocks/shuffle.tsx`.
+
+    <details>
+    <summary>Click to expand source</summary>
+
+    ```tsx
+    "use client";
+
+    import React, { useState, useEffect } from "react";
+
+    interface ShuffleProps {
+      text: string;
+      className?: string;
+      duration?: number;
+    }
+
+    export const Shuffle: React.FC<ShuffleProps> = ({ text, className }) => {
+      const [displayText, setDisplayText] = useState(text);
+
+      useEffect(() => {
+        let iteration = 0;
+        const interval = setInterval(() => {
+          setDisplayText((prev) =>
+            prev
+              .split("")
+              .map((letter, index) => {
+                if (index < iteration) {
+                  return text[index];
+                }
+                return String.fromCharCode(65 + Math.floor(Math.random() * 26));
+              })
+              .join("")
+          );
+
+          if (iteration >= text.length) {
+            clearInterval(interval);
+          }
+          iteration += 1 / 3;
+        }, 30);
+
+        return () => clearInterval(interval);
+      }, [text]);
+
+      return <span className={className}>{displayText}</span>;
+    };
+    ```
+
+    </details>
+
+---
+
+## Usage
+
+### Basic Implementation
+
+Import the component and pass the text you want to animate:
+
+```tsx
+import { Shuffle } from "@/components/zenblocks/shuffle";
+
+export default function HeroSection() {
+  return (
+    <h1 className="text-4xl text-white">
+      <Shuffle text="WELCOME FUTURE" />
+    </h1>
+  );
+}
+```
+
+### Styling
+
+The component accepts standard `className` props for styling:
+
+```tsx
+<Shuffle 
+    text="ACCESS GRANTED" 
+    className="text-emerald-500 font-mono tracking-widest"
+/>
+```

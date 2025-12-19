@@ -1,3 +1,4 @@
+"use client";
 
 import React from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
@@ -192,47 +193,7 @@ export default function BentoGrid() {
 
             <div className="container mx-auto px-6 relative z-10 max-w-7xl">
 
-                {/* Section Header */}
-                <div className="mb-32 flex flex-col items-center text-center gap-8">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        className="inline-flex px-5 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 shadow-sm"
-                    >
-                        <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.4em]">
-                            Design System v2.0
-                        </span>
-                    </motion.div>
 
-                    <motion.h2
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter text-zinc-900 dark:text-white leading-[0.8] mb-4"
-                    >
-                        The Grid <br />
-                        <span className="text-zinc-300 dark:text-zinc-800 italic">Template.</span>
-                    </motion.h2>
-
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        className="text-zinc-500 dark:text-zinc-500 text-base md:text-lg max-w-2xl leading-relaxed font-medium mt-2"
-                    >
-                        A high-performance mosaic structure for showcasing modular library elements.
-                        Engineered with absolute precision for the modern design ecosystem.
-                    </motion.p>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        className="mt-6"
-                    >
-                        <button className="flex items-center gap-3 group text-[11px] font-black uppercase tracking-[0.2em] text-zinc-900 dark:text-white border-b-2 border-zinc-200 dark:border-zinc-800 pb-2 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all">
-                            Documentation
-                            <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                        </button>
-                    </motion.div>
-                </div>
 
                 {/* 3-Column Bento Mosaic */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:auto-rows-[22rem]">
@@ -249,19 +210,7 @@ export default function BentoGrid() {
                     ))}
                 </div>
 
-                {/* Brand Signoff */}
-                <div className="mt-48 flex justify-center">
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        className="flex flex-col items-center gap-8"
-                    >
-                        <div className="h-[1px] w-24 bg-zinc-200 dark:bg-zinc-800" />
-                        <span className="text-[10px] font-black tracking-[0.8em] text-zinc-400 dark:text-zinc-600 uppercase">
-                            Engineered by ZenBlocks
-                        </span>
-                    </motion.div>
-                </div>
+
             </div>
         </section>
     );

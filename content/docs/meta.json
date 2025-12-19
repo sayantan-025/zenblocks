@@ -9,6 +9,15 @@
     "index",
     "---Blocks---",
     "blocks/navbar",
-    "blocks/pre-loader"
+    "blocks/pre-loader",
+    "blocks/animated-clock",
+    "blocks/bento-grid",
+    "blocks/floating-dock",
+    "blocks/image-gallery",
+    "blocks/image-trail",
+    "blocks/logo-loop",
+    "blocks/orb-field",
+    "blocks/pressure-test",
+    "blocks/shuffle"
   ]
 }

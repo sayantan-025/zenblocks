@@ -50,7 +50,6 @@ export const AnimatedClock = ({ className }: { className?: string }) => {
 
     // 3D Motion Values
     const x = useMotionValue(0);
-    // ... (rest of the motion values)
     const y = useMotionValue(0);
 
     // Smooth springs for tilt
@@ -84,7 +83,7 @@ export const AnimatedClock = ({ className }: { className?: string }) => {
     if (!mounted) {
         return (
             <div className={cn(
-                "group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/5 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/10 dark:border-white/5 shadow-2xl transition-all duration-500 w-[350px] h-[150px] mx-auto opacity-0",
+                "group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/40 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-2xl transition-all duration-500 w-[350px] h-[150px] mx-auto",
                 className
             )} />
         );
@@ -107,7 +106,7 @@ export const AnimatedClock = ({ className }: { className?: string }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className={cn(
-                "group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/20 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/40 dark:border-white/5 shadow-2xl transition-all duration-500 w-fit mx-auto cursor-default overflow-hidden",
+                "group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/40 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-2xl transition-all duration-500 w-fit mx-auto cursor-default",
                 className
             )}
         >

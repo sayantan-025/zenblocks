@@ -1,0 +1,43 @@
+:root {
+    --fd-nav-height: 0px;
+    /* Reset nav height since we rely on padding/theme */
+    /* Override Fumadocs sidebar background variables */
+    --fd-sidebar-bg: transparent;
+}
+
+/* 
+   Apply ZenBlocks Theme to the Sidebar 
+   Mimics styles from components/nav/desktop-nav.tsx
+*/
+aside[data-fd-sidebar] {
+    /* Background Gradient (Light Mode) */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(249, 250, 251, 0.95), rgba(255, 255, 255, 0.95)) !important;
+
+    /* Glassmorphism */
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+
+    /* Border */
+    border-right: 1px solid rgba(200, 200, 200, 0.8) !important;
+
+    /* Shadow */
+    box-shadow: 0 2px 20px -2px rgba(0, 0, 0, 0.15) !important;
+
+    /* Spacing adjustments to look like a floating panel if needed, 
+       but for standard sidebar we just style the surface */
+}
+
+/* Dark Mode Overrides */
+.dark aside[data-fd-sidebar] {
+    /* Background Gradient (Dark Mode) */
+    background: linear-gradient(to bottom, rgba(24, 24, 27, 0.90), rgba(39, 39, 42, 0.90), rgba(24, 24, 27, 0.90)) !important;
+
+    /* Border */
+    border-right: 1px solid rgba(70, 70, 70, 0.7) !important;
+}
+
+/* 
+   Ensure layout flow. 
+   If user wants top spacing, we can add it here, 
+   but with default layout it sits on the side. 
+*/

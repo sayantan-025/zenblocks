@@ -7,5 +7,6 @@
     "libDir": "./lib"
   },
   "baseDir": "",
-  "commands": {}
+  "commands": {},
+  "uiLibrary": "base-ui"
 }

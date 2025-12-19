@@ -1,0 +1,16 @@
+{
+  "name": "shuffle",
+  "type": "registry:block",
+  "dependencies": [
+    "framer-motion"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "type": "registry:component",
+      "path": "components/zenblocks/shuffle.tsx",
+      "target": "components/zenblocks/shuffle.tsx",
+      "content": "\"use client\";\r\n\r\nimport React, { useState, useEffect } from \"react\";\r\n\r\ninterface ShuffleProps {\r\n  text: string;\r\n  className?: string;\r\n  duration?: number;\r\n}\r\n\r\nexport const Shuffle: React.FC<ShuffleProps> = ({ text, className }) => {\r\n  const [displayText, setDisplayText] = useState(text);\r\n\r\n  useEffect(() => {\r\n    let iteration = 0;\r\n    const interval = setInterval(() => {\r\n      setDisplayText((prev) =>\r\n        prev\r\n          .split(\"\")\r\n          .map((letter, index) => {\r\n            if (index < iteration) {\r\n              return text[index];\r\n            }\r\n            return String.fromCharCode(65 + Math.floor(Math.random() * 26));\r\n          })\r\n          .join(\"\")\r\n      );\r\n\r\n      if (iteration >= text.length) {\r\n        clearInterval(interval);\r\n      }\r\n      iteration += 1 / 3;\r\n    }, 30);\r\n\r\n    return () => clearInterval(interval);\r\n  }, [text]);\r\n\r\n  return <span className={className}>{displayText}</span>;\r\n};\r\n"
+    }
+  ]
+}

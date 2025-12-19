@@ -1,0 +1,107 @@
+---
+title: "Orb Field"
+description: "A physics-based particle simulation with interactive orbs, liquid collisions, and dynamic lighting."
+icon: Loader
+---
+
+import { OrbField } from "@/components/zenblocks/orb-field";
+import { Preview } from "@/components/mdx/preview";
+
+## Overview
+
+**Orb Field** (formerly Ballpit) is a high-performance 3D particle simulation built with **Three.js** and **InstancedMesh**. It features thousands of interactive orbs with real-time physics, mouse collisions, wall bouncing, and liquid-like fluid dynamics, all optimized for 60FPS.
+
+---
+
+## Features
+
+-   **High Performance**: Renders 1000+ orbs using `InstancedMesh` for single draw calls.
+-   **Physics Engine**: Custom lightweight physics system with gravity, friction, and collision resolution.
+-   **Interactive**: Orbs respond to cursor movement and clicks (physics impulse).
+-   **Dynamic Lighting**: Real-time point lights and environment mapping.
+-   **Liquid Dynamics**: "Wall bounce" and "fluid friction" parameters for organic movement.
+
+---
+
+## Preview
+
+<Preview link="orb-field">
+  <div className="relative w-full h-[400px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+    <OrbField 
+        count={50}
+        minSize={1}
+        maxSize={2}
+        gravity={0.5}
+        friction={0.98}
+        followCursor={true}
+        className="w-full h-full"
+    />
+  </div>
+</Preview>
+
+---
+
+## Installation
+
+### Method 1: CLI (Recommended)
+
+This component is complex and large (~32KB). We strongly recommend using the CLI:
+
+```bash
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/orb-field.json
+```
+
+### Method 2: Manual
+
+1.  **Install Dependencies**
+
+    ```bash
+    npm install three @types/three framer-motion gsap
+    ```
+
+2.  **Copy the Source Code**
+
+    Download the full source code from the link below and save it to `components/zenblocks/orb-field.tsx`.
+
+    [View Source Code on GitHub](https://github.com/zenblocks/ui/blob/main/components/zenblocks/orb-field.tsx)
+    
+    *(Code snippet omitted for brevity due to large file size)*
+
+---
+
+## Usage
+
+### Basic Implementation
+
+Import and drop into any container (ensure parent has `relative` positioning):
+
+```tsx
+import { OrbField } from "@/components/zenblocks/orb-field";
+
+export default function HeroBackground() {
+  return (
+    <div className="relative w-full h-screen">
+      <OrbField />
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-6xl font-black text-white mix-blend-difference">
+            ZEN FLUID
+        </h1>
+      </div>
+    </div>
+  );
+}
+```
+
+### Configuration
+
+Customize the physics simulation via props:
+
+```tsx
+<OrbField 
+    count={400}             // Number of orbs
+    colors={[0xff0000, 0x00ff00]} // Color gradient
+    gravity={0.2}           // Lower gravity for "space" feel
+    friction={0.995}        // Higher friction for "water" feel
+    wallBounce={0.8}        // How bouncy the walls are
+/>
+```
