@@ -132,36 +132,48 @@ export const LogoLoop = ({
         return () => window.removeEventListener('resize', update);
     }, [items, gap]);
 
-    // Main RAF Loop
+    // Animation Loop
     useEffect(() => {
+        let animationFrameId: number;
+
         const animate = (time: number) => {
             if (lastTimeRef.current === null) {
                 lastTimeRef.current = time;
-                requestAnimationFrame(animate);
+                animationFrameId = requestAnimationFrame(animate);
                 return;
             }
 
             const delta = (time - lastTimeRef.current) / 1000;
             lastTimeRef.current = time;
 
-            // Smooth velocity transitions
-            const targetVel = isHovered && pauseOnHover ? 0 : speed * (direction === 'left' ? 1 : -1);
+            // Use refs or current state inside the callback without adding them to dependencies
+            // We use the current prop values directly since they are closed over, 
+            // but for best practice in a long-running RAF, refs are safer if props change often.
+            // For now, simpler closure access is fine as long as we don't reset the effect constantly.
+
+            const currentSpeed = speed;
+            const currentDirection = direction;
+
+            // Calculate target velocity
+            const targetVel = isHovered && pauseOnHover ? 0 : currentSpeed * (currentDirection === 'left' ? 1 : -1);
+
+            // Apply smoothing
             const easing = 1 - Math.exp(-delta / ANIMATION_CONFIG.SMOOTH_TAU);
             velocityRef.current += (targetVel - velocityRef.current) * easing;
 
             if (seqWidth > 0 && trackRef.current) {
                 offsetRef.current += velocityRef.current * delta;
-                // Wrap offset
+                // Wrap offset based on sequence width
                 offsetRef.current = (offsetRef.current % seqWidth + seqWidth) % seqWidth;
                 trackRef.current.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`;
             }
 
-            requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
         };
 
-        const id = requestAnimationFrame(animate);
-        return () => cancelAnimationFrame(id);
-    }, [seqWidth, isHovered, speed, direction, pauseOnHover]);
+        animationFrameId = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(animationFrameId);
+    }, [seqWidth, isHovered, speed, direction, pauseOnHover]); // Keep dependencies but ensure logic is robust
 
     return (
         <div

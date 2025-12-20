@@ -13,9 +13,17 @@ interface PreviewProps {
   isBlock?: boolean;
 }
 
-const prePath = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : "https://zenblocks-three.vercel.app";
+// const prePath = process.env.VERCEL_PROJECT_PRODUCTION_URL
+//   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+//   : "https://zenblocks-three.vercel.app";
+
+const prePath = process.env.NODE_ENV === "development"
+  ? "http://localhost:3000"
+  : (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://zenblocks-three.vercel.app");
+
+
 
 export function Preview({
   children,

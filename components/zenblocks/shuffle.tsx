@@ -8,7 +8,7 @@ interface ShuffleProps {
   duration?: number;
 }
 
-export const Shuffle: React.FC<ShuffleProps> = ({ text, className }) => {
+export const Shuffle: React.FC<ShuffleProps> = ({ text = "Shuffle", className }) => {
   const [displayText, setDisplayText] = useState(text);
 
   useEffect(() => {
