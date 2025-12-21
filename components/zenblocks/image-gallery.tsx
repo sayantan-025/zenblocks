@@ -72,9 +72,11 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
         const track = trackRef.current;
         const allItems = gsap.utils.toArray<HTMLElement>('.gallery-item');
 
-        // Layout Config
-        const itemWidth = 320; // Fixed width w-[320px]
-        const gap = 32;        // gap-8 = 32px
+        if (allItems.length === 0) return;
+
+        // Layout Config (Dynamic)
+        const itemWidth = allItems[0].offsetWidth;
+        const gap = parseFloat(window.getComputedStyle(track).gap) || 32;
         const totalItemWidth = itemWidth + gap;
         const groupWidth = items.length * totalItemWidth;
 
@@ -173,7 +175,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
         <div
             ref={containerRef}
             className={cn(
-                "relative w-full h-[600px] overflow-hidden bg-zinc-50 dark:bg-transparent flex flex-col justify-center select-none cursor-grab active:cursor-grabbing",
+                "relative w-full h-[400px] md:h-[600px] overflow-hidden bg-zinc-50 dark:bg-transparent flex flex-col justify-center select-none cursor-grab active:cursor-grabbing",
                 className
             )}
         >
@@ -189,13 +191,13 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
             {/* TRACK */}
             <div
                 ref={trackRef}
-                className="flex gap-8 px-8 items-center"
+                className="flex gap-4 md:gap-8 px-4 md:px-8 items-center"
                 style={{ width: 'max-content' }}
             >
                 {displayItems.map((item, i) => (
                     <div
                         key={i}
-                        className="gallery-item relative w-[320px] aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-200 dark:bg-zinc-800 shadow-xl border border-white/20 dark:border-white/5 WillChangeTransform"
+                        className="gallery-item relative w-[220px] md:w-[320px] aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-200 dark:bg-zinc-800 shadow-xl border border-white/20 dark:border-white/5 WillChangeTransform"
                     >
                         {/* Image Container */}
                         <div className="absolute inset-0 overflow-hidden">

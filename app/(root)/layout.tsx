@@ -1,5 +1,4 @@
 import Header from "@/components/landing/header";
-import Footer from "@/components/layout/footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -21,7 +20,6 @@ export default function HomeLayout({
       <main className="relative w-full pt-10 md:pt-0 bg-background text-foreground transition-colors duration-300 min h-screen">
         {children}
       </main>
-      <Footer />
     </>
   );
 }

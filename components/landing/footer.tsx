@@ -17,8 +17,7 @@ export const Footer = () => {
                             Beautiful, physics-enabled UI components for modern React applications. Built for speed and delight.
                         </p>
                         <div className="flex items-center gap-4 pt-2">
-                            <SocialLink href="https://github.com" icon={Github} label="GitHub" />
-                            <SocialLink href="https://twitter.com" icon={XIcon} label="X (Twitter)" />
+                            <SocialLink href="https://github.com/sayantan-025/zenblocks" icon={Github} label="GitHub" />
                         </div>
                     </div>
 
@@ -61,7 +60,7 @@ export const Footer = () => {
                     <div className="flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-500 font-mono">
                         <span>Made with</span>
                         <Heart className="w-3 h-3 text-red-500 fill-red-500 mx-1" />
-                        <span>by ZenDevs</span>
+                        <span>by Sayantan</span>
                     </div>
                 </div>
             </div>
@@ -73,6 +72,8 @@ export const Footer = () => {
 const SocialLink = ({ href, icon: Icon, label }: { href: string; icon: any; label: string }) => (
     <Link
         href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
         aria-label={label}
     >
@@ -90,8 +91,4 @@ const FooterLink = ({ href, children }: { href: string; children: React.ReactNod
         </Link>
     </li>
 );
-const XIcon = ({ className }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
-    </svg>
-);
+

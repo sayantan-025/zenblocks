@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     template: "%s · ZenBlocks",
   },
   description: "ZenBlocks is a modern, animated component library for Next.js.",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 /* -------------------------------------------------------------------------- */
