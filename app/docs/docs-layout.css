@@ -41,3 +41,21 @@ aside[data-fd-sidebar] {
    If user wants top spacing, we can add it here, 
    but with default layout it sits on the side. 
 */
+
+/* Force Navbar to be on top */
+header,
+nav,
+[data-fd-nav],
+.fd-nav,
+[data-fd-layout="notebook"] header {
+    z-index: 999 !important;
+    position: sticky !important;
+    /* Ensure it stays sticky if that was lost */
+    top: 0;
+}
+
+/* Ensure content stays below */
+main {
+    isolation: isolate;
+    z-index: 1;
+}

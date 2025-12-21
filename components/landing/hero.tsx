@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Copy, Check } from "lucide-react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 import { OrbField } from "../zenblocks/orb-field";
 import PressureTest from "../zenblocks/pressure-test";
 import { Shuffle } from "../zenblocks/shuffle";
@@ -14,7 +15,7 @@ export const Hero = () => {
     const { resolvedTheme } = useTheme();
 
     const handleCopy = () => {
-        navigator.clipboard.writeText("npm install zenblocks-ui");
+        navigator.clipboard.writeText("npx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json");
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -55,9 +56,9 @@ export const Hero = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="pointer-events-auto inline-flex items-center rounded-full border border-zinc-200 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-zinc-800 dark:text-zinc-200 shadow-sm dark:border-zinc-800 mb-6 sm:mb-8"
+                    className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-zinc-600 dark:text-zinc-400 shadow-sm dark:border-zinc-800 mb-6 sm:mb-8"
                 >
-                    <span className="flex h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+                    <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <Shuffle text="v2.0 Now Available" />
                 </motion.div>
 
@@ -82,7 +83,7 @@ export const Hero = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-                    className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-600 dark:text-zinc-400 max-w-sm sm:max-w-xl md:max-w-2xl mb-8 sm:mb-12 leading-relaxed px-4 sm:px-0"
+                    className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-500 dark:text-zinc-400 max-w-sm sm:max-w-xl md:max-w-2xl mb-8 sm:mb-12 leading-relaxed px-4 sm:px-0"
                 >
                     The enterprise-grade UI library for modern web applications.
                     <br className="hidden sm:block" />
@@ -101,10 +102,10 @@ export const Hero = () => {
                     className="pointer-events-auto flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-center px-4 sm:px-0"
                 >
                     {/* Primary Button */}
-                    <button className="group relative w-full sm:w-auto h-12 rounded-full bg-zinc-900 dark:bg-white px-8 text-white dark:text-zinc-900 shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-95 flex items-center justify-center gap-2">
+                    <Link href="/docs" className="group relative w-full sm:w-auto h-12 rounded-full bg-zinc-900 dark:bg-white px-8 text-white dark:text-zinc-900 shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-95 flex items-center justify-center gap-2">
                         <span className="font-semibold text-base">Get Started</span>
                         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                    </button>
+                    </Link>
 
                     {/* Secondary Button */}
                     <button
@@ -112,8 +113,8 @@ export const Hero = () => {
                         className="group relative w-full sm:w-auto h-12 rounded-full bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 px-6 text-zinc-800 dark:text-zinc-200 shadow-sm transition-all hover:bg-white/60 dark:hover:bg-zinc-900/60 hover:border-zinc-300 dark:hover:border-zinc-700 flex items-center justify-center gap-3 active:scale-95"
                     >
                         <span className="font-mono text-sm opacity-50 select-none">$</span>
-                        <span className="font-mono text-sm font-medium truncate">
-                            npm i zenblocks-ui
+                        <span className="font-mono text-sm font-medium truncate max-w-[200px]">
+                            npx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json
                         </span>
                         <div className="ml-1 p-1.5 rounded-md bg-transparent group-hover:bg-black/5 dark:group-hover:bg-white/10 transition-colors shrink-0">
                             {copied ? (

@@ -173,13 +173,13 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
         <div
             ref={containerRef}
             className={cn(
-                "relative w-full h-[600px] overflow-hidden bg-zinc-50 dark:bg-zinc-950 flex flex-col justify-center select-none cursor-grab active:cursor-grabbing",
+                "relative w-full h-[600px] overflow-hidden bg-zinc-50 dark:bg-transparent flex flex-col justify-center select-none cursor-grab active:cursor-grabbing",
                 className
             )}
         >
             {/* Cinematic Fade Edges */}
-            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-zinc-50 to-transparent dark:from-zinc-950 z-20 pointer-events-none" />
-            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-zinc-50 to-transparent dark:from-zinc-950 z-20 pointer-events-none" />
+            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-zinc-50 to-transparent dark:from-transparent z-20 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-zinc-50 to-transparent dark:from-transparent z-20 pointer-events-none" />
 
             {/* Title / Header (Optional) */}
             <div className="absolute top-4 left-0 w-full text-center z-10 pointer-events-none opacity-40">

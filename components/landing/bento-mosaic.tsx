@@ -18,9 +18,10 @@ import { cn } from "@/lib/utils";
 // Import ZenBlocks
 import { ImageGallery } from "../zenblocks/image-gallery";
 import { AnimatedClock } from "../zenblocks/animated-clock";
-import { FloatingDock } from "../zenblocks/floating-dock";
+import PressureTest from "../zenblocks/pressure-test";
 import { LogoLoop } from "../zenblocks/logo-loop";
 import { ImageTrail } from "../zenblocks/image-trail";
+import Link from "next/link";
 
 const MotionDiv = motion.div as any;
 
@@ -157,7 +158,7 @@ const ITEMS = [
         description: "Immersive image interactions and seamless transitions.",
         className: "md:col-span-2 md:row-span-2",
         icon: <Layers size={14} />,
-        visual: <ImageGallery />
+        visual: <ImageGallery className="bg-transparent" />
     },
     {
         title: "Chronos Motion",
@@ -167,11 +168,11 @@ const ITEMS = [
         visual: <AnimatedClock className="scale-75 shadow-none border-none bg-transparent" />
     },
     {
-        title: "Liquid Dock",
-        description: "Advanced physics-based interaction models for navigation.",
+        title: "Typography Physics",
+        description: "Interactive variable font dynamics.",
         className: "md:col-span-1 md:row-span-1",
         icon: <Zap size={14} />,
-        visual: <FloatingDock desktopClassName="scale-75" mobileClassName="hidden" />
+        visual: <PressureTest text="BLOCKS" className="text-zinc-900 dark:text-white p-4" />
     },
     {
         title: "Partner Ecosystem",
@@ -203,10 +204,11 @@ export const BentoMosaic = () => {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        className="inline-flex px-5 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 shadow-sm"
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 shadow-sm"
                     >
-                        <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.4em]">
-                            25+ and counting
+                        <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span className="text-[10px] font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
+                            10+ and counting
                         </span>
                     </motion.div>
 
@@ -222,7 +224,7 @@ export const BentoMosaic = () => {
                     <motion.p
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
-                        className="text-zinc-500 dark:text-zinc-500 text-base md:text-lg max-w-2xl leading-relaxed font-medium mt-2"
+                        className="text-zinc-500 dark:text-zinc-400 text-base md:text-lg max-w-2xl leading-relaxed font-medium mt-2"
                     >
                         A high-performance mosaic structure for showcasing modular library elements.
                         Engineered with absolute precision for the modern design ecosystem.
@@ -233,10 +235,10 @@ export const BentoMosaic = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         className="mt-6"
                     >
-                        <button className="flex items-center gap-3 group text-[11px] font-black uppercase tracking-[0.2em] text-zinc-900 dark:text-white border-b-2 border-zinc-200 dark:border-zinc-800 pb-2 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all">
+                        <Link href="/docs" className="flex items-center gap-3 group text-[11px] font-black uppercase tracking-[0.2em] text-zinc-900 dark:text-white border-b-2 border-zinc-200 dark:border-zinc-800 pb-2 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all">
                             Documentation
                             <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                        </button>
+                        </Link>
                     </motion.div>
                 </div>
 

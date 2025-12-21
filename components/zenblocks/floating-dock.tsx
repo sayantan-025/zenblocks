@@ -43,21 +43,6 @@ const DEFAULT_DOCK_ITEMS: FloatingDockItem[] = [
         icon: <Layers className="h-full w-full" />,
         href: "#",
     },
-    {
-        title: "Twitter",
-        icon: <Twitter className="h-full w-full" />,
-        href: "#",
-    },
-    {
-        title: "GitHub",
-        icon: <Github className="h-full w-full" />,
-        href: "#",
-    },
-    {
-        title: "Settings",
-        icon: <Settings className="h-full w-full" />,
-        href: "#",
-    },
 ];
 
 export const FloatingDock = ({

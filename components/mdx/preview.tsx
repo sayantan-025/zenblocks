@@ -57,9 +57,9 @@ export function Preview({
         ) : (
           <div
             className={cn(
-              "p-2 md:p-8 flex justify-center items-center relative border rounded-2xl my-4 border-zinc-400 dark:border-zinc-800 not-prose",
-              compact ? "min-h-[100px]" : "min-h-[400px]",
-              isBlock ? "md:p-0" : ""
+              "p-4 md:p-8 flex justify-center items-center relative border rounded-2xl my-4 border-zinc-200 dark:border-zinc-800 not-prose bg-zinc-50/50 dark:bg-zinc-950/50 transform-gpu",
+              compact ? "min-h-[150px]" : "min-h-[300px] md:min-h-[400px]",
+              isBlock ? "p-0 md:p-0 overflow-hidden" : ""
             )}
           >
             {children}

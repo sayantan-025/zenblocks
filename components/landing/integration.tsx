@@ -11,9 +11,16 @@ export const Integration = () => {
 
                 {/* Header */}
                 <div className="mb-20 text-center space-y-4">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] font-bold text-emerald-600 dark:text-emerald-400">
-                        quick_start
-                    </span>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm mx-auto"
+                    >
+                        <span className="flex h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                        <span className="text-[10px] font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
+                            Quick_Start
+                        </span>
+                    </motion.div>
                     <motion.h3
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -34,43 +41,52 @@ export const Integration = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.7, ease: "easeOut" }}
-                    className="w-full max-w-3xl rounded-xl overflow-hidden shadow-2xl bg-[#09090b] border border-zinc-800 dark:border-zinc-700 hover:border-zinc-700 dark:hover:border-zinc-600 transition-colors"
+                    className="w-full max-w-3xl rounded-xl overflow-hidden shadow-2xl bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors"
                 >
                     {/* Terminal Title Bar */}
-                    <div className="flex items-center px-4 py-3 bg-white/5 border-b border-white/5 gap-2">
+                    <div className="flex items-center px-4 py-3 bg-zinc-50 dark:bg-white/5 border-b border-zinc-200 dark:border-white/5 gap-2">
                         <div className="flex gap-2">
                             <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
                             <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
                             <div className="w-3 h-3 rounded-full bg-[#28c840]" />
                         </div>
                         <div className="flex-1 text-center">
-                            <span className="text-[10px] font-mono text-zinc-500">install.sh</span>
+                            <span className="text-[10px] font-mono text-zinc-400 dark:text-zinc-500">install.sh</span>
                         </div>
                     </div>
 
                     {/* Terminal Content */}
                     <div className="p-8 font-mono text-sm space-y-6">
-                        <div className="flex items-center gap-4 text-zinc-400">
+                        <div className="flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
                             <span className="text-emerald-500 font-bold">$</span>
-                            <span>npm install zenblocks-ui framer-motion</span>
+                            <span className="break-all">npx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json</span>
                         </div>
 
                         <div className="space-y-2">
-                            <div className="flex items-center gap-4 text-zinc-400">
+                            <div className="flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
                                 <span className="text-emerald-500 font-bold">$</span>
-                                <span className="text-zinc-500"># Start using components immediately</span>
+                                <span className="text-zinc-400 dark:text-zinc-500"># Install dependencies</span>
                             </div>
-                            <div className="text-zinc-300 pl-4 border-l-2 border-emerald-500/20">
-                                <span className="text-purple-400">import</span> {"{"} PressureTest {"}"} <span className="text-purple-400">from</span> <span className="text-green-400">"zenblocks-ui"</span>;
+                            <div className="flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
+                                <span className="text-emerald-500 font-bold">$</span>
+                                <span>npm install gsap @gsap/react clsx tailwind-merge</span>
+                            </div>
+
+                            <div className="flex items-center gap-4 text-zinc-600 dark:text-zinc-400 pt-4">
+                                <span className="text-emerald-500 font-bold">$</span>
+                                <span className="text-zinc-400 dark:text-zinc-500"># Start using components immediately</span>
+                            </div>
+                            <div className="text-zinc-800 dark:text-zinc-300 pl-4 border-l-2 border-emerald-500/20">
+                                <span className="text-purple-600 dark:text-purple-400">import</span> {"{"} ImageGallery {"}"} <span className="text-purple-600 dark:text-purple-400">from</span> <span className="text-green-600 dark:text-green-400">"@/components/zenblocks/image-gallery"</span>;
                                 <br />
                                 <br />
-                                <span className="text-purple-400">export default function</span> <span className="text-blue-400">App</span>() {"{"}
+                                <span className="text-purple-600 dark:text-purple-400">export default function</span> <span className="text-blue-600 dark:text-blue-400">App</span>() {"{"}
                                 <br />
-                                &nbsp;&nbsp;<span className="text-purple-400">return</span> (
+                                &nbsp;&nbsp;<span className="text-purple-600 dark:text-purple-400">return</span> (
                                 <br />
-                                &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="text-yellow-400">PressureTest</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="text-amber-600 dark:text-yellow-400">ImageGallery</span>
                                 <br />
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-orange-400">text</span>=<span className="text-green-400">"Hello World"</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-orange-600 dark:text-orange-400">items</span>={"{"}<span className="text-blue-600 dark:text-blue-400">[]</span>{"}"}
                                 <br />
                                 &nbsp;&nbsp;&nbsp;&nbsp;/&gt;
                                 <br />
@@ -82,7 +98,7 @@ export const Integration = () => {
 
                         <div className="flex items-center gap-2 text-emerald-500 pt-4">
                             <Check className="w-4 h-4" />
-                            <span>Compiled successfully in 42ms</span>
+                            <span>Components installed successfully</span>
                         </div>
                     </div>
                 </motion.div>

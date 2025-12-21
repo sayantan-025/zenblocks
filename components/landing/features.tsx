@@ -115,13 +115,16 @@ export const Features = () => {
                             <span className="text-zinc-300 dark:text-zinc-800 italic">Perfection.</span>
                         </motion.h3>
 
-                        <div className="flex items-center gap-4">
-                            <span className="h-px w-8 bg-zinc-200 dark:bg-zinc-800" />
-                            <span className="text-[10px] font-mono uppercase tracking-[0.2em] font-bold text-emerald-500">
-                                core_specs_v2
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 shadow-sm"
+                        >
+                            <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span className="text-[10px] font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
+                                Core_Specs_v2
                             </span>
-                            <span className="h-px w-8 bg-zinc-200 dark:bg-zinc-800" />
-                        </div>
+                        </motion.div>
 
                         <p className="text-base text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-xl font-medium">
                             Every component is engineered to handle edge cases, race conditions, and heavy animation loads without dropping a frame.
