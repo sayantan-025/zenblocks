@@ -108,7 +108,17 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
         </motion.div>
     );
 
-    export const AnimatedClock = ({ className }: { className?: string }) => {
+    export interface AnimatedClockProps {
+        className?: string;
+        /**
+         * If true, displays time in 24-hour format (HH:MM:SS).
+         * If false, displays in 12-hour format.
+         * @default true
+         */
+        use24HourFormat?: boolean;
+    }
+
+    export const AnimatedClock = ({ className, use24HourFormat = true }: AnimatedClockProps) => {
         const [time, setTime] = useState(new Date());
         const [mounted, setMounted] = useState(false);
         const containerRef = useRef<HTMLDivElement>(null);
@@ -154,9 +164,14 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
             );
         }
 
-        const hours = time.getHours().toString().padStart(2, "0");
-        const minutes = time.getMinutes().toString().padStart(2, "0");
-        const seconds = time.getSeconds().toString().padStart(2, "0");
+        let hours = time.getHours();
+        if (!use24HourFormat) {
+            hours = hours % 12 || 12; // Convert to 12h format
+        }
+
+        const hoursStr = hours.toString().padStart(2, "0");
+        const minutesStr = time.getMinutes().toString().padStart(2, "0");
+        const secondsStr = time.getSeconds().toString().padStart(2, "0");
 
         return (
             <motion.div
@@ -176,22 +191,22 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
                 )}
             >
                 <div className="flex items-center" style={{ transform: "translateZ(50px)" }}>
-                    <Digit value={hours[0]} className="text-zinc-950 dark:text-white" />
-                    <Digit value={hours[1]} className="text-zinc-950 dark:text-white" />
+                    <Digit value={hoursStr[0]} className="text-zinc-950 dark:text-white" />
+                    <Digit value={hoursStr[1]} className="text-zinc-950 dark:text-white" />
                 </div>
 
                 <Separator className="text-zinc-400 dark:text-zinc-600" />
 
                 <div className="flex items-center" style={{ transform: "translateZ(50px)" }}>
-                    <Digit value={minutes[0]} className="text-zinc-950 dark:text-white" />
-                    <Digit value={minutes[1]} className="text-zinc-950 dark:text-white" />
+                    <Digit value={minutesStr[0]} className="text-zinc-950 dark:text-white" />
+                    <Digit value={minutesStr[1]} className="text-zinc-950 dark:text-white" />
                 </div>
 
                 <Separator className="text-zinc-400 dark:text-zinc-600" />
 
                 <div className="flex items-center" style={{ transform: "translateZ(50px)" }}>
-                    <Digit value={seconds[0]} className="text-zinc-500 opacity-50" />
-                    <Digit value={seconds[1]} className="text-zinc-500 opacity-50" />
+                    <Digit value={secondsStr[0]} className="text-zinc-500 opacity-50" />
+                    <Digit value={secondsStr[1]} className="text-zinc-500 opacity-50" />
                 </div>
             </motion.div>
         );

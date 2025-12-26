@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Shuffle } from "../zenblocks/shuffle";
 import { OrbField } from "../zenblocks/orb-field";
-import PressureTest from "../zenblocks/pressure-test";
+import { PressureTest } from "../zenblocks/pressure-test";
 
 
 export const Hero = () => {

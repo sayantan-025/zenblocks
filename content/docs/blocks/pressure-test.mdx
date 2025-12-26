@@ -4,7 +4,7 @@ description: "Experimental variable font interaction that responds to cursor pro
 icon: MoveHorizontal
 ---
 
-import { PressureTestDemo } from "@/components/zenblocks/pressure-test";
+import { PressureTest, PressureTestDemo } from "@/components/zenblocks/pressure-test";
 import { Preview } from "@/components/mdx/preview";
 
 ## Overview
@@ -362,7 +362,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pressure-test.json
       );
     };
 
-    export default PressureTest;
+    export { PressureTest };
 
     export function PressureTestDemo() {
       return (
@@ -380,6 +380,8 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pressure-test.json
         </div>
       );
     }
+
+    export default PressureTestDemo;
     ```
 
 
@@ -395,7 +397,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pressure-test.json
 To recreate the large, responsive typography seen in the Hero section:
 
 ```tsx
-import PressureTest from "@/components/zenblocks/pressure-test";
+import { PressureTest } from "@/components/zenblocks/pressure-test";
 
 export function HeroTitle() {
   return (

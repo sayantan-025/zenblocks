@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 // Import ZenBlocks
 import { ImageGallery, DEFAULT_IMAGES } from "../zenblocks/image-gallery";
 import { AnimatedClock } from "../zenblocks/animated-clock";
-import PressureTest from "../zenblocks/pressure-test";
+import { PressureTest } from "../zenblocks/pressure-test";
 import { LogoLoop } from "../zenblocks/logo-loop";
 import { ImageTrail } from "../zenblocks/image-trail";
 import Link from "next/link";
