@@ -9,13 +9,20 @@ import { cn } from "@/lib/utils";
 /*                                   TYPES                                    */
 /* -------------------------------------------------------------------------- */
 
-type PreLoaderProps = {
+
+export type PreLoaderProps = {
   onComplete?: () => void;
+  /**
+   * The text to display during the loading animation.
+   * @default "S"
+   */
+  text?: string;
   /**
    * When true, renders inside a container instead of fullscreen.
    * Used for docs / previews.
    */
   embedded?: boolean;
+  className?: string;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -24,7 +31,9 @@ type PreLoaderProps = {
 
 const PreLoader: React.FC<PreLoaderProps> = ({
   onComplete,
+  text = "Z",
   embedded = false,
+  className,
 }) => {
   const screenRef = useRef<HTMLDivElement | null>(null);
   const textRef = useRef<HTMLDivElement | null>(null);
@@ -123,20 +132,20 @@ const PreLoader: React.FC<PreLoaderProps> = ({
 
         /* Surface */
         "bg-white text-zinc-900",
-        "dark:bg-black dark:text-white"
+        "dark:bg-black dark:text-white",
+        className
       )}
     >
       {/* Main Letter */}
       <div
         ref={textRef}
         className={cn(
-          "text-[200px] sm:text-[300px] md:text-[400px]",
+          "text-[100px] sm:text-[150px] md:text-[200px]",
           "font-black tracking-tight",
           "text-zinc-900 dark:text-white"
         )}
-        style={{ fontFamily: "var(--font-amiamie)" }}
       >
-        S
+        {text}
       </div>
 
       {/* Percentage counter */}
@@ -148,7 +157,6 @@ const PreLoader: React.FC<PreLoaderProps> = ({
           "font-light italic",
           "text-zinc-600 dark:text-white/80"
         )}
-        style={{ fontFamily: "var(--font-amiamie)" }}
       >
         0%
       </div>

@@ -307,4 +307,23 @@ const PressureTest: React.FC<PressureTestProps> = ({
   );
 };
 
-export default PressureTest;
+export { PressureTest };
+
+export function PressureTestDemo() {
+  return (
+    <div className="relative w-full h-full flex items-center justify-center p-4 bg-transparent">
+      <PressureTest
+        text="ZENBLOCKS"
+        className="text-zinc-950 dark:text-white"
+        flex={true}
+        alpha={false}
+        stroke={false}
+        width={true}
+        weight={true}
+        italic={true}
+      />
+    </div>
+  );
+}
+
+export default PressureTestDemo;

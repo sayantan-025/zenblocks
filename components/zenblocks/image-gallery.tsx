@@ -11,14 +11,10 @@ import { cn } from "@/lib/utils";
  * 
  * Features:
  * - Seamless infinite loop (using 2x dupe + wrapping)
- * - Inertia-based drag interactions
- * - Refined 3D tilt and parallax
  * - Premium, contained styling (no overflow mess)
  */
 
-gsap.registerPlugin(Observer);
-
-const IMAGES = [
+export const DEFAULT_IMAGES = [
     {
         url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
         title: "Ethereal Valley",
@@ -51,23 +47,36 @@ const IMAGES = [
     },
 ];
 
-interface ImageGalleryProps {
+gsap.registerPlugin(Observer);
+
+export interface ImageGalleryItem {
+    url: string;
+    title: string;
+    tag: string;
+}
+
+export interface ImageGalleryProps {
     className?: string;
-    items?: typeof IMAGES;
+    items?: ImageGalleryItem[];
 }
 
 export const ImageGallery: React.FC<ImageGalleryProps> = ({
     className,
-    items = IMAGES
+    items = DEFAULT_IMAGES
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
 
     // Duplicate items for seamless loop (triple buffer is safest for wide screens)
-    const displayItems = useMemo(() => [...items, ...items, ...items], [items]);
+    // If items is empty/undefined, handle gracefully
+    const displayItems = useMemo(() => {
+        if (!items || items.length === 0) return [];
+        return [...items, ...items, ...items];
+    }, [items]);
 
     useGSAP(() => {
         if (!containerRef.current || !trackRef.current) return;
+        if (displayItems.length === 0) return;
 
         const track = trackRef.current;
         const allItems = gsap.utils.toArray<HTMLElement>('.gallery-item');
@@ -75,6 +84,8 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
         if (allItems.length === 0) return;
 
         // Layout Config (Dynamic)
+        // We need to wait for layout or use hardcoded assumptions if rendered yet
+        // Since we are in useGSAP, elements should be mounted.
         const itemWidth = allItems[0].offsetWidth;
         const gap = parseFloat(window.getComputedStyle(track).gap) || 32;
         const totalItemWidth = itemWidth + gap;
@@ -169,7 +180,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
             gsap.ticker.remove(containerRef.current as any); // cleanup ticker listener
         };
 
-    }, { scope: containerRef });
+    }, { scope: containerRef, dependencies: [displayItems] });
 
     return (
         <div
@@ -224,3 +235,15 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
         </div>
     );
 };
+
+
+
+const ImageGalleryDemo = () => {
+    return (
+        <section className="w-full bg-zinc-50 dark:bg-zinc-950 py-24">
+            <ImageGallery />
+        </section>
+    );
+}
+
+export default ImageGalleryDemo;

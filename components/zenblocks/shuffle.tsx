@@ -37,3 +37,16 @@ export const Shuffle: React.FC<ShuffleProps> = ({ text = "Shuffle", className })
 
   return <span className={className}>{displayText}</span>;
 };
+
+export function ShuffleDemo() {
+  return (
+    <div className="flex items-center justify-center h-full w-full bg-transparent p-8">
+      <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white dark:bg-zinc-900 px-3 py-1 text-xs font-semibold text-zinc-600 dark:text-zinc-400 shadow-sm dark:border-zinc-800">
+        <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <Shuffle text="v2.0 Now Available" />
+      </div>
+    </div>
+  );
+}
+
+export default ShuffleDemo;

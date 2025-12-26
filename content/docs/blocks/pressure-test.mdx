@@ -4,7 +4,7 @@ description: "Experimental variable font interaction that responds to cursor pro
 icon: MoveHorizontal
 ---
 
-import PressureTest from "@/components/zenblocks/pressure-test";
+import { PressureTestDemo } from "@/components/zenblocks/pressure-test";
 import { Preview } from "@/components/mdx/preview";
 
 ## Overview
@@ -26,12 +26,8 @@ import { Preview } from "@/components/mdx/preview";
 ## Preview
 
 <Preview link="pressure-test">
-  <div className="relative w-full h-[300px] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 flex items-center justify-center p-8 bg-white dark:bg-zinc-950">
-      <PressureTest 
-        text="ZENBLOCKS" 
-        className="text-zinc-950 dark:text-white"
-        stroke={false}
-      />
+  <div className="relative w-full h-[300px] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
+      <PressureTestDemo />
   </div>
 </Preview>
 
@@ -367,6 +363,88 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pressure-test.json
     };
 
     export default PressureTest;
+
+    export function PressureTestDemo() {
+      return (
+        <div className="relative w-full h-full flex items-center justify-center p-4 bg-transparent">
+          <PressureTest
+            text="ZENBLOCKS"
+            className="text-zinc-950 dark:text-white"
+            flex={true}
+            alpha={false}
+            stroke={false}
+            width={true}
+            weight={true}
+            italic={true}
+          />
+        </div>
+      );
+    }
     ```
 
+
+
     </details>
+
+---
+
+## Usage
+
+### Hero Implementation (Live Demo Style)
+
+To recreate the large, responsive typography seen in the Hero section:
+
+```tsx
+import PressureTest from "@/components/zenblocks/pressure-test";
+
+export function HeroTitle() {
+  return (
+    <div className="relative w-full h-[300px] flex items-center justify-center">
+       <PressureTest
+          text="ZENBLOCKS"
+          flex={true}
+          alpha={false}
+          stroke={false}
+          width={true}
+          weight={true}
+          italic={true}
+          minFontSize={24}
+        />
+    </div>
+  );
+}
+```
+
+---
+
+## Configuration & Customization
+
+### Font Customization
+The component works best with variable fonts that have `wght` (Weight), `wdth` (Width), and `ital` (Italic) axes.
+By default, it loads "Compressa VF". You can use your own variable font by providing a `fontUrl` and matching `fontFamily`.
+
+### Flex vs. Fixed
+-   **Flex Mode (`flex={true}`)**: The component automatically calculates the font size to ensure the text spans the full width of the container.
+-   **Fixed Mode**: If `flex={false}`, it uses `minFontSize` or CSS-defined sizes.
+
+---
+
+## API Reference
+
+### Props
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `text` | `string` | `"Compressa"` | The text content to render. |
+| `fontUrl` | `string` | `(Compressa URL)` | URL to the WOFF2 variable font file. |
+| `fontFamily` | `string` | `"Compressa VF"` | CSS font-family name to use. |
+| `width` | `boolean` | `true` | Enable proximity-based Width axis animation. |
+| `weight` | `boolean` | `true` | Enable proximity-based Weight axis animation. |
+| `italic` | `boolean` | `true` | Enable proximity-based Italic axis animation. |
+| `alpha` | `boolean` | `false` | Enable proximity-based Opacity animation. |
+| `flex` | `boolean` | `true` | Auto-fit text directly to container width. |
+| `stroke` | `boolean` | `false` | Outline mode (transparent fill, colored stroke). |
+| `scale` | `boolean` | `false` | Vertically scale text to fill container height. |
+| `justify` | `"start" \| "center" \| "end" \| "between"` | `"between"` | Horizontal alignment of characters. |
+| `minFontSize` | `number` | `24` | Minimum font size in pixels. |
+

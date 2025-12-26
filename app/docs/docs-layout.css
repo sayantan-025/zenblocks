@@ -7,33 +7,33 @@
 
 /* 
    Apply ZenBlocks Theme to the Sidebar 
-   Mimics styles from components/nav/desktop-nav.tsx
+   Mimics styles from components/landing/header.tsx
 */
 aside[data-fd-sidebar] {
-    /* Background Gradient (Light Mode) */
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(249, 250, 251, 0.95), rgba(255, 255, 255, 0.95)) !important;
+    /* Background (Light Mode) */
+    background: rgba(255, 255, 255, 0.4) !important;
 
     /* Glassmorphism */
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
 
     /* Border */
-    border-right: 1px solid rgba(200, 200, 200, 0.8) !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.05) !important;
 
     /* Shadow */
-    box-shadow: 0 2px 20px -2px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03) !important;
 
-    /* Spacing adjustments to look like a floating panel if needed, 
-       but for standard sidebar we just style the surface */
+    /* Ensure sidebar stays on top of content and navbar */
+    z-index: 1000 !important;
 }
 
 /* Dark Mode Overrides */
 .dark aside[data-fd-sidebar] {
-    /* Background Gradient (Dark Mode) */
-    background: linear-gradient(to bottom, rgba(24, 24, 27, 0.90), rgba(39, 39, 42, 0.90), rgba(24, 24, 27, 0.90)) !important;
+    /* Background (Dark Mode) */
+    background: rgba(24, 24, 27, 0.4) !important;
 
     /* Border */
-    border-right: 1px solid rgba(70, 70, 70, 0.7) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
 /* 
@@ -42,20 +42,44 @@ aside[data-fd-sidebar] {
    but with default layout it sits on the side. 
 */
 
-/* Force Navbar to be on top */
+/* Force Navbar to match landing page header style */
 header,
 nav,
 [data-fd-nav],
 .fd-nav,
 [data-fd-layout="notebook"] header {
-    z-index: 999 !important;
+    z-index: 10 !important;
+    /* Lowered to allow sidebar/popovers to overlap */
     position: sticky !important;
-    /* Ensure it stays sticky if that was lost */
     top: 0;
+
+    /* Style override to match landing header */
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Ensure content stays below */
+.dark header,
+.dark nav,
+.dark [data-fd-nav],
+.dark .fd-nav,
+.dark [data-fd-layout="notebook"] header {
+    background: rgba(24, 24, 27, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Ensure content is centered when sidebar is closed/less wide */
 main {
     isolation: isolate;
     z-index: 1;
+    margin-inline: auto !important;
+    max-width: 1400px;
+    /* Optional: limit width for better readability when centered */
+    width: 100%;
+}
+
+/* Ensure the page wrapper also centers */
+.fd-page {
+    margin-inline: auto !important;
 }

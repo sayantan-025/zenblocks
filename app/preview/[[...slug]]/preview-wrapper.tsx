@@ -64,5 +64,20 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
         );
     }
 
-    return <Component />;
+    const isPreLoader = componentName.includes("pre-loader");
+
+    return (
+        <div className="relative w-full min-h-screen flex items-center justify-center">
+            {isPreLoader && (
+                <div className="absolute inset-0 flex items-center justify-center z-0">
+                    <p className="text-zinc-400 dark:text-zinc-600 font-mono text-sm animate-pulse">
+                        ✨ Animation Complete. Reload to replay.
+                    </p>
+                </div>
+            )}
+            <div className="relative z-10 w-full h-full">
+                <Component />
+            </div>
+        </div>
+    );
 }

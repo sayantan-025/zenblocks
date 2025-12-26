@@ -4,7 +4,7 @@ description: "A cyberpunk-inspired text reveal effect with random character decr
 icon: RefreshCw
 ---
 
-import { Shuffle } from "@/components/zenblocks/shuffle";
+import { Shuffle, ShuffleDemo } from "@/components/zenblocks/shuffle";
 import { Preview } from "@/components/mdx/preview";
 
 ## Overview
@@ -25,11 +25,8 @@ import { Preview } from "@/components/mdx/preview";
 ## Preview
 
 <Preview link="shuffle">
-  <div className="relative w-full h-[200px] flex items-center justify-center bg-zinc-950 rounded-xl overflow-hidden border border-zinc-800">
-    <Shuffle 
-      text="SYSTEM ACTIVATED" 
-      className="text-4xl font-black tracking-widest text-white uppercase font-mono"
-    />
+  <div className="relative w-full h-[200px] rounded-xl overflow-hidden border border-zinc-800">
+    <ShuffleDemo />
   </div>
 </Preview>
 
@@ -92,8 +89,19 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/shuffle.json
         return () => clearInterval(interval);
       }, [text]);
 
-      return <span className={className}>{displayText}</span>;
+    return <span className={className}>{displayText}</span>;
     };
+
+    export function ShuffleDemo() {
+      return (
+        <div className="flex items-center justify-center h-full w-full bg-transparent p-8">
+          <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white dark:bg-zinc-900 px-3 py-1 text-xs font-semibold text-zinc-600 dark:text-zinc-400 shadow-sm dark:border-zinc-800">
+            <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <Shuffle text="v2.0 Now Available" />
+          </div>
+        </div>
+      );
+    }
     ```
 
     </details>
@@ -128,3 +136,42 @@ The component accepts standard `className` props for styling:
     className="text-emerald-500 font-mono tracking-widest"
 />
 ```
+
+---
+
+### Badge Implementation (Live Demo Style)
+
+To recreate the badge style seen in the Hero section:
+
+```tsx
+import { Shuffle } from "@/components/zenblocks/shuffle";
+
+export function Badge() {
+  return (
+    <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white dark:bg-zinc-900 px-3 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+      <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+      <Shuffle text="v2.0 Now Available" />
+    </div>
+  );
+}
+```
+
+### Configuration & Customization
+
+### Animation Speed
+The shuffle effect runs on a set interval (currently 30ms per frame) defined internally. The duration is determined by the length of the string; standardizing roughly 3 frames per character reveal.
+
+### Typography
+Since this component renders raw text, it inherits all font properties (family, weight, size, color) from its parent or the `className` prop. It works exceptionally well with **Monospaced** fonts.
+
+---
+
+## API Reference
+
+### Props
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `text` | `string` | - | The final text to display. |
+| `className` | `string` | - | Optional CSS classes for styling. |
+| `duration` | `number` | - | *Reserved for future implementation of custom timing.* |

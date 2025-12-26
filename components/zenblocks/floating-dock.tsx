@@ -8,11 +8,10 @@ import {
     useSpring,
     useTransform,
 } from "framer-motion";
-
-
 import {
     LayoutGrid,
     Home,
+    Terminal, // Added Terminal
     Layers,
     Settings,
     Github,
@@ -27,33 +26,17 @@ export interface FloatingDockItem {
     href: string;
 }
 
-const DEFAULT_DOCK_ITEMS: FloatingDockItem[] = [
-    {
-        title: "Home",
-        icon: <Home className="h-full w-full" />,
-        href: "#",
-    },
-    {
-        title: "Components",
-        icon: <LayoutGrid className="h-full w-full" />,
-        href: "#",
-    },
-    {
-        title: "Blocks",
-        icon: <Layers className="h-full w-full" />,
-        href: "#",
-    },
-];
-
-export const FloatingDock = ({
-    items = DEFAULT_DOCK_ITEMS,
-    desktopClassName,
-    mobileClassName,
-}: {
-    items?: FloatingDockItem[];
+export interface FloatingDockProps {
+    items: FloatingDockItem[];
     desktopClassName?: string;
     mobileClassName?: string;
-}) => {
+}
+
+export const FloatingDock = ({
+    items,
+    desktopClassName,
+    mobileClassName,
+}: FloatingDockProps) => {
     return (
         <>
             <FloatingDockDesktop items={items} className={desktopClassName} />
@@ -78,7 +61,7 @@ const FloatingDockMobile = ({
                         layoutId="nav"
                         className="absolute bottom-full mb-4 inset-x-0 flex flex-col gap-3 items-center"
                     >
-                        {items.map((item, idx) => (
+                        {items?.map((item, idx) => (
                             <motion.div
                                 key={item.title}
                                 initial={{ opacity: 0, y: 10, scale: 0.8 }}
@@ -135,7 +118,7 @@ const FloatingDockDesktop = ({
                 className
             )}
         >
-            {items.map((item) => (
+            {items?.map((item) => (
                 <IconContainer mouseX={mouseX} key={item.title} {...item} />
             ))}
         </motion.div>
@@ -152,8 +135,6 @@ function IconContainer({
     title: string;
     icon: React.ReactElement;
     href: string;
-    // Fixed: Explicitly added key to the props type to resolve mapping error
-    key?: React.Key;
 }) {
     let ref = useRef<HTMLDivElement>(null);
 
@@ -200,7 +181,7 @@ function IconContainer({
                             animate={{ opacity: 1, y: -45, x: "-50%", scale: 1 }}
                             exit={{ opacity: 0, y: 10, x: "-50%", scale: 0.9 }}
                             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                            className="px-3 py-1 whitespace-pre rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 absolute left-1/2 -top-8 w-fit text-[10px] font-black uppercase tracking-widest shadow-2xl z-50"
+                            className="px-3 py-1 whitespace-pre rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 absolute left-1/2 -top-8 w-fit text-[10px] font-black uppercase tracking-widest shadow-2xl z-50 pointer-events-none"
                         >
                             {title}
                             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-zinc-950 dark:bg-white" />
@@ -229,3 +210,26 @@ function IconContainer({
         </Link>
     );
 }
+
+/* -------------------------------------------------------------------------- */
+/*                                DEMO EXPORT                                 */
+/* -------------------------------------------------------------------------- */
+
+const DEFAULT_ITEMS: FloatingDockItem[] = [
+    { title: "Home", icon: <Home className="h-full w-full" />, href: "#" },
+    { title: "Products", icon: <Terminal className="h-full w-full" />, href: "#" },
+    { title: "Components", icon: <LayoutGrid className="h-full w-full" />, href: "#" },
+];
+
+const FloatingDockDemo = () => {
+    return (
+        <div className="flex items-center justify-center w-full h-[400px] p-6 bg-zinc-50 dark:bg-zinc-950 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]" />
+            <div className="relative z-10">
+                <FloatingDock items={DEFAULT_ITEMS} desktopClassName="translate-y-20" mobileClassName="translate-y-20" />
+            </div>
+        </div>
+    );
+};
+
+export default FloatingDockDemo;

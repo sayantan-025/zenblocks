@@ -29,17 +29,7 @@ import { Cpu, Globe, Zap, Shield, Database, Cloud } from "lucide-react";
 <Preview link="logo-loop">
   <div className="relative w-full h-[200px] flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
     <div className="absolute inset-0 z-0 opacity-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]" />
-    <LogoLoop 
-        speed={50}
-        items={[
-            { node: <Cpu size={20} className="text-blue-500" />, name: "Compute" },
-            { node: <Globe size={20} className="text-emerald-500" />, name: "Edge" },
-            { node: <Zap size={20} className="text-yellow-500" />, name: "Fast" },
-            { node: <Shield size={20} className="text-purple-500" />, name: "Secure" },
-            { node: <Database size={20} className="text-orange-500" />, name: "Storage" },
-            { node: <Cloud size={20} className="text-cyan-500" />, name: "Cloud" },
-        ]} 
-    />
+    <LogoLoop speed={50} />
   </div>
 </Preview>
 
@@ -85,7 +75,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/logo-loop.json
         name?: string;
     };
 
-    const DEFAULT_LOGOS: LogoItem[] = [
+    export const DEFAULT_LOGOS: LogoItem[] = [
         { node: <Cpu size={20} className="text-blue-500" />, name: "Compute" },
         { node: <Globe size={20} className="text-emerald-500" />, name: "Edge" },
         { node: <Zap size={20} className="text-yellow-500" />, name: "Fast" },
@@ -278,6 +268,20 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/logo-loop.json
 
 ### Basic Implementation
 
+By default, the component loops through a set of placeholder technology icons.
+
+```tsx
+import { LogoLoop } from "@/components/zenblocks/logo-loop";
+
+export default function Partners() {
+  return (
+    <LogoLoop />
+  );
+}
+```
+
+### With Custom Items
+
 Pass an array of React nodes or image URLs to the `items` prop:
 
 ```tsx
@@ -309,3 +313,46 @@ You can also use image assets instead of icons:
     logoHeight={50}
 />
 ```
+
+---
+
+## API Reference
+
+### Props
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `items` | `LogoItem[]` | `DEFAULT_LOGOS` | Array of logos (nodes or images) to display. |
+| `speed` | `number` | `100` | Scrolling speed in pixels per second. |
+| `direction` | `'left' \| 'right'` | `'left'` | Scroll direction. |
+| `gap` | `number` | `24` | Gap between logo items (px). |
+| `logoHeight` | `number` | `40` | Height constraint for logo containers (px). |
+| `pauseOnHover` | `boolean` | `true` | Whether to pause animation on hover. |
+| `className` | `string` | - | Optional wrapper class name. |
+
+### LogoItem
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `src` | `string` | Image source URL (if using image). |
+| `node` | `ReactNode` | React component/icon (prioritized over src). |
+| `alt` | `string` | Alt text for accessibility. |
+| `name` | `string` | Optional name shown on hover. |
+
+---
+
+## Configuration & Customization
+
+### Animation Config
+The smooth velocity transition (for start/stop and hover pause) is controlled by the `ANIMATION_CONFIG` constant at the top of the file.
+
+```tsx
+const ANIMATION_CONFIG = {
+    SMOOTH_TAU: 0.2, // Time constant for velocity smoothing (Lower = snappier)
+    MIN_COPIES: 2,   // Minimum number of loops to render
+} as const;
+```
+
+### Sensitivity
+The `LogoBox` sub-component handles the 3D tilt effect. You can adjust the `useSpring` stiffness and damping in `LogoBox` to make the tilt more or less responsive to mouse movement.
+

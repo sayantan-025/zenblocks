@@ -13,15 +13,30 @@ import { useTheme } from "next-themes";
 /*                                   TYPES                                    */
 /* -------------------------------------------------------------------------- */
 
+
+export type NavbarItem = {
+  label: string;
+  href: string;
+};
+
 type NavbarProps = {
   position?: "fixed" | "relative";
+  items?: NavbarItem[];
+  className?: string;
 };
+
+const DEFAULT_NAV_ITEMS: NavbarItem[] = [
+  { label: "Docs", href: "/docs" },
+  { label: "Components", href: "/docs/components" },
+  { label: "Templates", href: "/templates" },
+  { label: "Pricing", href: "/pricing" },
+];
 
 /* -------------------------------------------------------------------------- */
 /*                                   NAVBAR                                   */
 /* -------------------------------------------------------------------------- */
 
-export default function Navbar({ position = "fixed" }: NavbarProps) {
+export default function Navbar({ position = "fixed", items = DEFAULT_NAV_ITEMS, className }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const prefersReduced = useReducedMotion();
@@ -34,30 +49,23 @@ export default function Navbar({ position = "fixed" }: NavbarProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, [position]);
 
-  const navLinks = [
-    { label: "Docs", href: "/docs" },
-    { label: "Components", href: "/docs/components" },
-    { label: "Templates", href: "/templates" },
-    { label: "Pricing", href: "/pricing" },
-  ];
+  const navLinks = items;
 
   return (
     <div
-      className={`z-50 px-3 mt-3 pointer-events-none ${
-        position === "fixed"
-          ? "fixed top-0 left-0 right-0 flex justify-center"
-          : "relative w-full"
-      }`}
+      className={`z-50 px-3 mt-3 pointer-events-none ${position === "fixed"
+        ? "fixed top-0 left-0 right-0 flex justify-center"
+        : "relative w-full"
+        } ${className || ''}`}
     >
       <nav
         aria-label="Main Navigation"
         className={`pointer-events-auto w-full rounded-2xl px-4 py-2 border transition-all duration-300
         ${position === "fixed" ? "max-w-3xl mx-auto" : "max-w-full"}
-        ${
-          scrolled && position === "fixed"
+        ${scrolled && position === "fixed"
             ? "bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl shadow-md border-zinc-200/50 dark:border-white/10"
             : "bg-white/10 dark:bg-zinc-900/10 backdrop-blur-lg border-zinc-900/5 dark:border-white/5"
-        }`}
+          }`}
       >
         <div className="relative flex items-center h-10">
           {/* LOGO */}

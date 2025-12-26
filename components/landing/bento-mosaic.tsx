@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 
 // Import ZenBlocks
-import { ImageGallery } from "../zenblocks/image-gallery";
+import { ImageGallery, DEFAULT_IMAGES } from "../zenblocks/image-gallery";
 import { AnimatedClock } from "../zenblocks/animated-clock";
 import PressureTest from "../zenblocks/pressure-test";
 import { LogoLoop } from "../zenblocks/logo-loop";
@@ -158,7 +158,7 @@ const ITEMS = [
         description: "Immersive image interactions and seamless transitions.",
         className: "md:col-span-2 md:row-span-2",
         icon: <Layers size={14} />,
-        visual: <ImageGallery className="bg-transparent" />
+        visual: <ImageGallery items={DEFAULT_IMAGES} className="bg-transparent" />
     },
     {
         title: "Chronos Motion",

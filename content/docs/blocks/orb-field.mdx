@@ -63,7 +63,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/orb-field.json
 
     Download the full source code from the link below and save it to `components/zenblocks/orb-field.tsx`.
 
-    [View Source Code on GitHub](https://github.com/zenblocks/ui/blob/main/components/zenblocks/orb-field.tsx)
+    [View Source Code on GitHub](https://github.com/sayantan-025/zenblocks/blob/main/components/zenblocks/orb-field.tsx)
     
     *(Code snippet omitted for brevity due to large file size)*
 
@@ -92,16 +92,47 @@ export default function HeroBackground() {
 }
 ```
 
-### Configuration
+### Configuration & Customization
 
-Customize the physics simulation via props:
+Customize the physics and visuals via the following props. The `materialParams` object allows deep control over the "feel" of the orbs (e.g., matte vs. glossy).
 
 ```tsx
 <OrbField 
-    count={400}             // Number of orbs
-    colors={[0xff0000, 0x00ff00]} // Color gradient
-    gravity={0.2}           // Lower gravity for "space" feel
-    friction={0.995}        // Higher friction for "water" feel
-    wallBounce={0.8}        // How bouncy the walls are
+    count={400}
+    maxVelocity={0.2}
+    materialParams={{
+        metalness: 0.8,
+        roughness: 0.1,
+        clearcoat: 1.0
+    }}
 />
 ```
+
+### Advanced Physics
+Internal physics time steps and collision iterations are tuned for performance in `OrbFieldPhysics`. You can modify the `damping` constant (0.98) inside the component to change air resistance.
+
+---
+
+## API Reference
+
+### Props
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `count` | `number` | `200` | Number of orbs in the simulation. |
+| `colors` | `number[]` | `[0, 0, 0]` | Array of hex colors for gradient mapping. |
+| `gravity` | `number` | `0.5` | Gravity force (Y-axis pull). |
+| `friction` | `number` | `0.9975` | Velocity decay per frame (1 = no friction). |
+| `wallBounce` | `number` | `0.95` | Bounciness of walls (1 = perfect elastic). |
+| `minSize` | `number` | `0.5` | Minimum orb scale. |
+| `maxSize` | `number` | `1.0` | Maximum orb scale. |
+| `followCursor` | `boolean` | `true` | Whether the leader orb follows the mouse. |
+
+### Material Params (`materialParams`)
+
+| Property | Default | Description |
+| :--- | :--- | :--- |
+| `metalness` | `0.5` | Metallic look (0-1). |
+| `roughness` | `0.4` | Surface roughness (0-1). |
+| `clearcoat` | `0.8` | Clear coat intensity (0-1). |
+| `transmission` | `0` | Glass-like transparency (0-1). |

@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { ArrowRight, Copy, Check } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { Shuffle } from "../zenblocks/shuffle";
 import { OrbField } from "../zenblocks/orb-field";
 import PressureTest from "../zenblocks/pressure-test";
-import { Shuffle } from "../zenblocks/shuffle";
 
 
 export const Hero = () => {

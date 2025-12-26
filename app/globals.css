@@ -137,3 +137,15 @@ samp {
     @apply bg-background text-foreground;
   }
 }
+/* 
+  Global Override for Radix/Fumadocs Popovers 
+  Ensures sidebar flyouts are ALWAYS on top of everything. 
+*/
+[data-radix-popper-content-wrapper],
+[data-radix-collection-item],
+[data-fd-popover],
+div[role="dialog"],
+div[role="menu"],
+.fd-sidebar-popover {
+  z-index: 99999 !important;
+}

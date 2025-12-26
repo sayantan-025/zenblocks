@@ -12,7 +12,7 @@ export type LogoItem = {
     name?: string;
 };
 
-const DEFAULT_LOGOS: LogoItem[] = [
+export const DEFAULT_LOGOS: LogoItem[] = [
     { node: <Cpu size={20} className="text-blue-500" />, name: "Compute" },
     { node: <Globe size={20} className="text-emerald-500" />, name: "Edge" },
     { node: <Zap size={20} className="text-yellow-500" />, name: "Fast" },
@@ -116,25 +116,40 @@ export const LogoLoop = ({
     const lastTimeRef = useRef<number | null>(null);
     const velocityRef = useRef(speed * (direction === 'left' ? 1 : -1));
 
-    // Determine copies needed
+    // Determine copies needed via ResizeObserver
     useEffect(() => {
+        if (!containerRef.current || !seqRef.current) return;
+
         const update = () => {
             if (!containerRef.current || !seqRef.current) return;
             const cWidth = containerRef.current.offsetWidth;
             const sWidth = seqRef.current.offsetWidth + gap;
-            setSeqWidth(sWidth);
-            const needed = Math.ceil(cWidth / sWidth) + 2;
-            setCopyCount(Math.max(2, needed));
+
+            if (sWidth > 0) {
+                setSeqWidth(sWidth);
+                const needed = Math.ceil(cWidth / sWidth) + 2;
+                setCopyCount(Math.max(2, needed));
+            }
         };
 
+        const observer = new ResizeObserver(() => {
+            // Debounce or just call update
+            requestAnimationFrame(update);
+        });
+
+        observer.observe(containerRef.current);
+        if (seqRef.current) observer.observe(seqRef.current);
+
+        // Initial call
         update();
-        window.addEventListener('resize', update);
-        return () => window.removeEventListener('resize', update);
+
+        return () => observer.disconnect();
     }, [items, gap]);
 
-    // Animation Loop
+    // Main RAF Loop
     useEffect(() => {
         let animationFrameId: number;
+        lastTimeRef.current = null; // Reset time on effect restart
 
         const animate = (time: number) => {
             if (lastTimeRef.current === null) {
@@ -146,24 +161,14 @@ export const LogoLoop = ({
             const delta = (time - lastTimeRef.current) / 1000;
             lastTimeRef.current = time;
 
-            // Use refs or current state inside the callback without adding them to dependencies
-            // We use the current prop values directly since they are closed over, 
-            // but for best practice in a long-running RAF, refs are safer if props change often.
-            // For now, simpler closure access is fine as long as we don't reset the effect constantly.
-
-            const currentSpeed = speed;
-            const currentDirection = direction;
-
-            // Calculate target velocity
-            const targetVel = isHovered && pauseOnHover ? 0 : currentSpeed * (currentDirection === 'left' ? 1 : -1);
-
-            // Apply smoothing
+            // Smooth velocity transitions
+            const targetVel = isHovered && pauseOnHover ? 0 : speed * (direction === 'left' ? 1 : -1);
             const easing = 1 - Math.exp(-delta / ANIMATION_CONFIG.SMOOTH_TAU);
             velocityRef.current += (targetVel - velocityRef.current) * easing;
 
             if (seqWidth > 0 && trackRef.current) {
                 offsetRef.current += velocityRef.current * delta;
-                // Wrap offset based on sequence width
+                // Wrap offset
                 offsetRef.current = (offsetRef.current % seqWidth + seqWidth) % seqWidth;
                 trackRef.current.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`;
             }
@@ -173,7 +178,7 @@ export const LogoLoop = ({
 
         animationFrameId = requestAnimationFrame(animate);
         return () => cancelAnimationFrame(animationFrameId);
-    }, [seqWidth, isHovered, speed, direction, pauseOnHover]); // Keep dependencies but ensure logic is robust
+    }, [seqWidth, isHovered, speed, direction, pauseOnHover]);
 
     return (
         <div
@@ -207,3 +212,18 @@ export const LogoLoop = ({
         </div>
     );
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                DEMO EXPORT                                 */
+/* -------------------------------------------------------------------------- */
+
+const LogoLoopDemo = () => {
+    return (
+        <div className="relative w-full h-[200px] flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+            <div className="absolute inset-0 z-0 opacity-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]" />
+            <LogoLoop speed={50} />
+        </div>
+    );
+};
+
+export default LogoLoopDemo;

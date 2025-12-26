@@ -6,28 +6,32 @@ icon: AppWindow
 
 import { FloatingDock } from "@/components/zenblocks/floating-dock";
 import { Preview } from "@/components/mdx/preview";
-import { Home, Terminal, AppWindow, Settings, User, Bot, LayoutGrid, Layers, Github, Twitter } from "lucide-react";
+import { Home, Terminal, LayoutGrid, FolderGit2, User, Settings } from "lucide-react";
 
 ## Overview
 
-**Floating Dock** is a navigation component that mimics the macOS dock behavior. As the cursor approaches, icons smoothly magnify, creating a fluid and playful interaction. It's fully responsive, functioning as a bottom-bar on mobile and a floating pill on desktop.
+The **Floating Dock** adds a sophisticated navigation element to your app. Inspired by macOS, it features **proximity-based magnification** that feels fluid and organic.
+
+It is fully responsive: rendering as a floating pill on desktop and a retractable bottom-right trigger on mobile.
 
 ---
 
 ## Features
 
--   **Proximity Magnification**: Icons scale up based on cursor distance using `framer-motion`.
--   **Spring Physics**: Smooth, organic scaling and movement.
--   **Responsive Design**: Automatically switches between desktop floating pill and mobile bottom sheet.
--   **Dynamic Stroke**: Icons become bolder when magnified.
--   **Tooltip Labels**: Clean, spring-animated labels on hover.
+-   **Proximity Magnification**: Icons scale up based on cursor distance using `framer-motion` springs.
+-   **Spring Physics**: Fluid, non-linear animations for a premium feel.
+-   **Responsive Layout**:
+    -   **Desktop**: Centered floating pill.
+    -   **Mobile**: Bottom-right floating action button (FAB) that expands into a vertical menu.
+-   **Dynamic Stroke**: Icon stroke weight adjusts dynamically with scale logic.
+-   **Tooltip Labels**: Elegant spring-animated labels appear on hover.
 
 ---
 
 ## Preview
 
 <Preview link="floating-dock">
-  <div className="relative w-full h-[350px] flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+  <div className="relative w-full h-[400px] flex items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-950 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
     <div className="absolute inset-0 z-0 opacity-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]" />
     
     <FloatingDock 
@@ -79,16 +83,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/floating-dock.json
         useSpring,
         useTransform,
     } from "framer-motion";
-
-
-    import {
-        LayoutGrid,
-        Home,
-        Layers,
-        Settings,
-        Github,
-        Twitter
-    } from "lucide-react";
+    import { LayoutGrid } from "lucide-react";
     import { cn } from "@/lib/utils";
     import Link from "next/link";
 
@@ -98,48 +93,17 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/floating-dock.json
         href: string;
     }
 
-    const DEFAULT_DOCK_ITEMS: FloatingDockItem[] = [
-        {
-            title: "Home",
-            icon: <Home className="h-full w-full" />,
-            href: "#",
-        },
-        {
-            title: "Components",
-            icon: <LayoutGrid className="h-full w-full" />,
-            href: "#",
-        },
-        {
-            title: "Blocks",
-            icon: <Layers className="h-full w-full" />,
-            href: "#",
-        },
-        {
-            title: "Twitter",
-            icon: <Twitter className="h-full w-full" />,
-            href: "#",
-        },
-        {
-            title: "GitHub",
-            icon: <Github className="h-full w-full" />,
-            href: "#",
-        },
-        {
-            title: "Settings",
-            icon: <Settings className="h-full w-full" />,
-            href: "#",
-        },
-    ];
-
-    export const FloatingDock = ({
-        items = DEFAULT_DOCK_ITEMS,
-        desktopClassName,
-        mobileClassName,
-    }: {
-        items?: FloatingDockItem[];
+    export interface FloatingDockProps {
+        items: FloatingDockItem[];
         desktopClassName?: string;
         mobileClassName?: string;
-    }) => {
+    }
+
+    export const FloatingDock = ({
+        items,
+        desktopClassName,
+        mobileClassName,
+    }: FloatingDockProps) => {
         return (
             <>
                 <FloatingDockDesktop items={items} className={desktopClassName} />
@@ -238,8 +202,6 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/floating-dock.json
         title: string;
         icon: React.ReactElement;
         href: string;
-        // Fixed: Explicitly added key to the props type to resolve mapping error
-        key?: React.Key;
     }) {
         let ref = useRef<HTMLDivElement>(null);
 
@@ -286,7 +248,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/floating-dock.json
                                 animate={{ opacity: 1, y: -45, x: "-50%", scale: 1 }}
                                 exit={{ opacity: 0, y: 10, x: "-50%", scale: 0.9 }}
                                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                                className="px-3 py-1 whitespace-pre rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 absolute left-1/2 -top-8 w-fit text-[10px] font-black uppercase tracking-widest shadow-2xl z-50"
+                                className="px-3 py-1 whitespace-pre rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 absolute left-1/2 -top-8 w-fit text-[10px] font-black uppercase tracking-widest shadow-2xl z-50 pointer-events-none"
                             >
                                 {title}
                                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-zinc-950 dark:bg-white" />
@@ -316,28 +278,78 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/floating-dock.json
         );
     }
     ```
-
     </details>
 
 ---
 
 ## Usage
 
-### Basic Implementation
+### Define Your Items
 
-Wrap the `FloatingDock` with your desired items:
+Create an array of objects matching the `FloatingDockItem` interface. Each item needs a `title`, `href`, and an `icon` (a React element).
 
 ```tsx
 import { FloatingDock } from "@/components/zenblocks/floating-dock";
 import { Home, User, Settings } from "lucide-react";
 
-export default function Nav() {
-  const items = [
+export default function Navbar() {
+  const links = [
     { title: "Home", icon: <Home />, href: "/" },
     { title: "Profile", icon: <User />, href: "/profile" },
     { title: "Settings", icon: <Settings />, href: "/settings" },
   ];
 
-  return <FloatingDock items={items} />;
+  return <FloatingDock items={links} />;
 }
 ```
+
+### Positioning
+
+The `FloatingDock` components are unstyled wrappers. You can position them using the `desktopClassName` and `mobileClassName` props or by wrapping the component in a layout container.
+
+```tsx
+<div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+    <FloatingDock items={links} />
+</div>
+```
+
+---
+
+## API Reference
+
+### Props
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `items` | `FloatingDockItem[]` | - | Array of navigation items to display. |
+| `desktopClassName` | `string` | - | CSS class for the desktop container (pill). |
+| `mobileClassName` | `string` | - | CSS class for the mobile container (trigger). |
+
+### FloatingDockItem
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `title` | `string` | Tooltip label text. |
+| `icon` | `ReactNode` | The icon component (e.g., Lucide icon). |
+| `href` | `string` | Navigation link URL. |
+
+---
+
+## Configuration & Customization
+
+### Magnification Physics
+The magnification effect is driven by `framer-motion`'s `useSpring` and `useTransform`.
+You can adjust the feel by modifying the spring config in `IconContainer`:
+
+```tsx
+let width = useSpring(widthSync, {
+    mass: 0.1,
+    stiffness: 200, // Higher = snappier
+    damping: 15     // Lower = more bounce
+});
+```
+
+### Proximity Range
+The "influence" of the cursor is determined by the `distance` transform range.
+Currently set to `[-150, 0, 150]`, meaning the mouse affects icons up to 150px away. Increasing this number makes the magnification wave wider.
+

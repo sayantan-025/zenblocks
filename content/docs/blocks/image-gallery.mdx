@@ -9,27 +9,29 @@ import { Preview } from "@/components/mdx/preview";
 
 ## Overview
 
-**Image Gallery** is a production-ready infinite carousel designed for high-end landing pages. It features a seamless loop, physics-based inertia dragging (powered by GSAP), and polished hover states. Unlike standard sliders, it offers a "weighted" feel that responds naturally to user input.
+The **Image Gallery** component is a production-level infinite carousel designed for high-end web experiences. Seamlessly looping, it employs physics-based inertia for a "weighted" drag feel, making it vastly superior to standard CSS sliders.
+
+It uses [GSAP](https://gsap.com/) for performance-critical animations (ticker-based) to ensure 60fps+ smoothness even on mobile.
 
 ---
 
 ## Features
 
--   **Inertia Scrolling**: Weighted drag interaction for a premium feel.
--   **Seamless Loop**: Infinite wrapping logic with no visible seams.
--   **GSAP Powered**: High-performance animations using `Observer` and `gsap.ticker`.
--   **Responsive Physics**: Adapts scroll velocity based on input intensity.
--   **Contained Layout**: Standard aspect ratios with proper image overflowing.
--   **Touch Friendly**: Works flawlessly on mobile and desktop.
+-   **Inertia Scrolling**: Weighted drag interaction (momentum) powered by GSAP.
+-   **Seamless Loop**: Infinite wrapping logic with triple-buffering for wide screens.
+-   **High Performance**: Uses `gsap.ticker` and `Observer` for optimized rendering.
+-   **Responsive Physics**: Velocity adapts to input intensity.
+-   **Cinematic Polish**: Includes fade edges, 3D tilt interaction, and parallax skewing.
+-   **Touch Friendly**: Unified pointer events for mouse and touch.
 
 ---
 
 ## Preview
 
 <Preview link="image-gallery">
-  <div className="relative w-full h-[600px] overflow-hidden rounded-xl bg-zinc-50 dark:bg-zinc-950">
+  <div className="relative w-full h-[600px] overflow-hidden rounded-xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800">
     <div className="absolute inset-0 flex items-center justify-center">
-        <ImageGallery className="w-full h-full bg-transparent" />
+        <ImageGallery className="h-full bg-transparent" />
     </div>
   </div>
 </Preview>
@@ -75,14 +77,10 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-gallery.json
      * 
      * Features:
      * - Seamless infinite loop (using 2x dupe + wrapping)
-     * - Inertia-based drag interactions
-     * - Refined 3D tilt and parallax
      * - Premium, contained styling (no overflow mess)
      */
 
-    gsap.registerPlugin(Observer);
-
-    const IMAGES = [
+    export const DEFAULT_IMAGES = [
         {
             url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
             title: "Ethereal Valley",
@@ -115,36 +113,53 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-gallery.json
         },
     ];
 
-    interface ImageGalleryProps {
-        className?: string;
-        items?: typeof IMAGES;
+    gsap.registerPlugin(Observer);
+
+    export interface ImageGalleryItem {
+        url: string;
+        title: string;
+        tag: string;
     }
 
-    export const ImageGallery: React.FC<ImageGalleryProps> = ({ 
+    export interface ImageGalleryProps {
+        className?: string;
+        items?: ImageGalleryItem[];
+    }
+
+    export const ImageGallery: React.FC<ImageGalleryProps> = ({
         className,
-        items = IMAGES
+        items = DEFAULT_IMAGES
     }) => {
         const containerRef = useRef<HTMLDivElement>(null);
         const trackRef = useRef<HTMLDivElement>(null);
-        
+
         // Duplicate items for seamless loop (triple buffer is safest for wide screens)
-        const displayItems = useMemo(() => [...items, ...items, ...items], [items]);
+        // If items is empty/undefined, handle gracefully
+        const displayItems = useMemo(() => {
+            if (!items || items.length === 0) return [];
+            return [...items, ...items, ...items];
+        }, [items]);
 
         useGSAP(() => {
             if (!containerRef.current || !trackRef.current) return;
+            if (displayItems.length === 0) return;
 
             const track = trackRef.current;
             const allItems = gsap.utils.toArray<HTMLElement>('.gallery-item');
-            
-            // Layout Config
-            const itemWidth = 320; // Fixed width w-[320px]
-            const gap = 32;        // gap-8 = 32px
+
+            if (allItems.length === 0) return;
+
+            // Layout Config (Dynamic)
+            // We need to wait for layout or use hardcoded assumptions if rendered yet
+            // Since we are in useGSAP, elements should be mounted.
+            const itemWidth = allItems[0].offsetWidth;
+            const gap = parseFloat(window.getComputedStyle(track).gap) || 32;
             const totalItemWidth = itemWidth + gap;
             const groupWidth = items.length * totalItemWidth;
 
             // Initialize position
             // Center the initial view in the middle set of images
-            let xPos = -groupWidth; 
+            let xPos = -groupWidth;
             gsap.set(track, { x: xPos });
 
             let isDragging = false;
@@ -159,7 +174,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-gallery.json
                 // If we've scrolled past the first set, wrap back to end
                 if (xPos > 0) {
                     xPos = -groupWidth;
-                } 
+                }
                 // If we've scrolled past the second set, wrap back to start
                 else if (xPos < -groupWidth * 2) {
                     xPos = -groupWidth;
@@ -173,7 +188,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-gallery.json
                 gsap.set(allItems, { skewX: skewAmount });
             };
 
-            const loop = gsap.to({}, { duration: 1/60, repeat: -1, onRepeat: updateLoop });
+            const loop = gsap.to({}, { duration: 1 / 60, repeat: -1, onRepeat: updateLoop });
 
             // Auto-scroll drift
             let driftStrength = -0.5;
@@ -210,14 +225,14 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-gallery.json
                 const item = el as HTMLElement;
                 const img = item.querySelector('img');
                 const overlay = item.querySelector('.overlay');
-                
+
                 item.addEventListener('mouseenter', () => {
-                    if(isDragging) return;
+                    if (isDragging) return;
                     gsap.to(item, { scale: 1.02, duration: 0.4, ease: "power2.out" });
                     gsap.to(img, { scale: 1.15, duration: 0.4, ease: "power2.out" });
                     gsap.to(overlay, { opacity: 1, duration: 0.4 });
                 });
-                
+
                 item.addEventListener('mouseleave', () => {
                     gsap.to(item, { scale: 1, duration: 0.4, ease: "power2.out" });
                     gsap.to(img, { scale: 1.05, duration: 0.4, ease: "power2.out" }); // Keep slightly scaled for parallax
@@ -231,19 +246,19 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-gallery.json
                 gsap.ticker.remove(containerRef.current as any); // cleanup ticker listener
             };
 
-        }, { scope: containerRef });
+        }, { scope: containerRef, dependencies: [displayItems] });
 
         return (
-            <div 
+            <div
                 ref={containerRef}
                 className={cn(
-                    "relative w-full h-[600px] overflow-hidden bg-zinc-50 dark:bg-zinc-950 flex flex-col justify-center select-none cursor-grab active:cursor-grabbing", 
+                    "relative w-full h-[400px] md:h-[600px] overflow-hidden bg-zinc-50 dark:bg-transparent flex flex-col justify-center select-none cursor-grab active:cursor-grabbing",
                     className
                 )}
             >
                 {/* Cinematic Fade Edges */}
-                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-zinc-50 to-transparent dark:from-zinc-950 z-20 pointer-events-none" />
-                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-zinc-50 to-transparent dark:from-zinc-950 z-20 pointer-events-none" />
+                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-zinc-50 to-transparent dark:from-transparent z-20 pointer-events-none" />
+                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-zinc-50 to-transparent dark:from-transparent z-20 pointer-events-none" />
 
                 {/* Title / Header (Optional) */}
                 <div className="absolute top-4 left-0 w-full text-center z-10 pointer-events-none opacity-40">
@@ -251,22 +266,22 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-gallery.json
                 </div>
 
                 {/* TRACK */}
-                <div 
+                <div
                     ref={trackRef}
-                    className="flex gap-8 px-8 items-center"
+                    className="flex gap-4 md:gap-8 px-4 md:px-8 items-center"
                     style={{ width: 'max-content' }}
                 >
                     {displayItems.map((item, i) => (
-                        <div 
+                        <div
                             key={i}
-                            className="gallery-item relative w-[320px] aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-200 dark:bg-zinc-800 shadow-xl border border-white/20 dark:border-white/5 WillChangeTransform"
+                            className="gallery-item relative w-[220px] md:w-[320px] aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-200 dark:bg-zinc-800 shadow-xl border border-white/20 dark:border-white/5 WillChangeTransform"
                         >
                             {/* Image Container */}
                             <div className="absolute inset-0 overflow-hidden">
-                                <img 
-                                    src={item.url} 
+                                <img
+                                    src={item.url}
                                     alt={item.title}
-                                    className="w-full h-full object-cover scale-105 transition-transform duration-700 will-change-transform" 
+                                    className="w-full h-full object-cover scale-105 transition-transform duration-700 will-change-transform"
                                 />
                             </div>
 
@@ -280,14 +295,13 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-gallery.json
                 </div>
 
                 {/* Progress / Hint */}
-                 <div className="absolute bottom-4 left-0 w-full text-center z-10 pointer-events-none opacity-40">
+                <div className="absolute bottom-4 left-0 w-full text-center z-10 pointer-events-none opacity-40">
                     <p className="text-[10px] uppercase tracking-[0.2em]">Drag to Explore</p>
                 </div>
             </div>
         );
     };
     ```
-
     </details>
 
 ---
@@ -296,28 +310,70 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-gallery.json
 
 ### Basic Implementation
 
+By default, the component includes a set of curated images. You can simply mount it:
+
 ```tsx
 import { ImageGallery } from "@/components/zenblocks/image-gallery";
 
 export default function Showcase() {
-  return (
-    <section className="py-20 w-full overflow-hidden">
-      <ImageGallery />
-    </section>
-  );
+    return (
+        <section className="py-20 w-full">
+            <ImageGallery />
+        </section>
+    );
 }
 ```
 
-### Passing Custom Items
+### With Custom Items
 
-You can customize the card content by passing an `items` array:
+Pass your own array of items to override the defaults:
 
 ```tsx
-const MY_ITEMS = [
+import { ImageGallery } from "@/components/zenblocks/image-gallery";
+
+const items = [
     { url: "/img1.jpg", title: "Project A", tag: "Design" },
     { url: "/img2.jpg", title: "Project B", tag: "Dev" },
-    // ... at least 5-6 items recommended for best loop effect
+    // Recommend 5-6 items for best loop effect
 ];
 
-<ImageGallery items={MY_ITEMS} />
+export default function CustomShowcase() {
+    return (
+        <ImageGallery items={items} />
+    );
+}
 ```
+
+---
+
+## API Reference
+
+### Props
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `items` | `ImageGalleryItem[]` | `DEFAULT_IMAGES` | Array of images to display. |
+| `className` | `string` | - | Optional wrapper class name. |
+
+### ImageGalleryItem
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `url` | `string` | Image source URL. |
+| `title` | `string` | Title shown on hover. |
+| `tag` | `string` | Tag/Category label. |
+
+---
+
+## Configuration & Customization
+
+### Animation Physics
+The scrolling physics are fine-tuned within the `useGSAP` hook in `image-gallery.tsx`. You can adjust these values to change the "feel" of the carousel:
+
+-   **Friction**: `velocity *= 0.92` (Lower = more slippery, Higher = stops faster)
+-   **Skew Strength**: `skewAmount` clamp range (currently `-5, 5`) controls how much images tilt during fast scrolls.
+-   **Drift**: `driftStrength` controls the passive auto-scroll speed when idle.
+
+### Layout
+The component automatically handles infinite looping by creating **3 copies** of the item set (triple buffering). This ensures that even on ultra-wide monitors, there is always content to fill the screen before the loop resets.
+

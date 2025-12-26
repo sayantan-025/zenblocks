@@ -1006,7 +1006,16 @@ function createOrbField(
   const intersectionPoint = new Vector3();
   let isPaused = false;
 
-  canvas.style.touchAction = "none";
+  // FIX: Only disable touch action on larger screens to allow scrolling on mobile
+  // We assume mobile/small screens are <= 768px
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+  
+  if (!isMobile) {
+    canvas.style.touchAction = "none";
+  } else {
+      canvas.style.touchAction = "auto";
+  }
+
   canvas.style.userSelect = "none";
   (canvas.style as any).webkitUserSelect = "none";
 

@@ -3,18 +3,17 @@
 import React from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
-    LayoutGrid,
     ArrowRight,
-    Layers,
     Box,
-    Zap,
+    LayoutGrid,
+    Layers,
     Activity,
+    Zap,
     Terminal,
     Monitor,
     Component
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
 
 const MotionDiv = motion.div as any;
 
@@ -22,14 +21,13 @@ const MotionDiv = motion.div as any;
 /*                                 BENTOCARD                                  */
 /* -------------------------------------------------------------------------- */
 
-interface BentoCardProps {
+export interface BentoCardProps {
     children?: React.ReactNode;
     className?: string;
     title: string;
     description: string;
     icon?: React.ReactNode;
     delay?: number;
-    index?: number;
     visual?: React.ReactNode;
 }
 
@@ -37,14 +35,13 @@ interface BentoCardProps {
  * BentoCard: The foundational wrapper for each grid item.
  * Includes magnetic spotlight, technical metadata, and spring-based interactions.
  */
-const BentoCard: React.FC<BentoCardProps> = ({
+export const BentoCard: React.FC<BentoCardProps> = ({
     children,
     className = "",
     title,
     description,
     icon,
     delay = 0,
-    index = 0,
     visual
 }) => {
     const mouseX = useMotionValue(0);
@@ -71,7 +68,7 @@ const BentoCard: React.FC<BentoCardProps> = ({
             }}
             onMouseMove={handleMouseMove}
             className={cn(
-                "group relative flex flex-col overflow-visible rounded-[2.8rem] transition-all duration-500 cursor-pointer",
+                "group relative flex flex-col overflow-visible rounded-[2.8rem] transition-all duration-500 cursor-pointer text-left",
                 className
             )}
         >
@@ -81,12 +78,6 @@ const BentoCard: React.FC<BentoCardProps> = ({
                 "group-hover:border-zinc-400 dark:group-hover:border-zinc-100/30",
                 "group-hover:shadow-[0_48px_96px_-24px_rgba(0,0,0,0.15)] dark:group-hover:shadow-[0_48px_96px_-24px_rgba(255,255,255,0.03)]"
             )}>
-
-                {/* Technical Data Overlays */}
-                <div className="absolute top-6 left-10 z-30 opacity-0 group-hover:opacity-30 transition-opacity duration-1000 flex gap-6 pointer-events-none font-mono">
-                    <span className="text-[7px] font-black dark:text-white uppercase tracking-[0.3em]">REF_{index + 1}</span>
-                    <span className="text-[7px] font-black dark:text-white uppercase tracking-[0.3em]">UNIT_{title.toUpperCase().replace(/\s+/g, '_')}</span>
-                </div>
 
                 {/* Spotlights */}
                 <MotionDiv
@@ -145,6 +136,26 @@ const BentoCard: React.FC<BentoCardProps> = ({
 /*                                 BENTOGRID                                  */
 /* -------------------------------------------------------------------------- */
 
+export interface BentoGridProps {
+    children: React.ReactNode;
+    className?: string;
+}
+
+export const BentoGrid: React.FC<BentoGridProps> = ({ children, className }) => {
+    return (
+        <div className={cn(
+            "grid grid-cols-1 md:grid-cols-3 gap-8 md:auto-rows-[22rem]",
+            className
+        )}>
+            {children}
+        </div>
+    );
+};
+
+/* -------------------------------------------------------------------------- */
+/*                                DEMO EXPORT                                 */
+/* -------------------------------------------------------------------------- */
+
 const TEMPLATE_ITEMS = [
     {
         title: "Core Architecture",
@@ -184,23 +195,17 @@ const TEMPLATE_ITEMS = [
     },
 ];
 
-export default function BentoGrid() {
+const BentoGridDemo = () => {
     return (
-        <section className="relative py-48 bg-white dark:bg-zinc-950 overflow-hidden font-sans">
-
+        <section className="relative py-24 bg-white dark:bg-zinc-950 overflow-hidden font-sans">
             {/* Subtle Background Grids */}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.04] dark:opacity-[0.08] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:96px_96px]" />
 
             <div className="container mx-auto px-6 relative z-10 max-w-7xl">
-
-
-
-                {/* 3-Column Bento Mosaic */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:auto-rows-[22rem]">
+                <BentoGrid>
                     {TEMPLATE_ITEMS.map((item, i) => (
                         <BentoCard
                             key={i}
-                            index={i}
                             title={item.title}
                             description={item.description}
                             className={item.className}
@@ -208,10 +213,10 @@ export default function BentoGrid() {
                             delay={i * 0.05}
                         />
                     ))}
-                </div>
-
-
+                </BentoGrid>
             </div>
         </section>
-    );
+    )
 }
+
+export default BentoGridDemo;
