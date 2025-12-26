@@ -72,7 +72,7 @@ function debounce<T extends (...args: never[]) => void>(
 /*                               COMPONENT                                    */
 /* -------------------------------------------------------------------------- */
 
-const PressureTest: React.FC<PressureTestProps> = ({
+export function PressureTest({
   text = "Compressa",
   fontFamily = "Compressa VF",
   fontUrl = "https://res.cloudinary.com/dr6lvwubh/raw/upload/v1529908256/CompressaPRO-GX.woff2",
@@ -89,7 +89,7 @@ const PressureTest: React.FC<PressureTestProps> = ({
   className = "",
   minFontSize = 24,
   justify = "between",
-}) => {
+}: PressureTestProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const spansRef = useRef<Array<HTMLSpanElement | null>>([]);
@@ -307,7 +307,6 @@ const PressureTest: React.FC<PressureTestProps> = ({
   );
 };
 
-export { PressureTest };
 
 export function PressureTestDemo() {
   return (
