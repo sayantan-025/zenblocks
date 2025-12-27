@@ -208,7 +208,7 @@ export const BentoMosaic = () => {
                     >
                         <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span className="text-[10px] font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
-                            10+ and counting
+                            15+ and counting
                         </span>
                     </motion.div>
 

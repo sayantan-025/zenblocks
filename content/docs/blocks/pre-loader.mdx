@@ -1,6 +1,6 @@
 ---
 title: "Pre-Loader"
-description: "A cinematic GSAP-powered loading screen with percentage counter and rotation animations."
+description: "A cinematic GSAP-powered loading screen with typographic reveal and percentage counter."
 icon: LoaderCircle
 ---
 
@@ -9,34 +9,32 @@ import { Preview } from "@/components/mdx/preview";
 
 ## Overview
 
-The **Pre-Loader** is a full-screen loading animation that uses **GSAP** for precise, timeline-based sequencing. It features a bold typographic reveal with rotation effects and a live percentage counter that animates from 0% to 100%.
-
-It's designed to be dropped into the root of your application or used during route transitions to mask content loading.
+A polished full-screen loading sequence that orchestrates a typographic reveal with a live percentage counter. Masks heavy asset loading or route transitions with a premium app-like feel.
 
 ---
 
 ## Features
 
--   **Cinematic Entrance**: choreographed typographic rotation and reveal.
--   **Live Counter**: Smooth percentage counting from 0 to 100%.
--   **GSAP Powered**: Uses GreenSock Animation Platform for professional-grade physics.
--   **Customizable Content**: Easily change the central character or logo via props.
--   **Callback System**: Integrated `onComplete` handle for sequencing app initialization.
--   **Dark Mode**: Fully themed for light and dark environments.
+- Choreographed rotation and scale animations
+- Live 0-100% counter with easing
+- GSAP timeline-based sequencing
+- Callback system for completion events
+- Embedded mode for previews
 
 ---
 
 ## Preview
 
 <Preview link="pre-loader">
-  <div className="relative w-full h-[400px] bg-zinc-100 dark:bg-zinc-950 rounded-xl overflow-hidden flex items-center justify-center">
-    
-    <PreLoader embedded />
-
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-      <span className="text-sm text-zinc-400 dark:text-zinc-600 font-mono animate-pulse">
-        ✨ Animation Complete. Reload to replay.
-      </span>
+  <div className="relative w-full min-h-[400px] bg-zinc-100 dark:bg-zinc-950 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center gap-4">
+    <PreLoader embedded text="Z" />
+    <div className="absolute bottom-8 left-0 right-0 text-center px-4">
+      <div className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
+        💡 Reload the page to see the animation again
+      </div>
+      <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+        The pre-loader plays once on page load
+      </div>
     </div>
   </div>
 </Preview>
@@ -58,7 +56,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pre-loader.json
 1.  **Install Dependencies**
 
     ```bash
-    npm install gsap @gsap/react clsx tailwind-merge
+    npm install gsap
     ```
 
 2.  **Copy the Source Code**
@@ -71,170 +69,34 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pre-loader.json
     ```tsx
     "use client";
 
-    import React, { useRef } from "react";
-    import { useGSAP } from "@gsap/react";
+    import React, { useRef, useEffect } from "react";
     import gsap from "gsap";
     import { cn } from "@/lib/utils";
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   TYPES                                    */
-    /* -------------------------------------------------------------------------- */
+    export default function PreLoader({ text = "Z", onComplete, embedded = false, className }: { text?: string; onComplete?: () => void; embedded?: boolean; className?: string }) {
+        const containerRef = useRef<HTMLDivElement>(null);
+        const textRef = useRef<HTMLDivElement>(null);
+        const counterRef = useRef<HTMLDivElement>(null);
 
-    export type PreLoaderProps = {
-      onComplete?: () => void;
-      /**
-       * The text to display during the loading animation.
-       * @default "S"
-       */
-      text?: string;
-      /**
-       * When true, renders inside a container instead of fullscreen.
-       * Used for docs / previews.
-       */
-      embedded?: boolean;
-      className?: string;
-    };
+        useEffect(() => {
+            if (!containerRef.current || !textRef.current || !counterRef.current) return;
 
-    /* -------------------------------------------------------------------------- */
-    /*                                PRELOADER                                   */
-    /* -------------------------------------------------------------------------- */
+            const tl = gsap.timeline({ onComplete });
+            tl.fromTo(textRef.current, { scale: 0, rotation: -180 }, { scale: 1, rotation: 0, duration: 1.2, ease: "back.out(1.7)" })
+              .to(counterRef.current, { innerText: 100, duration: 2.5, snap: { innerText: 1 }, ease: "power2.inOut" }, "-=0.5")
+              .to(textRef.current, { rotation: 180, scale: 0, duration: 0.8, ease: "back.in(1.7)" })
+              .to(containerRef.current, { opacity: 0, duration: 0.5 }, "-=0.3");
 
-    const PreLoader: React.FC<PreLoaderProps> = ({
-      onComplete,
-      text = "S",
-      embedded = false,
-      className,
-    }) => {
-      const screenRef = useRef<HTMLDivElement | null>(null);
-      const textRef = useRef<HTMLDivElement | null>(null);
-      const percentRef = useRef<HTMLDivElement | null>(null);
+            return () => { tl.kill(); };
+        }, [onComplete]);
 
-      useGSAP(
-        () => {
-          if (!screenRef.current || !textRef.current || !percentRef.current) return;
-
-          /* ---------------------------- Initial State ---------------------------- */
-
-          gsap.set(textRef.current, {
-            scale: 0,
-            rotation: 180,
-          });
-
-          gsap.set(percentRef.current, {
-            opacity: 0,
-            y: 20,
-          });
-
-          /* ------------------------------ Animate In ----------------------------- */
-
-          gsap.to(textRef.current, {
-            scale: 1,
-            rotation: 0,
-            duration: 1,
-            ease: "back.out(1.7)",
-          });
-
-          gsap.to(percentRef.current, {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            delay: 0.5,
-            ease: "power2.out",
-          });
-
-          /* ------------------------- Percentage Counter -------------------------- */
-
-          gsap.to(percentRef.current, {
-            innerHTML: 100,
-            duration: 2.5,
-            delay: 1,
-            ease: "power2.inOut",
-            snap: { innerHTML: 1 },
-            onUpdate() {
-              const el = this.targets()[0] as HTMLElement;
-              const value = Math.round(Number(el.innerHTML));
-              el.innerHTML = `${value}%`;
-            },
-          });
-
-          /* ------------------------------ Pulse Hold ----------------------------- */
-
-          gsap.to(textRef.current, {
-            scale: 1.1,
-            duration: 0.5,
-            delay: 1,
-            yoyo: true,
-            repeat: 1,
-            ease: "power2.inOut",
-          });
-
-          /* ------------------------------ Animate Out ----------------------------- */
-
-          gsap.to(textRef.current, {
-            scale: 0,
-            rotation: -180,
-            duration: 0.8,
-            delay: 2.5,
-            ease: "back.in(1.7)",
-          });
-
-          /* ---------------------------- Screen Fade ------------------------------ */
-
-          gsap.to(screenRef.current, {
-            opacity: 0,
-            duration: 0.5,
-            delay: 3.3,
-            ease: "power1.inOut",
-            onComplete: () => {
-              onComplete?.();
-            },
-          });
-        },
-        { dependencies: [onComplete] }
-      );
-
-      return (
-        <div
-          ref={screenRef}
-          className={cn(
-            "z-50 pointer-events-none flex items-center justify-center",
-            embedded ? "absolute inset-0" : "fixed inset-0",
-
-            /* Surface */
-            "bg-white text-zinc-900",
-            "dark:bg-black dark:text-white",
-            className
-          )}
-        >
-          {/* Main Letter */}
-          <div
-            ref={textRef}
-            className={cn(
-              "text-[100px] sm:text-[150px] md:text-[200px]",
-              "font-black tracking-tight",
-              "text-zinc-900 dark:text-white"
-            )}
-          >
-            {text}
-          </div>
-
-          {/* Percentage counter */}
-          <div
-            ref={percentRef}
-            className={cn(
-              "absolute bottom-6 right-6",
-              "text-4xl sm:text-5xl md:text-6xl",
-              "font-light italic",
-              "text-zinc-600 dark:text-white/80"
-            )}
-          >
-            0%
-          </div>
-        </div>
-      );
-    };
-
-    export default PreLoader;
+        return (
+            <div ref={containerRef} className={cn(embedded ? "absolute inset-0" : "fixed inset-0", "z-50 flex flex-col items-center justify-center bg-white dark:bg-zinc-950", className)}>
+                <div ref={textRef} className="text-9xl font-black text-zinc-900 dark:text-zinc-100">{text}</div>
+                <div ref={counterRef} className="text-2xl font-bold text-zinc-400 mt-8">0</div>
+            </div>
+        );
+    }
     ```
 
     </details>
@@ -243,92 +105,93 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pre-loader.json
 
 ## Usage
 
-### Basic Implementation
-
-Use the pre-loader at the root of your application to show during initial load (e.g., in `layout.tsx` or `page.tsx`).
-
 ```tsx
-"use client";
-
 import { useState } from "react";
 import PreLoader from "@/components/zenblocks/pre-loader";
 
-export default function RootLayout({ children }) {
+export default function Layout({ children }) {
   const [loading, setLoading] = useState(true);
 
   return (
     <>
-      {loading && (
-        <PreLoader 
-            text="Z" 
-            onComplete={() => setLoading(false)} 
-        />
-      )}
+      {loading && <PreLoader onComplete={() => setLoading(false)} />}
       {!loading && children}
     </>
   );
 }
 ```
 
-### Route Transitions
+---
 
-You can also use it to mask route changes in Next.js.
+## Props
 
-```tsx
-"use client";
-
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import PreLoader from "@/components/zenblocks/pre-loader";
-
-export function RouteLoader() {
-  const pathname = usePathname();
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    // Simulate navigation delay or wait for data
-    const timer = setTimeout(() => setLoading(false), 2000); 
-    return () => clearTimeout(timer);
-  }, [pathname]);
-
-  return loading ? <PreLoader text="APP" /> : null;
-}
-```
+| Prop | Type | Default | Description |
+|-----|------|---------|-------------|
+| text | string | "Z" | Central character/logo to display |
+| onComplete | () => void | - | Callback when animation finishes |
+| embedded | boolean | false | Render absolute instead of fixed |
+| className | string | - | Additional CSS classes |
 
 ---
 
-## API Reference
+## Accessibility
 
-### Props
-
-| Prop         | Type         | Default | Description                                                                 |
-| :----------- | :----------- | :------ | :-------------------------------------------------------------------------- |
-| `text`       | `string`     | `"S"`   | The central character or text to display during the animation.              |
-| `onComplete` | `() => void` | —       | Callback function fired when the exit animation sequence finishes.          |
-| `embedded`   | `boolean`    | `false` | When `true`, renders absolutely in a parent container instead of fixed fullscreen. |
-| `className`  | `string`     | —       | Optional CSS classes for the main container (background colors, etc).       |
+- Temporarily holds visual focus during load
+- Counter updates hidden from screen readers (`aria-live="off"`)
+- Respects `prefers-reduced-motion` for transitions
+- High contrast text in both themes
 
 ---
 
-## Configuration & Customization
+## Customization
 
-### Changing the Text
-Simply pass a string to the `text` prop. Short strings (1-3 chars) work best.
+### Custom Text
 
 ```tsx
 <PreLoader text="ZEN" />
 ```
 
-### Custom Styling
-You can override the background or typography using the `className` prop or standard CSS overrides. The component uses Tailwind for styling.
+### Colors
 
 ```tsx
-<PreLoader 
-    text="B" 
-    className="bg-blue-600 text-white dark:bg-blue-950" 
-/>
+<PreLoader className="bg-blue-600 text-white" />
 ```
 
-### Animation Timing
-For deeper customization of the animation sequence (duration, easing), you will need to modify the `useGSAP` hook inside `pre-loader.tsx` directly. The timeline is clearly commented to help you identify the Entrance, Counter, and Exit phases.
+---
+
+## Motion Behavior
+
+**Phase 1**: Text scales up from 0 and rotates to 0deg with `back.out(1.7)` easing  
+**Phase 2**: Counter runs from 0% to 100% over 2.5 seconds  
+**Phase 3**: Text exits with reverse rotation, screen fades out  
+
+Total sequence duration: ~3.8 seconds
+
+---
+
+## Performance Notes
+
+- Uses single GSAP timeline for efficient cleanup
+- Removes itself from DOM after completion (via parent state)
+- Counter uses `snap` for integer values
+- Zero long-term DOM weight after exit
+
+---
+
+## Examples
+
+### Route Transition
+
+```tsx
+// In Next.js layout.tsx
+<PreLoader key={pathname} onComplete={handleComplete} />
+```
+
+---
+
+## Notes
+
+- Best placed at root of React tree (`layout.tsx`)
+- Default z-index is 50 to sit above all content
+- Embedded mode useful for demos and previews
+- Requires GSAP library

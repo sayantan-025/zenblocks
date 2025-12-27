@@ -226,4 +226,5 @@ const LogoLoopDemo = () => {
     );
 };
 
+export { LogoLoopDemo };
 export default LogoLoopDemo;

@@ -1,65 +1,37 @@
+/* ==========================================================================
+   ROOT VARIABLES
+   ========================================================================== */
+
 :root {
-    --fd-nav-height: 0px;
-    /* Reset nav height since we rely on padding/theme */
-    /* Override Fumadocs sidebar background variables */
+    /* REQUIRED for Fumadocs layout math */
+    --fd-nav-height: 64px;
+
+    /* Sidebar background override */
     --fd-sidebar-bg: transparent;
 }
 
-/* 
-   Apply ZenBlocks Theme to the Sidebar 
-   Mimics styles from components/landing/header.tsx
-*/
-aside[data-fd-sidebar] {
-    /* Background (Light Mode) */
-    background: rgba(255, 255, 255, 0.4) !important;
+/* ==========================================================================
+   TOP NAV / HEADER (Docs Navbar)
+   ========================================================================== */
 
-    /* Glassmorphism */
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-
-    /* Border */
-    border-right: 1px solid rgba(0, 0, 0, 0.05) !important;
-
-    /* Shadow */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03) !important;
-
-    /* Ensure sidebar stays on top of content and navbar */
-    z-index: 1000 !important;
-}
-
-/* Dark Mode Overrides */
-.dark aside[data-fd-sidebar] {
-    /* Background (Dark Mode) */
-    background: rgba(24, 24, 27, 0.4) !important;
-
-    /* Border */
-    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
-}
-
-/* 
-   Ensure layout flow. 
-   If user wants top spacing, we can add it here, 
-   but with default layout it sits on the side. 
-*/
-
-/* Force Navbar to match landing page header style */
 header,
 nav,
 [data-fd-nav],
 .fd-nav,
 [data-fd-layout="notebook"] header {
-    z-index: 10 !important;
-    /* Lowered to allow sidebar/popovers to overlap */
     position: sticky !important;
     top: 0;
 
-    /* Style override to match landing header */
     background: rgba(255, 255, 255, 0.4) !important;
     backdrop-filter: blur(16px) !important;
     -webkit-backdrop-filter: blur(16px) !important;
+
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+
+    z-index: 30 !important;
 }
 
+/* Dark mode header */
 .dark header,
 .dark nav,
 .dark [data-fd-nav],
@@ -69,17 +41,76 @@ nav,
     border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
-/* Ensure content is centered when sidebar is closed/less wide */
-main {
-    isolation: isolate;
-    z-index: 1;
-    margin-inline: auto !important;
-    max-width: 1400px;
-    /* Optional: limit width for better readability when centered */
-    width: 100%;
+/* ==========================================================================
+   SIDEBAR — Glassmorphism
+   ========================================================================== */
+
+aside[data-fd-sidebar] {
+    background: rgba(255, 255, 255, 0.4) !important;
+
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+
+    border-right: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03) !important;
+
+    z-index: 40 !important;
 }
 
-/* Ensure the page wrapper also centers */
+/* Dark mode sidebar */
+.dark aside[data-fd-sidebar] {
+    background: rgba(24, 24, 27, 0.4) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ==========================================================================
+   MAIN CONTENT LAYOUT
+   ========================================================================== */
+
+main {
+    padding-top: var(--fd-nav-height);
+    margin-inline: auto !important;
+    width: 100%;
+    max-width: 1400px;
+
+    isolation: isolate;
+    z-index: 1;
+}
+
 .fd-page {
     margin-inline: auto !important;
+}
+
+/* ==========================================================================
+   FUMADOCS TABS — FORCE BEHIND EVERYTHING
+   ========================================================================== */
+
+[data-fd-tabs] {
+    position: relative !important;
+    z-index: -999 !important;
+}
+
+[data-fd-tabs-list] {
+    position: relative !important;
+    z-index: -999 !important;
+}
+
+[data-fd-tabs-trigger] {
+    position: relative !important;
+    z-index: -999 !important;
+}
+
+[data-fd-tabs-content] {
+    position: relative !important;
+    z-index: -999 !important;
+}
+
+/* ==========================================================================
+   MOBILE ADJUSTMENT
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    :root {
+        --fd-nav-height: 56px;
+    }
 }

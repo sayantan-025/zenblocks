@@ -7,11 +7,15 @@ const CENTERED_COMPONENTS = [
   "blocks/navbar",
   "animated-clock",
   "floating-dock",
+  "modal-dialog",
   "image-gallery",
   "image-trail",
   "logo-loop",
   "pressure-test",
   "shuffle",
+  "animated-button",
+  "theme-switcher",
+  "toast",
 ];
 
 // const FULL_WIDTH_COMPONENTS = ["hero"];

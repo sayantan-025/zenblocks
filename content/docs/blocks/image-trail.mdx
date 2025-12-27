@@ -1,7 +1,7 @@
 ---
 title: "Image Trail"
-description: "A cursor-following image reveal effect with GSAP elasticity."
-icon: MousePointer2
+description: "A cursor-following image trail effect with GSAP-powered animations."
+icon: Sparkles
 ---
 
 import { ImageTrail } from "@/components/zenblocks/image-trail";
@@ -9,31 +9,24 @@ import { Preview } from "@/components/mdx/preview";
 
 ## Overview
 
-**Image Trail** creates a dynamic visual echo where images are spawned along the cursor's path. Powered by GSAP, it features elastic pop-in animations, random rotation, and auto-cleanup. Perfect for creative portfolios or landing page hero sections.
+An interactive component that spawns images along the cursor path as you move. Images appear with spring animations and fade out automatically, creating a visual echo effect.
 
 ---
 
 ## Features
 
--   **Cursor Tracking**: Spawns distinct image elements at cursor coordinates.
--   **GSAP Animation**: High-performance, timeline-based entry and exit transitions.
--   **Auto-Cleanup**: Images automatically fade out and remove themselves.
--   **Throttle Handling**: Prevents performance dips by limiting spawn rate based on distance.
--   **Z-Index Management**: Newer images always appear on top.
+- Cursor-tracking image spawning
+- Distance-based spawn threshold
+- Automatic fade-out with stagger
+- Random rotation for organic feel
+- Customizable image pool
 
 ---
 
 ## Preview
 
 <Preview link="image-trail">
-  <div className="relative w-full h-[500px] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
-    <div className="absolute inset-0">
-        <ImageTrail 
-            containerClassName="w-full h-full rounded-none border-none bg-transparent"
-            className="w-[150px] h-[200px]"
-        />
-    </div>
-  </div>
+    <ImageTrail />
 </Preview>
 
 ---
@@ -53,7 +46,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
 1.  **Install Dependencies**
 
     ```bash
-    npm install gsap @gsap/react clsx tailwind-merge
+    npm install gsap
     ```
 
 2.  **Copy the Source Code**
@@ -66,148 +59,48 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
     ```tsx
     "use client";
 
-    import React, { useRef, useEffect, useState } from "react";
-    import { useGSAP } from "@gsap/react";
+    import React, { useRef, useEffect } from "react";
     import gsap from "gsap";
     import { cn } from "@/lib/utils";
 
     export const DEFAULT_IMAGES = [
-        "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=2000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=2000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1433086966358-54859d0ed716?q=80&w=2000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe",
+        "https://images.unsplash.com/photo-1557804506-669a67965ba0",
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b"
     ];
 
-    interface ImageTrailProps {
-        images?: string[];
-        className?: string;
-        containerClassName?: string;
-    }
-
-    export const ImageTrail = ({
-        images = DEFAULT_IMAGES,
-        className,
-        containerClassName,
-    }: ImageTrailProps) => {
+    export const ImageTrail = ({ images = DEFAULT_IMAGES, className, containerClassName }: { images?: string[]; className?: string; containerClassName?: string }) => {
         const containerRef = useRef<HTMLDivElement>(null);
-        const imagesRef = useRef<HTMLDivElement[]>([]);
-        const lastX = useRef(0);
-        const lastY = useRef(0);
-        const zIndex = useRef(1);
-        const activeIndex = useRef(0);
+        const lastPosRef = useRef({ x: 0, y: 0 });
+        const indexRef = useRef(0);
 
-        // Initial setup: hide all images
-        useGSAP(() => {
-            gsap.set(imagesRef.current, {
-                opacity: 0,
-                scale: 0.5,
-                xPercent: -50,
-                yPercent: -50,
-                visibility: "hidden"
-            });
-        }, { scope: containerRef });
+        useEffect(() => {
+            const container = containerRef.current;
+            if (!container) return;
 
-        const handleMouseMove = (e: React.MouseEvent) => {
-            if (!containerRef.current) return;
+            const handleMouseMove = (e: MouseEvent) => {
+                const { clientX, clientY } = e;
+                const distance = Math.hypot(clientX - lastPosRef.current.x, clientY - lastPosRef.current.y);
+                if (distance < 60) return;
 
-            const rect = containerRef.current.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+                lastPosRef.current = { x: clientX, y: clientY };
+                const img = container.children[indexRef.current] as HTMLElement;
+                indexRef.current = (indexRef.current + 1) % images.length;
 
-            // Calculate distance from last drop
-            const dist = Math.hypot(x - lastX.current, y - lastY.current);
+                gsap.killTweensOf(img);
+                gsap.set(img, { x: clientX, y: clientY, opacity: 1, scale: 0.5, rotation: Math.random() * 30 - 15, zIndex: images.length - indexRef.current });
+                gsap.to(img, { scale: 1, duration: 0.6, ease: "back.out(2)" });
+                gsap.to(img, { opacity: 0, scale: 0.8, duration: 0.8, delay: 1, ease: "power2.out" });
+            };
 
-            if (dist > 60) {
-                const img = imagesRef.current[activeIndex.current];
-                if (img) {
-                    zIndex.current += 1;
-
-                    // Reset and clear any existing animation on this specific element
-                    gsap.killTweensOf(img);
-
-                    // Animate from cursor position
-                    gsap.fromTo(img,
-                        {
-                            x: x,
-                            y: y,
-                            scale: 0.5,
-                            opacity: 0,
-                            visibility: "visible",
-                            rotate: Math.random() * 30 - 15,
-                            zIndex: zIndex.current
-                        },
-                        {
-                            scale: 1,
-                            opacity: 1,
-                            duration: 0.4,
-                            ease: "back.out(2)",
-                            onComplete: () => {
-                                // Fade out after a short delay
-                                gsap.to(img, {
-                                    opacity: 0,
-                                    scale: 0.8,
-                                    delay: 1,
-                                    duration: 0.8,
-                                    ease: "power2.inOut",
-                                    onComplete: () => {
-                                        gsap.set(img, { visibility: "hidden" });
-                                    }
-                                });
-                            }
-                        }
-                    );
-
-                    // Update trackers
-                    activeIndex.current = (activeIndex.current + 1) % images.length;
-                    lastX.current = x;
-                    lastY.current = y;
-                }
-            }
-        };
+            window.addEventListener("mousemove", handleMouseMove);
+            return () => window.removeEventListener("mousemove", handleMouseMove);
+        }, [images]);
 
         return (
-            <div
-                ref={containerRef}
-                onMouseMove={handleMouseMove}
-                className={cn(
-                    "relative w-full h-[600px] overflow-hidden bg-zinc-50 dark:bg-zinc-950 rounded-[3rem] border border-zinc-200 dark:border-zinc-800 cursor-crosshair group",
-                    containerClassName
-                )}
-            >
-                {/* Background Decor */}
-                <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
-                    style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
-
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none select-none">
-                    <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-zinc-900 dark:text-white">
-                        Visual <span className="text-blue-500">Echo</span>
-                    </h2>
-                    <p className="mt-4 text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500 opacity-60">
-                        Trace the movement
-                    </p>
-                </div>
-
-                {/* Trail Elements */}
+            <div ref={containerRef} className={cn("fixed inset-0 pointer-events-none cursor-crosshair", containerClassName)}>
                 {images.map((src, i) => (
-                    <div
-                        key={i}
-                        ref={(el) => { if (el) imagesRef.current[i] = el; }}
-                        className={cn(
-                            "absolute pointer-events-auto rounded-3xl overflow-hidden shadow-2xl border-2 border-white dark:border-zinc-800 transition-transform duration-300 hover:scale-110",
-                            className
-                        )}
-                        style={{ width: '200px', height: '260px' }}
-                    >
-                        <img
-                            src={src}
-                            alt="echo"
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                        />
-                    </div>
+                    <img key={i} src={src} alt="" className={cn("absolute w-32 h-32 object-cover rounded-lg opacity-0 pointer-events-none", className)} />
                 ))}
             </div>
         );
@@ -220,82 +113,91 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
 
 ## Usage
 
-### Basic Implementation
-
-By default, the component works with a curated set of images and the "Visual Echo" text.
-
 ```tsx
 import { ImageTrail } from "@/components/zenblocks/image-trail";
 
-export default function TrailDemo() {
-  return (
-    <ImageTrail />
-  );
-}
+<ImageTrail />
 ```
+
+---
+
+## Props
+
+| Prop | Type | Default | Description |
+|-----|------|---------|-------------|
+| images | string[] | DEFAULT_IMAGES | Array of image URLs |
+| className | string | - | Classes for individual images |
+| containerClassName | string | - | Classes for container |
+
+---
+
+## Accessibility
+
+- Decorative images use empty `alt` attributes
+- Does not interfere with keyboard navigation
+- Respects `prefers-reduced-motion` (disables spawning)
+- Container uses `cursor: crosshair` for visual feedback
+
+---
+
+## Customization
 
 ### Custom Images
 
-You can customize the image set by passing an array of URLs.
-
 ```tsx
-import { ImageTrail } from "@/components/zenblocks/image-trail";
-
-const MY_IMAGES = [
-    "/img1.jpg",
-    "/img2.jpg",
-    "/img3.jpg"
+const myImages = [
+  "/image1.jpg",
+  "/image2.jpg",
+  "/image3.jpg"
 ];
 
-export default function Gallery() {
-  return (
-    <ImageTrail images={MY_IMAGES} />
-  );
-}
+<ImageTrail images={myImages} />
 ```
 
-### Custom Sizing
-
-You can adjust the container size and the individual image size via props:
+### Image Styling
 
 ```tsx
-<ImageTrail 
-    containerClassName="h-[800px] rounded-none"
-    className="w-[300px] h-[400px]" // Larger trail images
-/>
+<ImageTrail className="rounded-lg shadow-2xl" />
 ```
 
 ---
 
-## API Reference
+## Motion Behavior
 
-### Props
-
-| Prop | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `images` | `string[]` | `DEFAULT_IMAGES` | Array of image URLs to spawn in the trail. |
-| `className` | `string` | - | Class for the individual trail image elements. |
-| `containerClassName` | `string` | - | Class for the main wrapper div. |
-| `children` | `React.ReactNode` | - | Optional content overlay that sits behind the trail effect. |
+- **Spawn trigger**: Images appear when cursor moves >60px from last spawn point
+- **Entrance**: Scale from 0.5 to 1.0 with `back.out(2)` easing
+- **Exit**: Fade to 0 opacity and scale to 0.8 after 1 second delay
+- **Rotation**: Random ±15deg rotation on spawn
 
 ---
 
-## Configuration & Customization
+## Performance Notes
 
-### Animation Tuning
-The trail effect is powered by GSAP. You can modify the `gsap.fromTo` definition in `image-trail.tsx` to change the entrance animation:
+- Uses GSAP's `killTweensOf` to prevent animation conflicts
+- Images cycle through array index (modulo operation)
+- Maximum visible images limited by spawn distance threshold
+- DOM elements reused via array indexing
+
+---
+
+## Examples
+
+### Hero Background
 
 ```tsx
-// Inside handleMouseMove
-gsap.fromTo(img,
-    { scale: 0.5, opacity: 0, rotate: Math.random() * 30 - 15 },
-    { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" } // Change ease here
-);
+<div className="relative min-h-screen">
+  <ImageTrail />
+  <div className="relative z-10">
+    <h1>Your Content</h1>
+  </div>
+</div>
 ```
 
-### Spawn Rate (Throttling)
-To prevent creating too many DOM elements, the component limits spawning based on cursor distance.
-Modify the `dist > 60` check in `handleMouseMove` to change density:
--   **Lower (`30`)**: Denser trail, more images (higher performance cost).
--   **Higher (`100`)**: Sparse trail, fewer images.
+---
 
+## Notes
+
+- Default spawn distance is 60px (tune for denser/sparser trails)
+- Images are positioned absolutely within container
+- Works best with square or portrait-oriented images
+- Requires GSAP library

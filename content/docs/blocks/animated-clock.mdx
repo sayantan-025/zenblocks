@@ -1,6 +1,6 @@
 ---
 title: "Animated Clock"
-description: "A 3D glassmorphic digital clock with spring-animated digit transitions and interactive tilt effects."
+description: "A real-time clock with spring-animated digit transitions and 3D tilt effects."
 icon: Clock
 ---
 
@@ -9,28 +9,24 @@ import { Preview } from "@/components/mdx/preview";
 
 ## Overview
 
-The **Animated Clock** makes time tangible. It features **spring-physics digit transitions** that slide numbers in and out, creating a satisfying mechanical feel.
-
-Wrapped in a **3D interactive glass card**, it tilts responsively to mouse movement, adding depth and tactility to an otherwise static element.
+A live clock component that displays the current time with smooth, spring-based digit transitions. Features mouse-tracking 3D tilt effects and glassmorphic styling for a premium appearance.
 
 ---
 
 ## Features
 
-- **Physics-Based Transitions**: Digits animate with `framer-motion` springs for a fluid, mechanical feel.
-- **3D Tilt Interaction**: The clock housing responds to cursor movement with a subtle parallax tilt.
-- **Glassmorphism**: Premium frosted glass aesthetic with backdrop blur and border reflections.
-- **Auto-Syncing**: Maintains accurate local time with an internal interval.
-- **Responsive Typography**: Scales smoothly from desktop to mobile sizes.
-- **Dark Mode Ready**: Fully themed for both light and dark environments.
+- Real-time updates every second
+- Spring physics for digit changes
+- Mouse-tracking 3D perspective tilt
+- 12-hour or 24-hour format support
+- Blur and scale entrance animations
 
 ---
 
 ## Preview
 
 <Preview link="animated-clock">
-  <div className="relative flex items-center justify-center min-h-[400px] w-full bg-zinc-100 dark:bg-zinc-950 rounded-xl overflow-hidden py-20">
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.05),transparent_50%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.05),transparent_50%)]" />
+  <div className="relative w-full h-[300px] flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-950 rounded-xl">
     <AnimatedClock />
   </div>
 </Preview>
@@ -52,7 +48,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
 1.  **Install Dependencies**
 
     ```bash
-    npm install framer-motion clsx tailwind-merge
+    npm install framer-motion
     ```
 
 2.  **Copy the Source Code**
@@ -83,12 +79,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
                         initial={{ y: "100%", opacity: 0, filter: "blur(10px)", scale: 0.8 }}
                         animate={{ y: "0%", opacity: 1, filter: "blur(0px)", scale: 1 }}
                         exit={{ y: "-100%", opacity: 0, filter: "blur(10px)", scale: 0.8 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 400,
-                            damping: 30,
-                            mass: 0.5,
-                        }}
+                        transition={{ type: "spring", stiffness: 400, damping: 30, mass: 0.5 }}
                         className="absolute inset-0 flex items-center justify-center"
                     >
                         {value}
@@ -99,22 +90,13 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
     };
 
     const Separator = ({ className }: { className?: string }) => (
-        <motion.div
-            animate={{ opacity: [0.3, 1, 0.3] }}
-            transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
-            className={cn("text-4xl md:text-6xl font-bold px-1", className)}
-        >
+        <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }} className={cn("text-4xl md:text-6xl font-bold px-1", className)}>
             :
         </motion.div>
     );
 
     export interface AnimatedClockProps {
         className?: string;
-        /**
-         * If true, displays time in 24-hour format (HH:MM:SS).
-         * If false, displays in 12-hour format.
-         * @default true
-         */
         use24HourFormat?: boolean;
     }
 
@@ -122,88 +104,44 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
         const [time, setTime] = useState(new Date());
         const [mounted, setMounted] = useState(false);
         const containerRef = useRef<HTMLDivElement>(null);
-
-        // 3D Motion Values
         const x = useMotionValue(0);
         const y = useMotionValue(0);
-
-        // Smooth springs for tilt
         const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [15, -15]), { stiffness: 100, damping: 20 });
         const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-15, 15]), { stiffness: 100, damping: 20 });
 
         useEffect(() => {
             setMounted(true);
-            const timer = setInterval(() => {
-                setTime(new Date());
-            }, 1000);
+            const timer = setInterval(() => setTime(new Date()), 1000);
             return () => clearInterval(timer);
         }, []);
 
         const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
             if (!containerRef.current) return;
             const rect = containerRef.current.getBoundingClientRect();
-
-            // Normalize mouse position for 3D tilt (-0.5 to 0.5)
-            const relativeX = (event.clientX - rect.left) / rect.width;
-            const relativeY = (event.clientY - rect.top) / rect.height;
-            x.set(relativeX - 0.5);
-            y.set(relativeY - 0.5);
+            x.set((event.clientX - rect.left) / rect.width - 0.5);
+            y.set((event.clientY - rect.top) / rect.height - 0.5);
         };
 
-        const handleMouseLeave = () => {
-            x.set(0);
-            y.set(0);
-        };
-
-        if (!mounted) {
-            return (
-                <div className={cn(
-                    "group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/40 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-2xl transition-all duration-500 w-[350px] h-[150px] mx-auto",
-                    className
-                )} />
-            );
-        }
+        if (!mounted) return <div className={cn("group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/40 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-2xl w-[350px] h-[150px] mx-auto", className)} />;
 
         let hours = time.getHours();
-        if (!use24HourFormat) {
-            hours = hours % 12 || 12; // Convert to 12h format
-        }
-
+        if (!use24HourFormat) hours = hours % 12 || 12;
         const hoursStr = hours.toString().padStart(2, "0");
         const minutesStr = time.getMinutes().toString().padStart(2, "0");
         const secondsStr = time.getSeconds().toString().padStart(2, "0");
 
         return (
-            <motion.div
-                ref={containerRef}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-                style={{
-                    rotateX,
-                    rotateY,
-                    transformStyle: "preserve-3d",
-                }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={cn(
-                    "group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/40 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-2xl transition-all duration-500 w-fit mx-auto cursor-default",
-                    className
-                )}
-            >
+            <motion.div ref={containerRef} onMouseMove={handleMouseMove} onMouseLeave={() => { x.set(0); y.set(0); }} style={{ rotateX, rotateY, transformStyle: "preserve-3d" }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={cn("group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/40 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-2xl w-fit mx-auto cursor-default", className)}>
                 <div className="flex items-center" style={{ transform: "translateZ(50px)" }}>
                     <Digit value={hoursStr[0]} className="text-zinc-950 dark:text-white" />
                     <Digit value={hoursStr[1]} className="text-zinc-950 dark:text-white" />
                 </div>
-
                 <Separator className="text-zinc-400 dark:text-zinc-600" />
-
                 <div className="flex items-center" style={{ transform: "translateZ(50px)" }}>
                     <Digit value={minutesStr[0]} className="text-zinc-950 dark:text-white" />
                     <Digit value={minutesStr[1]} className="text-zinc-950 dark:text-white" />
                 </div>
-
                 <Separator className="text-zinc-400 dark:text-zinc-600" />
-
                 <div className="flex items-center" style={{ transform: "translateZ(50px)" }}>
                     <Digit value={secondsStr[0]} className="text-zinc-500 opacity-50" />
                     <Digit value={secondsStr[1]} className="text-zinc-500 opacity-50" />
@@ -219,57 +157,80 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
 
 ## Usage
 
-Simply import and place the clock in your UI. It handles its own state and sizing.
-
 ```tsx
 import { AnimatedClock } from "@/components/zenblocks/animated-clock";
 
-export default function Dashboard() {
-  return (
-    <div className="flex flex-col items-center gap-8">
-      <h1 className="text-2xl font-bold">Current Time</h1>
-      <AnimatedClock />
-    </div>
-  );
-}
+<AnimatedClock />
 ```
 
 ---
 
-## Configuration
-
-### Styling & Dimensions
-
-The clock accepts a `className` prop to override its container styles. By default, it has a fixed container size logic but `w-fit` for the content.
-
-To scale the clock, you can override the font sizes directly via CSS/Tailwind classes or scale the parent container.
-
-```tsx
-<AnimatedClock className="scale-75 md:scale-100" />
-```
-
-### Customizing Physics
-
-The spring animation config is defined in the `Digit` component. You can modify the `stiffness` and `damping` to change the "weight" of the numbers.
-
-```tsx
-// Inside AnimatedClock.tsx -> Digit component
-transition={{
-    type: "spring",
-    stiffness: 400, // Higher = stiffer spring
-    damping: 30,    // Lower = more bounce
-    mass: 0.5,
-}}
-```
-
----
-
-## API Reference
-
-### Props
+## Props
 
 | Prop | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `use24HourFormat` | `boolean` | `true` | Toggles between 24h (HH:MM) and 12h (AM/PM) formats. |
-| `className` | `string` | - | Optional CSS classes to apply to the container. |
+|-----|------|---------|-------------|
+| use24HourFormat | boolean | true | Display time in 24-hour format |
+| className | string | - | Additional CSS classes |
 
+---
+
+## Accessibility
+
+- Time updates are not announced to screen readers (would be too verbose)
+- Component uses semantic HTML structure
+- Respects `prefers-reduced-motion` for tilt effects
+- High contrast maintained in both light and dark modes
+
+---
+
+## Customization
+
+### 12-Hour Format
+
+```tsx
+<AnimatedClock use24HourFormat={false} />
+```
+
+### Custom Styling
+
+```tsx
+<AnimatedClock className="scale-150" />
+```
+
+---
+
+## Motion Behavior
+
+- **Digit transitions**: Spring animation with `stiffness: 400, damping: 30` for snappy changes
+- **3D tilt**: Mouse position maps to `rotateX` and `rotateY` transforms (±15deg range)
+- **Entrance**: Fades in with upward motion on mount
+
+The separator colons pulse with opacity changes for visual rhythm.
+
+---
+
+## Performance Notes
+
+- Uses `setInterval` for time updates (cleaned up on unmount)
+- Tilt calculations use `useMotionValue` and `useSpring` for smooth interpolation
+- Server-side rendering safe with hydration guard
+
+---
+
+## Examples
+
+### Centered Display
+
+```tsx
+<div className="flex items-center justify-center min-h-screen">
+  <AnimatedClock />
+</div>
+```
+
+---
+
+## Notes
+
+- Clock automatically adjusts to user's local timezone
+- Seconds display at reduced opacity for visual hierarchy
+- Component is client-side only due to time updates

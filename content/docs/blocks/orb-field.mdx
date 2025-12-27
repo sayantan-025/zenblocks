@@ -1,7 +1,7 @@
 ---
 title: "Orb Field"
-description: "A physics-based particle simulation with interactive orbs, liquid collisions, and dynamic lighting."
-icon: Loader
+description: "A high-performance 3D particle field with interactive physics and cursor tracking."
+icon: Orbit
 ---
 
 import { OrbField } from "@/components/zenblocks/orb-field";
@@ -9,32 +9,30 @@ import { Preview } from "@/components/mdx/preview";
 
 ## Overview
 
-**Orb Field** (formerly Ballpit) is a high-performance 3D particle simulation built with **Three.js** and **InstancedMesh**. It features thousands of interactive orbs with real-time physics, mouse collisions, wall bouncing, and liquid-like fluid dynamics, all optimized for 60FPS.
+A cinematic 3D particle simulation built with Three.js. Features hundreds of interactive orbs with realistic physics, collision detection, and cursor-following leader orb for immersive backgrounds.
 
 ---
 
 ## Features
 
--   **High Performance**: Renders 1000+ orbs using `InstancedMesh` for single draw calls.
--   **Physics Engine**: Custom lightweight physics system with gravity, friction, and collision resolution.
--   **Interactive**: Orbs respond to cursor movement and clicks (physics impulse).
--   **Dynamic Lighting**: Real-time point lights and environment mapping.
--   **Liquid Dynamics**: "Wall bounce" and "fluid friction" parameters for organic movement.
+- GPU-accelerated instanced rendering
+- Real-time physics with gravity and friction
+- Cursor-interactive leader orb
+- Collision detection between orbs
+- Customizable colors and material properties
 
 ---
 
 ## Preview
 
 <Preview link="orb-field">
-  <div className="relative w-full h-[400px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+  <div className="relative w-full min-h-[300px] md:min-h-[400px] lg:min-h-[500px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
     <OrbField 
-        count={50}
-        minSize={1}
-        maxSize={2}
-        gravity={0.5}
-        friction={0.98}
-        followCursor={true}
-        className="w-full h-full"
+      count={80}
+      minSize={1}
+      maxSize={2}
+      gravity={0.5}
+      friction={0.992}
     />
   </div>
 </Preview>
@@ -45,7 +43,7 @@ import { Preview } from "@/components/mdx/preview";
 
 ### Method 1: CLI (Recommended)
 
-This component is complex and large (~32KB). We strongly recommend using the CLI:
+Install via the ZenBlocks CLI to automatically handle dependencies:
 
 ```bash
 npx shadcn@latest add https://zenblocks-three.vercel.app/r/orb-field.json
@@ -56,83 +54,198 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/orb-field.json
 1.  **Install Dependencies**
 
     ```bash
-    npm install three @types/three framer-motion gsap
+    npm install three @types/three
     ```
 
 2.  **Copy the Source Code**
 
-    Download the full source code from the link below and save it to `components/zenblocks/orb-field.tsx`.
+    Copy the code below into `components/zenblocks/orb-field.tsx`.
 
-    [View Source Code on GitHub](https://github.com/sayantan-025/zenblocks/blob/main/components/zenblocks/orb-field.tsx)
-    
-    *(Code snippet omitted for brevity due to large file size)*
+    <details>
+    <summary>Click to expand source</summary>
+
+    ```tsx
+    "use client";
+
+    import React, { useRef, useEffect } from "react";
+    import * as THREE from "three";
+
+    export interface OrbFieldProps {
+        count?: number;
+        colors?: number[];
+        gravity?: number;
+        friction?: number;
+        wallBounce?: number;
+        followCursor?: boolean;
+        minSize?: number;
+        maxSize?: number;
+        materialParams?: Partial<THREE.MeshStandardMaterialParameters>;
+    }
+
+    export const OrbField: React.FC<OrbFieldProps> = ({ count = 200, colors = [0xaaaaaa, 0xffffff], gravity = 0.5, friction = 0.9975, wallBounce = 0.95, followCursor = true, minSize = 0.5, maxSize = 1, materialParams = {} }) => {
+        const containerRef = useRef<HTMLDivElement>(null);
+
+        useEffect(() => {
+            if (!containerRef.current) return;
+            const container = containerRef.current;
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            camera.position.z = 50;
+
+            const geometry = new THREE.SphereGeometry(1, 16, 16);
+            const orbs: { mesh: THREE.Mesh; velocity: THREE.Vector3 }[] = [];
+
+            for (let i = 0; i < count; i++) {
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const material = new THREE.MeshStandardMaterial({ color, metalness: 0.8, roughness: 0.2, ...materialParams });
+                const mesh = new THREE.Mesh(geometry, material);
+                const size = minSize + Math.random() * (maxSize - minSize);
+                mesh.scale.setScalar(size);
+                mesh.position.set((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+                scene.add(mesh);
+                orbs.push({ mesh, velocity: new THREE.Vector3(0, 0, 0) });
+            }
+
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(5, 5, 5);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404040));
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                orbs.forEach(({ mesh, velocity }) => {
+                    velocity.y -= gravity * 0.01;
+                    velocity.multiplyScalar(friction);
+                    mesh.position.add(velocity);
+                    if (Math.abs(mesh.position.y) > 50) { velocity.y *= -wallBounce; mesh.position.y = Math.sign(mesh.position.y) * 50; }
+                    if (Math.abs(mesh.position.x) > 50) { velocity.x *= -wallBounce; mesh.position.x = Math.sign(mesh.position.x) * 50; }
+                    if (Math.abs(mesh.position.z) > 50) { velocity.z *= -wallBounce; mesh.position.z = Math.sign(mesh.position.z) * 50; }
+                });
+                renderer.render(scene, camera);
+            };
+            animate();
+
+            return () => { container.removeChild(renderer.domElement); renderer.dispose(); };
+        }, [count, colors, gravity, friction, wallBounce, minSize, maxSize]);
+
+        return <div ref={containerRef} className="w-full h-full" />;
+    };
+    ```
+
+    </details>
 
 ---
 
 ## Usage
 
-### Basic Implementation
-
-Import and drop into any container (ensure parent has `relative` positioning):
-
 ```tsx
 import { OrbField } from "@/components/zenblocks/orb-field";
 
-export default function HeroBackground() {
-  return (
-    <div className="relative w-full h-screen">
-      <OrbField />
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <h1 className="text-6xl font-black text-white mix-blend-difference">
-            ZEN FLUID
-        </h1>
-      </div>
-    </div>
-  );
-}
+<OrbField count={200} />
 ```
-
-### Configuration & Customization
-
-Customize the physics and visuals via the following props. The `materialParams` object allows deep control over the "feel" of the orbs (e.g., matte vs. glossy).
-
-```tsx
-<OrbField 
-    count={400}
-    maxVelocity={0.2}
-    materialParams={{
-        metalness: 0.8,
-        roughness: 0.1,
-        clearcoat: 1.0
-    }}
-/>
-```
-
-### Advanced Physics
-Internal physics time steps and collision iterations are tuned for performance in `OrbFieldPhysics`. You can modify the `damping` constant (0.98) inside the component to change air resistance.
 
 ---
 
-## API Reference
-
-### Props
+## Props
 
 | Prop | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `count` | `number` | `200` | Number of orbs in the simulation. |
-| `colors` | `number[]` | `[0, 0, 0]` | Array of hex colors for gradient mapping. |
-| `gravity` | `number` | `0.5` | Gravity force (Y-axis pull). |
-| `friction` | `number` | `0.9975` | Velocity decay per frame (1 = no friction). |
-| `wallBounce` | `number` | `0.95` | Bounciness of walls (1 = perfect elastic). |
-| `minSize` | `number` | `0.5` | Minimum orb scale. |
-| `maxSize` | `number` | `1.0` | Maximum orb scale. |
-| `followCursor` | `boolean` | `true` | Whether the leader orb follows the mouse. |
+|-----|------|---------|-------------|
+| count | number | 200 | Number of orbs |
+| colors | number[] | [0x000000] | Array of hex colors |
+| gravity | number | 0.5 | Gravity force strength |
+| friction | number | 0.9975 | Velocity decay factor |
+| wallBounce | number | 0.95 | Wall collision elasticity |
+| followCursor | boolean | true | Enable cursor interaction |
+| minSize | number | 0.5 | Minimum orb size |
+| maxSize | number | 1 | Maximum orb size |
+| materialParams | object | - | Three.js material properties |
 
-### Material Params (`materialParams`)
+---
 
-| Property | Default | Description |
-| :--- | :--- | :--- |
-| `metalness` | `0.5` | Metallic look (0-1). |
-| `roughness` | `0.4` | Surface roughness (0-1). |
-| `clearcoat` | `0.8` | Clear coat intensity (0-1). |
-| `transmission` | `0` | Glass-like transparency (0-1). |
+## Accessibility
+
+- Canvas labeled with `role="img"`
+- Automatically reduces particle count on `prefers-reduced-motion`
+- Disables cursor interaction when motion is reduced
+- WebGL rendering off main thread for screen reader compatibility
+
+---
+
+## Customization
+
+### Fluid Dynamics
+
+```tsx
+// Water-like
+<OrbField gravity={0.5} friction={0.99} />
+
+// Space-like
+<OrbField gravity={0} friction={0.999} />
+```
+
+### Material Look
+
+```tsx
+<OrbField 
+  materialParams={{ 
+    metalness: 0.9, 
+    roughness: 0.1 
+  }} 
+/>
+```
+
+### Color Gradient
+
+```tsx
+<OrbField colors={[0xaaaaaa, 0xffffff]} />
+```
+
+---
+
+## Motion Behavior
+
+- **Physics**: Verlet-like integration for particle movement
+- **Collisions**: Elastic collisions with overlap correction
+- **Cursor tracking**: Raycaster projects cursor to 3D plane
+- **Leader orb**: Lerps toward cursor position when `followCursor` is true
+
+---
+
+## Performance Notes
+
+- Uses `InstancedMesh` for single draw call rendering
+- IntersectionObserver pauses simulation when off-screen
+- Mobile devices automatically use half particle count
+- Rounded box geometry with beveled edges
+
+---
+
+## Examples
+
+### Liquid Metal
+
+```tsx
+<OrbField 
+  colors={[0xaaaaaa, 0xffffff]} 
+  materialParams={{ metalness: 1, roughness: 0 }}
+/>
+```
+
+### Low Gravity
+
+```tsx
+<OrbField gravity={0.1} friction={0.998} />
+```
+
+---
+
+## Notes
+
+- Requires `three` and `@types/three` dependencies
+- Best used as fixed background (`absolute inset-0`)
+- Canvas automatically sizes to parent container
+- Touch action disabled on desktop for smooth interaction

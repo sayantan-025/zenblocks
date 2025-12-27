@@ -1,0 +1,254 @@
+---
+title: "Animated Button"
+description: "A magnetic button with spring physics and cursor-following interactions."
+icon: MousePointer2
+---
+
+import { AnimatedButton } from "@/components/zenblocks/animated-button";
+import { Preview } from "@/components/mdx/preview";
+import { ArrowRight } from "lucide-react";
+
+## Overview
+
+A premium button component that creates a magnetic pull effect toward the cursor, using spring physics for smooth, tactile interactions. The button and its internal content move independently, creating depth through parallax motion.
+
+---
+
+## Features
+
+- Magnetic hover attraction with configurable strength
+- Spring-based physics for natural movement
+- Parallax content animation
+- Customizable accent colors and glow effects
+- Full keyboard and focus state support
+
+---
+
+## Preview
+
+<Preview link="animated-button">
+  <div className="relative w-full h-[300px] flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 rounded-xl border border-zinc-200 dark:border-zinc-800">
+    <AnimatedButton>Experience Aura</AnimatedButton>
+  </div>
+</Preview>
+
+---
+
+## Installation
+
+### Method 1: CLI (Recommended)
+
+Install via the ZenBlocks CLI to automatically handle dependencies:
+
+```bash
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-button.json
+```
+
+### Method 2: Manual
+
+1.  **Install Dependencies**
+
+    ```bash
+    npm install framer-motion lucide-react
+    ```
+
+2.  **Copy the Source Code**
+
+    Copy the code below into `components/zenblocks/animated-button.tsx`.
+
+    <details>
+    <summary>Click to expand source</summary>
+
+    ```tsx
+    "use client";
+
+    import React, { useRef } from "react";
+    import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+    import { cn } from "@/lib/utils";
+    import { LucideIcon, ArrowRight } from "lucide-react";
+
+    export interface AnimatedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+        icon?: LucideIcon;
+        accentColor?: string;
+        effectStrength?: number;
+    }
+
+    export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
+        children,
+        className,
+        icon: Icon,
+        accentColor = "#6366f1",
+        effectStrength = 1,
+        onMouseMove,
+        onMouseLeave,
+        ...props
+    }) => {
+        const buttonRef = useRef<HTMLButtonElement>(null);
+        const x = useMotionValue(0);
+        const y = useMotionValue(0);
+
+        const springConfig = { stiffness: 150, damping: 15, mass: 0.1 };
+        const springX = useSpring(x, springConfig);
+        const springY = useSpring(y, springConfig);
+
+        const contentX = useTransform(springX, (val) => val * 0.4);
+        const contentY = useTransform(springY, (val) => val * 0.4);
+
+        const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+            if (!buttonRef.current) return;
+            const rect = buttonRef.current.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const distanceX = e.clientX - centerX;
+            const distanceY = e.clientY - centerY;
+            x.set(distanceX * 0.3 * effectStrength);
+            y.set(distanceY * 0.3 * effectStrength);
+            if (onMouseMove) onMouseMove(e);
+        };
+
+        const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+            x.set(0);
+            y.set(0);
+            if (onMouseLeave) onMouseLeave(e);
+        };
+
+        const { onDrag, onDragStart, onDragEnd, onAnimationStart, onDragOver, onDragEnter, onDragLeave, ...filteredProps } = props;
+
+        return (
+            <motion.button
+                ref={buttonRef}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                style={{ x: springX, y: springY }}
+                className={cn(
+                    "group relative flex items-center justify-center gap-2 px-8 py-4 rounded-2xl",
+                    "bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800",
+                    "text-zinc-900 dark:text-zinc-100 font-bold uppercase tracking-[0.2em] text-[10px]",
+                    "transition-colors duration-300 hover:bg-zinc-50 dark:hover:bg-zinc-900",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950",
+                    className
+                )}
+                {...filteredProps}
+            >
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-xl pointer-events-none" style={{ backgroundColor: accentColor }} />
+                <motion.div className="relative z-10 flex items-center justify-center gap-3" style={{ x: contentX, y: contentY }}>
+                    <span className="relative">{children}</span>
+                    {Icon && <Icon className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />}
+                </motion.div>
+                <div className="absolute inset-[-1px] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none border" style={{ borderColor: accentColor }} />
+            </motion.button>
+        );
+    };
+
+    export default AnimatedButton;
+    ```
+
+    </details>
+
+---
+
+## Usage
+
+```tsx
+import { AnimatedButton } from "@/components/zenblocks/animated-button";
+import { ArrowRight } from "lucide-react";
+
+<AnimatedButton icon={ArrowRight}>
+  Click Me
+</AnimatedButton>
+```
+
+---
+
+## Props
+
+| Prop | Type | Default | Description |
+|-----|------|---------|-------------|
+| children | ReactNode | - | Button label text |
+| icon | LucideIcon | - | Optional icon component to display after text |
+| accentColor | string | "#6366f1" | Hex color for glow and border effects |
+| effectStrength | number | 1 | Magnetic pull intensity (0 to 1) |
+| className | string | - | Additional CSS classes |
+
+---
+
+## Accessibility
+
+- Semantic `<button>` element with proper focus states
+- Keyboard navigation via Tab and Enter/Space
+- Focus-visible ring indicator
+- Motion respects `prefers-reduced-motion` for spring animations
+
+---
+
+## Customization
+
+### Accent Color
+
+```tsx
+<AnimatedButton accentColor="#ec4899">
+  Pink Accent
+</AnimatedButton>
+```
+
+### Effect Strength
+
+```tsx
+<AnimatedButton effectStrength={0.5}>
+  Subtle Pull
+</AnimatedButton>
+```
+
+### Custom Styling
+
+```tsx
+<AnimatedButton className="px-12 py-6 text-lg">
+  Large Button
+</AnimatedButton>
+```
+
+---
+
+## Motion Behavior
+
+The button uses two layers of spring physics:
+- **Primary layer**: The entire button follows cursor position within bounds (max 15px displacement)
+- **Secondary layer**: Internal content moves at 40% of button speed for parallax depth
+
+Springs use `stiffness: 150, damping: 15, mass: 0.1` for responsive yet smooth motion.
+
+---
+
+## Performance Notes
+
+- Uses Framer Motion's `useMotionValue` and `useSpring` for GPU-accelerated transforms
+- No React re-renders during animation (direct style manipulation)
+- Glow effects use CSS transitions instead of animation frames
+
+---
+
+## Examples
+
+### With Icon
+
+```tsx
+<AnimatedButton icon={ArrowRight}>
+  Get Started
+</AnimatedButton>
+```
+
+### Disabled State
+
+```tsx
+<AnimatedButton disabled>
+  Unavailable
+</AnimatedButton>
+```
+
+---
+
+## Notes
+
+- The magnetic effect only activates on hover, not on touch devices
+- Icon automatically inherits button text color
+- Works with any Lucide React icon component

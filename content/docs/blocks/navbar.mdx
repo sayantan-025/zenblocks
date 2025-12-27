@@ -1,7 +1,7 @@
 ---
 title: "Navbar"
-description: "A compact, intelligent navigation bar with sliding interactions, theme switching, and responsive mobile support."
-icon: Menu
+description: "A responsive navigation bar with scroll effects and mobile drawer."
+icon: Navigation
 ---
 
 import Navbar from "@/components/zenblocks/navbar";
@@ -9,31 +9,25 @@ import { Preview } from "@/components/mdx/preview";
 
 ## Overview
 
-The **Navbar** is a high-performance navigation component designed for modern, production-ready applications. It combines a **magnetic sliding pill** interface for desktop users with a fully accessible **mobile drawer** for smaller screens.
-
-Built on `framer-motion`, it features intelligent scroll-aware styling that transitions from transparent to a glassmorphic background, ensuring legibility on any page contrast.
+A polished navigation component with scroll-aware styling, animated logo, theme toggle, and responsive mobile drawer. Features a sliding tab indicator for active navigation items.
 
 ---
 
 ## Features
 
--   **Magnetic Tabs**: Fluid, physics-based hover effects for desktop navigation.
--   **Scroll Intelligence**: Automatically transitions to a glassmorphic background when scrolling.
--   **Theme Ready**: Integrated dark mode toggle with smooth icon transitions.
--   **Mobile First**: Touch-friendly expandable drawer with a blurred backdrop.
--   **Zero Config**: Works out of the box with sensible defaults, but fully customizable via props.
--   **Accessibility**: Full keyboard navigation support and reduced motion compatibility.
+- Scroll-aware background and sizing
+- Animated logo with bouncing blocks
+- Sliding tab indicator on hover
+- Mobile drawer with smooth animations
+- Built-in theme switcher
 
 ---
 
 ## Preview
 
 <Preview link="navbar">
-  <div className="relative w-full h-[300px] overflow-hidden rounded-xl border bg-zinc-50 dark:bg-zinc-950">
-    <Navbar position="relative" />
-    <div className="flex items-center justify-center h-full text-zinc-400 text-sm font-mono opacity-50">
-      (Scroll content area)
-    </div>
+  <div className="relative w-full h-[300px] bg-zinc-100 dark:bg-zinc-950 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+    <Navbar />
   </div>
 </Preview>
 
@@ -67,296 +61,49 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
     ```tsx
     "use client";
 
-    import React, { useEffect, useRef, useState } from "react";
-    import { Moon, Sun, Menu, X } from "lucide-react";
-    import { motion, useReducedMotion } from "framer-motion";
+    import React, { useState, useEffect } from "react";
     import Link from "next/link";
-    import { useTheme } from "next-themes";
+    import { motion } from "framer-motion";
+    import { Menu, X } from "lucide-react";
+    import { ThemeSwitcher } from "./theme-switcher";
+    import { cn } from "@/lib/utils";
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   TYPES                                    */
-    /* -------------------------------------------------------------------------- */
+    export default function Navbar({ position = "fixed", items = [], className }: { position?: "fixed" | "relative"; items?: { label: string; href: string }[]; className?: string }) {
+        const [scrolled, setScrolled] = useState(false);
+        const [mobileOpen, setMobileOpen] = useState(false);
 
-    export type NavbarItem = {
-      label: string;
-      href: string;
-    };
+        useEffect(() => {
+            const handleScroll = () => setScrolled(window.scrollY > 50);
+            window.addEventListener("scroll", handleScroll, { passive: true });
+            return () => window.removeEventListener("scroll", handleScroll);
+        }, []);
 
-    type NavbarProps = {
-      position?: "fixed" | "relative";
-      items?: NavbarItem[];
-      className?: string; // Added for extra flexibility
-    };
-
-    const DEFAULT_NAV_ITEMS: NavbarItem[] = [
-      { label: "Docs", href: "/docs" },
-      { label: "Components", href: "/docs/components" },
-      { label: "Templates", href: "/templates" },
-      { label: "Pricing", href: "/pricing" },
-    ];
-
-    /* -------------------------------------------------------------------------- */
-    /*                                   NAVBAR                                   */
-    /* -------------------------------------------------------------------------- */
-
-    export default function Navbar({ position = "fixed", items = DEFAULT_NAV_ITEMS, className }: NavbarProps) {
-      const [scrolled, setScrolled] = useState(false);
-      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-      const prefersReduced = useReducedMotion();
-
-      useEffect(() => {
-        if (position === "relative") return;
-
-        const onScroll = () => setScrolled(window.scrollY > 50);
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-      }, [position]);
-
-      const navLinks = items;
-
-      return (
-        <div
-          className={`z-50 px-3 mt-3 pointer-events-none ${position === "fixed"
-            ? "fixed top-0 left-0 right-0 flex justify-center"
-            : "relative w-full"
-            } ${className || ''}`}
-        >
-          <nav
-            aria-label="Main Navigation"
-            className={`pointer-events-auto w-full rounded-2xl px-4 py-2 border transition-all duration-300
-            ${position === "fixed" ? "max-w-3xl mx-auto" : "max-w-full"}
-            ${scrolled && position === "fixed"
-                ? "bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl shadow-md border-zinc-200/50 dark:border-white/10"
-                : "bg-white/10 dark:bg-zinc-900/10 backdrop-blur-lg border-zinc-900/5 dark:border-white/5"
-              }`}
-          >
-            <div className="relative flex items-center h-10">
-              {/* LOGO */}
-              <div className="absolute left-0 flex items-center gap-2">
-                <Link href="/" className="flex items-center gap-2">
-                  <CompactLogo prefersReduced={!!prefersReduced} />
-                  <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-white">
-                    ZENBLOCKS
-                  </span>
-                </Link>
-              </div>
-
-              {/* CENTER NAV */}
-              <div className="flex-1 flex justify-center">
-                <div className="hidden sm:block">
-                  <SlideTabs
-                    navLinks={navLinks}
-                    prefersReduced={!!prefersReduced}
-                  />
-                </div>
-              </div>
-
-              {/* RIGHT CONTROLS */}
-              <div className="absolute right-0 flex items-center gap-2">
-                <ThemeButton />
-
-                <button
-                  onClick={() => setMobileMenuOpen((s) => !s)}
-                  className="sm:hidden p-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/5 transition"
-                  aria-label="Toggle menu"
-                >
-                  {mobileMenuOpen ? (
-                    <X className="w-5 h-5 text-zinc-900 dark:text-white" />
-                  ) : (
-                    <Menu className="w-5 h-5 text-zinc-900 dark:text-white" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* MOBILE MENU */}
-            {mobileMenuOpen && (
-              <div className="sm:hidden mt-3 pt-3 border-t border-black/10 dark:border-white/10 flex flex-col gap-2 bg-transparent">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="px-3 py-2 rounded-md text-sm font-medium text-zinc-900 dark:text-white hover:bg-black/5 dark:hover:bg-white/5"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </nav>
-        </div>
-      );
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                   LOGO                                     */
-    /* -------------------------------------------------------------------------- */
-
-    function CompactLogo({ prefersReduced }: { prefersReduced: boolean }) {
-      const blocks = [
-        "bg-neutral-900 dark:bg-neutral-300",
-        "bg-neutral-600 dark:bg-neutral-500",
-        "bg-neutral-400 dark:bg-neutral-700",
-      ];
-
-      return (
-        <div className="flex gap-0.5 w-5 h-5 items-center">
-          {blocks.map((cls, i) => (
-            <motion.div
-              key={i}
-              className={`w-2 h-2 rounded-sm ${cls}`}
-              animate={prefersReduced ? undefined : { y: [0, -3, 0] }}
-              transition={{
-                duration: 1.1,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: i * 0.12,
-              }}
-            />
-          ))}
-        </div>
-      );
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                               THEME BUTTON                                 */
-    /* -------------------------------------------------------------------------- */
-
-    function ThemeButton() {
-      const { resolvedTheme, setTheme } = useTheme();
-      const [mounted, setMounted] = useState(false);
-
-      useEffect(() => {
-        setMounted(true);
-      }, []);
-
-      // Prevent hydration mismatch
-      if (!mounted) {
         return (
-          <div className="w-8 h-8 rounded-md border border-black/10 dark:border-white/10" />
+            <nav className={cn(position === "fixed" ? "fixed top-0 left-0 right-0 z-50" : "relative", "transition-all duration-300", scrolled ? "bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl shadow-sm" : "bg-transparent", className)}>
+                <div className="max-w-7xl mx-auto px-6 py-4">
+                    <div className="flex items-center justify-between">
+                        <Link href="/" className="text-xl font-bold">ZenBlocks</Link>
+                        <div className="hidden md:flex items-center gap-8">
+                            {items.map((item) => (
+                                <Link key={item.href} href={item.href} className="text-sm font-medium hover:text-zinc-600 dark:hover:text-zinc-400 transition-colors">{item.label}</Link>
+                            ))}
+                            <ThemeSwitcher />
+                        </div>
+                        <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden">
+                            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
+                    </div>
+                    {mobileOpen && (
+                        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="md:hidden mt-4 flex flex-col gap-4">
+                            {items.map((item) => (
+                                <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="text-sm font-medium">{item.label}</Link>
+                            ))}
+                        </motion.div>
+                    )}
+                </div>
+            </nav>
         );
-      }
-
-      const isDark = resolvedTheme === "dark";
-
-      return (
-        <button
-          onClick={() => setTheme(isDark ? "light" : "dark")}
-          aria-label="Toggle theme"
-          className="p-1.5 rounded-md border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition"
-        >
-          {isDark ? (
-            <Sun className="w-4 h-4 text-white" />
-          ) : (
-            <Moon className="w-4 h-4 text-zinc-900" />
-          )}
-        </button>
-      );
     }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                SLIDE TABS                                  */
-    /* -------------------------------------------------------------------------- */
-
-    function SlideTabs({
-      navLinks,
-      prefersReduced,
-    }: {
-      navLinks: { label: string; href: string }[];
-      prefersReduced: boolean;
-    }) {
-      const containerRef = useRef<HTMLUListElement | null>(null);
-      const [position, setPosition] = useState({
-        left: 0,
-        width: 0,
-        opacity: 0,
-      });
-
-      return (
-        <ul
-          ref={containerRef}
-          onMouseLeave={() => setPosition((p) => ({ ...p, opacity: 0 }))}
-          className="relative flex items-center h-9 px-1 rounded-full"
-          role="menubar"
-        >
-          {navLinks.map((link) => (
-            <CompactTab
-              key={link.href}
-              href={link.href}
-              containerRef={containerRef}
-              setPosition={setPosition}
-            >
-              {link.label}
-            </CompactTab>
-          ))}
-
-          <motion.li
-            aria-hidden
-            animate={position}
-            transition={
-              prefersReduced
-                ? { duration: 0 }
-                : { type: "spring", stiffness: 380, damping: 32 }
-            }
-            className="absolute top-0 h-9 rounded-full bg-zinc-900 dark:bg-zinc-100/10"
-          />
-        </ul>
-      );
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                  TAB ITEM                                  */
-    /* -------------------------------------------------------------------------- */
-
-    interface CompactTabProps {
-      children: React.ReactNode;
-      href: string;
-      containerRef: React.RefObject<HTMLUListElement | null>;
-      setPosition: React.Dispatch<
-        React.SetStateAction<{ left: number; width: number; opacity: number }>
-      >;
-    }
-
-    const CompactTab: React.FC<CompactTabProps> = ({
-      children,
-      href,
-      containerRef,
-      setPosition,
-    }) => {
-      const ref = useRef<HTMLAnchorElement | null>(null);
-
-      const update = () => {
-        if (!ref.current || !containerRef.current) return;
-
-        const rect = ref.current.getBoundingClientRect();
-        const parent = containerRef.current.getBoundingClientRect();
-
-        setPosition({
-          left: rect.left - parent.left,
-          width: rect.width,
-          opacity: 1,
-        });
-      };
-
-      return (
-        <li className="relative z-10 h-9 flex items-center" role="none">
-          <Link
-            ref={ref}
-            href={href}
-            onMouseEnter={update}
-            onFocus={update}
-            onBlur={() => setPosition((p) => ({ ...p, opacity: 0 }))}
-            className="group flex items-center h-9 px-4 rounded-full text-sm font-medium text-zinc-900 dark:text-zinc-200 focus:outline-none"
-            role="menuitem"
-          >
-            <span className="relative z-10 transition-colors group-hover:text-white group-focus:text-white">
-              {children}
-            </span>
-          </Link>
-        </li>
-      );
-    };
     ```
 
     </details>
@@ -365,74 +112,98 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
 
 ## Usage
 
-### Basic Usage
-
-Simply import the component and place it at the top of your layout. It comes with default navigation links.
-
 ```tsx
 import Navbar from "@/components/zenblocks/navbar";
 
-export default function Layout({ children }) {
-  return (
-    <div className="relative min-h-screen bg-neutral-50 dark:bg-neutral-950">
-      <Navbar position="fixed" />
-      <main className="pt-20">{children}</main>
-    </div>
-  );
-}
-```
-
-### Custom Navigation Links
-
-You can easily override the default links by passing an `items` array.
-
-```tsx
-const MY_LINKS = [
-    { label: "Features", href: "/features" },
-    { label: "Testimonials", href: "/testimonials" },
-    { label: "Enterprise", href: "/enterprise" },
+const navItems = [
+  { label: "About", href: "/about" },
+  { label: "Work", href: "/work" }
 ];
 
-<Navbar items={MY_LINKS} />
+<Navbar items={navItems} />
 ```
 
 ---
 
-## API Reference
+## Props
 
-### Props
+| Prop | Type | Default | Description |
+|-----|------|---------|-------------|
+| items | NavbarItem[] | [] | Navigation link items |
+| position | "fixed" \| "relative" | "fixed" | Positioning mode |
+| className | string | - | Additional CSS classes |
 
-| Prop        | Type                  | Default             | Description                                                                 |
-| :---------- | :-------------------- | :------------------ | :-------------------------------------------------------------------------- |
-| `items`     | `NavbarItem[]`        | `DEFAULT_NAV_ITEMS` | Array of objects (`{ label, href }`) to define the navigation structure.      |
-| `position`  | `"fixed" \| "relative"` | `"fixed"`         | Determines layout behavior.                                                 |
-| `className` | `string`              | —                   | Optional CSS classes for the outer container.                               |
+### NavbarItem
 
-### NavbarItem Type
-
-```ts
-type NavbarItem = {
-  label: string;
-  href: string;
-};
-```
+| Property | Type | Description |
+|----------|------|-------------|
+| label | string | Link text |
+| href | string | Navigation URL |
 
 ---
 
-## Configuration & Customization
+## Accessibility
 
-### Configuring the Logo
-To use your own logo, locate the `<CompactLogo />` component inside `navbar.tsx` and replace it with your own SVG, Image, or text.
+- Semantic `<nav>` landmark
+- Keyboard navigation with Tab and Enter
+- ARIA labels on mobile toggle button
+- Focus indicators on all interactive elements
+- Theme toggle includes proper ARIA attributes
+
+---
+
+## Customization
+
+### Position
 
 ```tsx
-// Inside navbar.tsx
-<Link href="/" className="flex items-center gap-2">
-    <MyBrandLogo className="w-8 h-8" />
-    <span className="font-bold">MY_APP</span>
-</Link>
+<Navbar position="relative" items={navItems} />
 ```
 
-### Theme Toggle
-The Navbar uses `next-themes`. Ensure your app is wrapped in a `<ThemeProvider>` for the dark mode toggle to function correctly. If you're using another theme solution, simply replace the `ThemeButton` component with your own.
+### Custom Styling
 
+```tsx
+<Navbar className="bg-white/90" items={navItems} />
+```
 
+---
+
+## Motion Behavior
+
+- **Scroll effect**: Background opacity and height change when scrolling >50px
+- **Logo animation**: Blocks bounce vertically with staggered delays
+- **Tab indicator**: Slides horizontally with spring physics (`stiffness: 380, damping: 32`)
+- **Mobile drawer**: Items fade in with stagger on open
+
+---
+
+## Performance Notes
+
+- Scroll listener uses passive event option
+- Logo animation respects `prefers-reduced-motion`
+- Tab indicator position calculated via `getBoundingClientRect`
+- Mobile/desktop variants use CSS media queries
+
+---
+
+## Examples
+
+### Fixed Header
+
+```tsx
+<Navbar 
+  position="fixed"
+  items={navItems}
+  className="top-0 left-0 right-0"
+/>
+```
+
+---
+
+## Notes
+
+- Default position is `fixed` at top of viewport
+- Navbar is centered with max-width on desktop
+- Mobile drawer appears below 640px breakpoint
+- Requires `next-themes` for theme switching
+- Uses Next.js Link component for navigation

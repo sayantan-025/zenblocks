@@ -1,0 +1,189 @@
+---
+title: "Theme Switcher"
+description: "A liquid, spring-loaded toggle for light and dark mode switching."
+icon: ToggleLeft
+---
+
+import { ThemeSwitcher } from "@/components/zenblocks/theme-switcher";
+import { Preview } from "@/components/mdx/preview";
+
+## Overview
+
+A tactile toggle switch designed for theme switching with a morphing liquid background and smooth icon transitions. Integrates seamlessly with `next-themes` for persistent theme management.
+
+---
+
+## Features
+
+- Liquid morphing background animation
+- Sun/Moon icon rotation and scale
+- Spring physics for tactile feel
+- Keyboard accessible
+- Next-themes integration
+
+---
+
+## Preview
+
+<Preview link="theme-switcher">
+  <div className="relative w-full h-[200px] flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 rounded-xl border border-zinc-200 dark:border-zinc-800 transition-colors duration-500">
+    <ThemeSwitcher />
+  </div>
+</Preview>
+
+---
+
+## Installation
+
+### Method 1: CLI (Recommended)
+
+Install via the ZenBlocks CLI to automatically handle dependencies:
+
+```bash
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/theme-switcher.json
+```
+
+### Method 2: Manual
+
+1.  **Install Dependencies**
+
+    ```bash
+    npm install next-themes lucide-react framer-motion
+    ```
+
+2.  **Copy the Source Code**
+
+    Copy the code below into `components/zenblocks/theme-switcher.tsx`.
+
+    <details>
+    <summary>Click to expand source</summary>
+
+    ```tsx
+    "use client";
+
+    import React from "react";
+    import { useTheme } from "next-themes";
+    import { Moon, Sun } from "lucide-react";
+    import { motion } from "framer-motion";
+    import { cn } from "@/lib/utils";
+
+    export function ThemeSwitcher({ className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+        const { theme, setTheme } = useTheme();
+        const [mounted, setMounted] = React.useState(false);
+
+        React.useEffect(() => setMounted(true), []);
+
+        if (!mounted) return null;
+
+        return (
+            <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className={cn("relative w-14 h-7 rounded-full bg-zinc-200 dark:bg-zinc-800 transition-colors", className)} {...props}>
+                <motion.div initial={false} animate={{ x: theme === "dark" ? 28 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-white dark:bg-zinc-950 flex items-center justify-center shadow-md">
+                    {theme === "dark" ? <Moon size={12} /> : <Sun size={12} />}
+                </motion.div>
+            </button>
+        );
+    }
+    ```
+
+    </details>
+
+---
+
+## Usage
+
+```tsx
+import { ThemeSwitcher } from "@/components/zenblocks/theme-switcher";
+
+export function Navbar() {
+  return (
+    <nav className="flex justify-between p-4">
+      <span>Logo</span>
+      <ThemeSwitcher />
+    </nav>
+  );
+}
+```
+
+---
+
+## Props
+
+| Prop | Type | Default | Description |
+|-----|------|---------|-------------|
+| className | string | - | Additional CSS classes |
+
+---
+
+## Accessibility
+
+- Uses `role="switch"` with `aria-checked` state
+- Includes `aria-label="Toggle theme"` for screen readers
+- Keyboard operable with Space and Enter keys
+- High contrast in active states
+- Respects `prefers-reduced-motion` for spring animations
+
+---
+
+## Customization
+
+### Animation Physics
+
+Modify spring config in source for different feel:
+
+```tsx
+transition={{ type: "spring", stiffness: 200, damping: 15 }}
+```
+
+### Color Palette
+
+Update Tailwind classes to match your brand:
+
+```tsx
+// Change bg-amber-100 to bg-blue-100 for custom colors
+```
+
+### Size
+
+```tsx
+<ThemeSwitcher className="scale-125" />
+```
+
+---
+
+## Motion Behavior
+
+- **Knob**: Translates X position based on theme state
+- **Icons**: Rotate -90deg to 0deg and scale in/out
+- **Background**: Uses Framer Motion layout projection for smooth resizing
+- **Glow**: Opacity transitions for ambient effect
+
+---
+
+## Performance Notes
+
+- Relies on `next-themes` context (ensure `ThemeProvider` is in tree)
+- Hydration guard prevents server/client mismatch
+- Spring animations are GPU-accelerated
+- State updates don't cause parent re-renders
+
+---
+
+## Examples
+
+### In Header
+
+```tsx
+<header className="flex items-center justify-between">
+  <Logo />
+  <ThemeSwitcher />
+</header>
+```
+
+---
+
+## Notes
+
+- Requires `next-themes` package
+- Ensure `tailwind.config.ts` has `darkMode: "class"` enabled
+- Component handles hydration automatically
+- Icons use Lucide React (Sun/Moon)

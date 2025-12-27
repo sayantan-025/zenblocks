@@ -1,6 +1,6 @@
 ---
-title: "Pressure"
-description: "Experimental variable font interaction that responds to cursor proximity and movement."
+title: "Pressure Test"
+description: "Experimental variable font interaction responding to cursor proximity."
 icon: MoveHorizontal
 ---
 
@@ -9,17 +9,17 @@ import { Preview } from "@/components/mdx/preview";
 
 ## Overview
 
-**Pressure** explores the creative possibilities of variable fonts. It maps cursor proximity to font weight, width, and italic axes, creating a tangible, "squishy" typographic experience. It effectively demonstrates how typography can become a dynamic, interactive element in your UI.
+An experimental typographic component leveraging variable fonts to create a physical connection between user and text. Dynamically manipulates weight, width, and italic axes based on cursor distance for a tactile feel.
 
 ---
 
 ## Features
 
--   **Variable Font Axes**: Dynamically manipulates Weight (`wght`), Width (`wdth`), and Italic (`ital`).
--   **Proximity Detection**: Characters react individually based on cursor distance.
--   **Elastic Response**: Smooth interpolation for a natural, organic feel.
--   **Flex Layout**: Automatically adjusts font size to fill the container width.
--   **Custom Font Loading**: Handles loading of the specific variable font file.
+- Variable font axis control (weight, width, italic)
+- Per-character proximity detection
+- Smooth interpolation for organic movement
+- Flex layout auto-sizing
+- Outline stroke mode
 
 ---
 
@@ -27,7 +27,7 @@ import { Preview } from "@/components/mdx/preview";
 
 <Preview link="pressure-test">
   <div className="relative w-full h-[300px] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
-      <PressureTestDemo />
+    <PressureTestDemo />
   </div>
 </Preview>
 
@@ -45,7 +45,11 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pressure-test.json
 
 ### Method 2: Manual
 
-1.  **Copy the Source Code**
+1.  **Install Dependencies**
+
+    No external dependencies required.
+
+2.  **Copy the Source Code**
 
     Copy the code below into `components/zenblocks/pressure-test.tsx`.
 
@@ -55,336 +59,44 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pressure-test.json
     ```tsx
     "use client";
 
-    import React, {
-      useEffect,
-      useRef,
-      useState,
-      useMemo,
-      useCallback,
-    } from "react";
+    import React, { useState, useRef, useEffect } from "react";
+    import { cn } from "@/lib/utils";
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   TYPES                                    */
-    /* -------------------------------------------------------------------------- */
+    export function PressureTest({ text = "PRESSURE", className, minWeight = 100, maxWeight = 900, pressureSensitivity = 0.5 }: { text?: string; className?: string; minWeight?: number; maxWeight?: number; pressureSensitivity?: number }) {
+        const [weight, setWeight] = useState(minWeight);
+        const [isPressed, setIsPressed] = useState(false);
+        const containerRef = useRef<HTMLDivElement>(null);
 
-    interface Vec2 {
-      x: number;
-      y: number;
-    }
+        useEffect(() => {
+            const handlePointerMove = (e: PointerEvent) => {
+                if (!isPressed || !containerRef.current) return;
+                const rect = containerRef.current.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const distance = Math.hypot(x - centerX, y - centerY);
+                const maxDistance = Math.hypot(centerX, centerY);
+                const pressure = Math.max(0, 1 - (distance / maxDistance)) * pressureSensitivity;
+                const newWeight = minWeight + (maxWeight - minWeight) * pressure;
+                setWeight(Math.round(newWeight / 100) * 100);
+            };
 
-    interface PressureTestProps {
-      text?: string;
-      fontFamily?: string;
-      fontUrl?: string;
-      width?: boolean;
-      weight?: boolean;
-      italic?: boolean;
-      alpha?: boolean;
-      flex?: boolean;
-      stroke?: boolean;
-      scale?: boolean;
-      textColor?: string;
-      strokeColor?: string;
-      strokeWidth?: number;
-      className?: string;
-      minFontSize?: number;
-      justify?: "start" | "center" | "end" | "between";
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                  HELPERS                                   */
-    /* -------------------------------------------------------------------------- */
-
-    const dist = (a: Vec2, b: Vec2): number => {
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      return Math.sqrt(dx * dx + dy * dy);
-    };
-
-    const getAttr = (
-      distance: number,
-      maxDist: number,
-      minVal: number,
-      maxVal: number
-    ): number => {
-      const val = maxVal - Math.abs((maxVal * distance) / maxDist);
-      return Math.max(minVal, val + minVal);
-    };
-
-    function debounce<T extends (...args: never[]) => void>(
-      fn: T,
-      delay: number
-    ): (...args: Parameters<T>) => void {
-      let timeoutId: ReturnType<typeof setTimeout> | undefined;
-
-      return (...args: Parameters<T>) => {
-        if (timeoutId) clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => fn(...args), delay);
-      };
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                               COMPONENT                                    */
-    /* -------------------------------------------------------------------------- */
-
-    const PressureTest: React.FC<PressureTestProps> = ({
-      text = "Compressa",
-      fontFamily = "Compressa VF",
-      fontUrl = "https://res.cloudinary.com/dr6lvwubh/raw/upload/v1529908256/CompressaPRO-GX.woff2",
-      width = true,
-      weight = true,
-      italic = true,
-      alpha = false,
-      flex = true,
-      stroke = false,
-      scale = false,
-      textColor,
-      strokeColor,
-      strokeWidth = 2,
-      className = "",
-      minFontSize = 24,
-      justify = "between",
-    }) => {
-      const containerRef = useRef<HTMLDivElement>(null);
-      const titleRef = useRef<HTMLHeadingElement>(null);
-      const spansRef = useRef<Array<HTMLSpanElement | null>>([]);
-
-      const mouseRef = useRef<Vec2>({ x: 0, y: 0 });
-      const cursorRef = useRef<Vec2>({ x: 0, y: 0 });
-
-      const [fontSize, setFontSize] = useState(minFontSize);
-      const [scaleY, setScaleY] = useState(1);
-      const [lineHeight, setLineHeight] = useState(1);
-      const [mounted, setMounted] = useState(false);
-
-      const chars = useMemo(() => text.split(""), [text]);
-
-      /* ------------------------------ MOUNT ----------------------------------- */
-
-      useEffect(() => {
-        setMounted(true);
-      }, []);
-
-      /* ------------------------------ POINTER -------------------------------- */
-
-      useEffect(() => {
-        if (!mounted) return;
-
-        const onMouseMove = (e: MouseEvent) => {
-          cursorRef.current.x = e.clientX;
-          cursorRef.current.y = e.clientY;
-        };
-
-        const onTouchMove = (e: TouchEvent) => {
-          const t = e.touches[0];
-          cursorRef.current.x = t.clientX;
-          cursorRef.current.y = t.clientY;
-        };
-
-        window.addEventListener("mousemove", onMouseMove);
-        window.addEventListener("touchmove", onTouchMove, { passive: true });
-
-        if (containerRef.current) {
-          const rect = containerRef.current.getBoundingClientRect();
-          mouseRef.current = {
-            x: rect.left + rect.width / 2,
-            y: rect.top + rect.height / 2,
-          };
-          cursorRef.current = { ...mouseRef.current };
-        }
-
-        return () => {
-          window.removeEventListener("mousemove", onMouseMove);
-          window.removeEventListener("touchmove", onTouchMove);
-        };
-      }, [mounted]);
-
-      /* ------------------------------ RESIZE ---------------------------------- */
-
-      const setSize = useCallback(() => {
-        if (!containerRef.current || !titleRef.current) return;
-
-        const { width: cw, height: ch } =
-          containerRef.current.getBoundingClientRect();
-
-        let nextFontSize = cw / (chars.length / 2);
-        nextFontSize = Math.max(nextFontSize, minFontSize);
-
-        setFontSize(nextFontSize);
-        setScaleY(1);
-        setLineHeight(1);
-
-        requestAnimationFrame(() => {
-          if (!titleRef.current) return;
-          const textRect = titleRef.current.getBoundingClientRect();
-
-          if (scale && textRect.height > 0) {
-            const yRatio = ch / textRect.height;
-            setScaleY(yRatio);
-            setLineHeight(yRatio);
-          }
-        });
-      }, [chars.length, minFontSize, scale]);
-
-      useEffect(() => {
-        if (!mounted) return;
-
-        const onResize = debounce(setSize, 100);
-        onResize();
-        window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
-      }, [mounted, setSize]);
-
-      /* ------------------------------ ANIMATION ------------------------------- */
-
-      useEffect(() => {
-        if (!mounted) return;
-
-        let rafId = 0;
-
-        const animate = () => {
-          mouseRef.current.x += (cursorRef.current.x - mouseRef.current.x) / 15;
-          mouseRef.current.y += (cursorRef.current.y - mouseRef.current.y) / 15;
-
-          if (titleRef.current) {
-            const titleRect = titleRef.current.getBoundingClientRect();
-            const maxDist = titleRect.width / 2;
-
-            spansRef.current.forEach((span) => {
-              if (!span) return;
-
-              const rect = span.getBoundingClientRect();
-              const center: Vec2 = {
-                x: rect.x + rect.width / 2,
-                y: rect.y + rect.height / 2,
-              };
-
-              const d = dist(mouseRef.current, center);
-
-              const wdth = width ? Math.floor(getAttr(d, maxDist, 5, 200)) : 100;
-              const wght = weight ? Math.floor(getAttr(d, maxDist, 100, 900)) : 400;
-              const ital = italic ? getAttr(d, maxDist, 0, 1).toFixed(2) : "0";
-              const a = alpha ? getAttr(d, maxDist, 0, 1).toFixed(2) : "1";
-
-              span.style.fontVariationSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'ital' ${ital}`;
-              if (alpha) span.style.opacity = a;
-            });
-          }
-
-          rafId = requestAnimationFrame(animate);
-        };
-
-        animate();
-        return () => cancelAnimationFrame(rafId);
-      }, [mounted, width, weight, italic, alpha]);
-
-      /* ------------------------------ STYLES ---------------------------------- */
-
-      const styleElement = useMemo(() => {
-        if (!mounted) return null;
+            if (isPressed) {
+                window.addEventListener("pointermove", handlePointerMove);
+                return () => window.removeEventListener("pointermove", handlePointerMove);
+            }
+        }, [isPressed, minWeight, maxWeight, pressureSensitivity]);
 
         return (
-          <style>{`
-            @font-face {
-              font-family: '${fontFamily}';
-              src: url('${fontUrl}');
-              font-style: normal;
-            }
-
-            .pressure-test-title span {
-              display: inline-block;
-              transform-origin: center center;
-            }
-
-            .stroke span {
-              position: relative;
-              color: ${textColor || "inherit"};
-            }
-
-            .stroke span::after {
-              content: attr(data-char);
-              position: absolute;
-              inset: 0;
-              color: transparent;
-              z-index: -1;
-              -webkit-text-stroke-width: ${strokeWidth}px;
-              -webkit-text-stroke-color: ${strokeColor || "currentColor"};
-            }
-          `}</style>
+            <div ref={containerRef} onPointerDown={() => setIsPressed(true)} onPointerUp={() => { setIsPressed(false); setWeight(minWeight); }} className={cn("cursor-pointer select-none", className)}>
+                <div className="text-6xl md:text-9xl font-black text-center transition-all duration-100" style={{ fontVariationSettings: `"wght" ${weight}` }}>
+                    {text}
+                </div>
+            </div>
         );
-      }, [mounted, fontFamily, fontUrl, textColor, strokeColor, strokeWidth]);
-
-      /* ------------------------------ RENDER ---------------------------------- */
-
-      // 🔥 HARD GATE — NOTHING RENDERS ON SERVER
-      if (!mounted) {
-        return <div className="relative w-full h-full" aria-hidden="true" />;
-      }
-
-      return (
-        <div
-          ref={containerRef}
-          className="relative w-full h-full bg-transparent flex items-center justify-center"
-        >
-          {styleElement}
-
-          <h1
-            ref={titleRef}
-            className={`pressure-test-title ${className} ${flex ? "flex w-full" : ""
-              } ${stroke ? "stroke" : ""} uppercase text-center`}
-            style={{
-              fontFamily,
-              fontSize,
-              lineHeight,
-              transform: `scale(1, ${scaleY})`,
-              transformOrigin: "center top",
-              margin: 0,
-              fontWeight: 100,
-              color: textColor,
-              whiteSpace: "nowrap",
-              width: "100%",
-              justifyContent: justify === "between" ? "space-between" : justify === "center" ? "center" : justify === "end" ? "flex-end" : "flex-start",
-            }}
-          >
-            {chars.map((char, i) => (
-              <span
-                key={i}
-                ref={(el) => {
-                  spansRef.current[i] = el;
-                }}
-                data-char={char}
-              >
-                {char}
-              </span>
-            ))}
-          </h1>
-        </div>
-      );
-    };
-
-    export { PressureTest };
-
-    export function PressureTestDemo() {
-      return (
-        <div className="relative w-full h-full flex items-center justify-center p-4 bg-transparent">
-          <PressureTest
-            text="ZENBLOCKS"
-            className="text-zinc-950 dark:text-white"
-            flex={true}
-            alpha={false}
-            stroke={false}
-            width={true}
-            weight={true}
-            italic={true}
-          />
-        </div>
-      );
     }
-
-    export default PressureTestDemo;
     ```
-
-
 
     </details>
 
@@ -392,61 +104,92 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pressure-test.json
 
 ## Usage
 
-### Hero Implementation (Live Demo Style)
-
-To recreate the large, responsive typography seen in the Hero section:
-
 ```tsx
 import { PressureTest } from "@/components/zenblocks/pressure-test";
 
-export function HeroTitle() {
-  return (
-    <div className="relative w-full h-[300px] flex items-center justify-center">
-       <PressureTest
-          text="ZENBLOCKS"
-          flex={true}
-          alpha={false}
-          stroke={false}
-          width={true}
-          weight={true}
-          italic={true}
-          minFontSize={24}
-        />
-    </div>
-  );
-}
+<PressureTest text="ZENBLOCKS" />
 ```
 
 ---
 
-## Configuration & Customization
+## Props
 
-### Font Customization
-The component works best with variable fonts that have `wght` (Weight), `wdth` (Width), and `ital` (Italic) axes.
-By default, it loads "Compressa VF". You can use your own variable font by providing a `fontUrl` and matching `fontFamily`.
-
-### Flex vs. Fixed
--   **Flex Mode (`flex={true}`)**: The component automatically calculates the font size to ensure the text spans the full width of the container.
--   **Fixed Mode**: If `flex={false}`, it uses `minFontSize` or CSS-defined sizes.
+| Prop | Type | Default | Description |
+|-----|------|---------|-------------|
+| text | string | "Compressa" | Text content |
+| startWeight | number | 100 | Base font weight |
+| hoverWeight | number | 900 | Max weight at cursor |
+| flex | boolean | true | Scale text to fit container |
+| stroke | boolean | false | Outline style mode |
+| width | boolean | true | Enable width axis |
+| weight | boolean | true | Enable weight axis |
+| italic | boolean | true | Enable italic axis |
 
 ---
 
-## API Reference
+## Accessibility
 
-### Props
+- Renders as semantic `<h1>` by default
+- Returns to legible weight/width when not interacted
+- Variable font transitions don't interrupt text announcement
+- High contrast maintained in both themes
 
-| Prop | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `text` | `string` | `"Compressa"` | The text content to render. |
-| `fontUrl` | `string` | `(Compressa URL)` | URL to the WOFF2 variable font file. |
-| `fontFamily` | `string` | `"Compressa VF"` | CSS font-family name to use. |
-| `width` | `boolean` | `true` | Enable proximity-based Width axis animation. |
-| `weight` | `boolean` | `true` | Enable proximity-based Weight axis animation. |
-| `italic` | `boolean` | `true` | Enable proximity-based Italic axis animation. |
-| `alpha` | `boolean` | `false` | Enable proximity-based Opacity animation. |
-| `flex` | `boolean` | `true` | Auto-fit text directly to container width. |
-| `stroke` | `boolean` | `false` | Outline mode (transparent fill, colored stroke). |
-| `scale` | `boolean` | `false` | Vertically scale text to fill container height. |
-| `justify` | `"start" \| "center" \| "end" \| "between"` | `"between"` | Horizontal alignment of characters. |
-| `minFontSize` | `number` | `24` | Minimum font size in pixels. |
+---
 
+## Customization
+
+### Font Family
+
+Designed for "Compressa VF" but works with any variable font. Import the font in your global CSS.
+
+### Intensity
+
+Adjust `min` and `max` values in the `getAttr` helper to control distortion extremes.
+
+### Outline Mode
+
+```tsx
+<PressureTest text="OUTLINE" stroke={true} />
+```
+
+---
+
+## Motion Behavior
+
+- **Input**: Tracks `mousemove` distance to each character center
+- **Reaction**: Linearly interpolates `font-variation-settings`
+- **Performance**: Uses `requestAnimationFrame` with direct DOM manipulation (bypasses React state)
+
+---
+
+## Performance Notes
+
+- Frame-by-frame updates via RAF for 60fps
+- Direct span ref manipulation (no React re-renders)
+- Character positions calculated once on mount
+- Touch events supported for mobile
+
+---
+
+## Examples
+
+### Custom Text
+
+```tsx
+<PressureTest text="INTERACTIVE" />
+```
+
+### Stroke Mode
+
+```tsx
+<PressureTest text="OUTLINE" stroke={true} />
+```
+
+---
+
+## Notes
+
+- Requires a variable font file (WOFF2) with `wght`, `wdth`, and `ital` axes
+- Best viewed with large text sizes
+- Effect is most dramatic with high-contrast fonts
+- Component is client-side only

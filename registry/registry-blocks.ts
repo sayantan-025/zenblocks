@@ -133,4 +133,52 @@ export const block: Registry = [
       },
     ],
   },
+  {
+    name: "animated-button",
+    type: "registry:block",
+    dependencies: ["framer-motion", "lucide-react"],
+    registryDependencies: [],
+    files: [
+      {
+        path: "components/zenblocks/animated-button.tsx",
+        type: "registry:component",
+      },
+    ],
+  },
+  {
+    name: "modal-dialog",
+    type: "registry:block",
+    dependencies: ["framer-motion", "lucide-react", "react-dom"],
+    registryDependencies: [],
+    files: [
+      {
+        path: "components/zenblocks/modal-dialog.tsx",
+        type: "registry:component",
+      },
+    ],
+  },
+  {
+    name: "theme-switcher",
+    type: "registry:block",
+    dependencies: ["framer-motion", "next-themes", "lucide-react"],
+    registryDependencies: [],
+    files: [
+      {
+        path: "components/zenblocks/theme-switcher.tsx",
+        type: "registry:component",
+      },
+    ],
+  },
+  {
+    name: "toast",
+    type: "registry:block",
+    dependencies: ["framer-motion", "lucide-react"],
+    registryDependencies: [],
+    files: [
+      {
+        path: "components/zenblocks/toast.tsx",
+        type: "registry:component",
+      },
+    ],
+  },
 ];

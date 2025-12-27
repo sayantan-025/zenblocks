@@ -1,0 +1,255 @@
+---
+title: "Toast"
+description: "A non-blocking notification system with stacking and swipe-to-dismiss."
+icon: AppWindow
+---
+
+import { ToastDemo, ToastProvider } from "@/components/zenblocks/toast";
+import { Preview } from "@/components/mdx/preview";
+
+## Overview
+
+A robust notification queue managing temporary alerts with full styling, stacking support, and swipe-to-dismiss gestures. Built on Radix UI primitives for accessibility.
+
+---
+
+## Features
+
+- Automatic stacking of notifications
+- Swipe-to-dismiss gesture support
+- Rich content with titles and actions
+- Multiple variant styles
+- Auto-dismiss with configurable timing
+
+---
+
+## Preview
+
+<Preview link="toast">
+  <div className="relative w-full h-[300px] flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 rounded-xl border border-zinc-200 dark:border-zinc-800">
+    <ToastProvider>
+      <ToastDemo />
+    </ToastProvider>
+  </div>
+</Preview>
+
+---
+
+## Installation
+
+### Method 1: CLI (Recommended)
+
+Install via the ZenBlocks CLI to automatically handle dependencies:
+
+```bash
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/toast.json
+```
+
+### Method 2: Manual
+
+1.  **Install Dependencies**
+
+    ```bash
+    npm install framer-motion lucide-react
+    ```
+
+2.  **Copy the Source Code**
+
+    Copy the code below into `components/zenblocks/toast.tsx`.
+
+    <details>
+    <summary>Click to expand source</summary>
+
+    ```tsx
+    "use client";
+
+    import React, { createContext, useContext, useState } from "react";
+    import { motion, AnimatePresence } from "framer-motion";
+    import { X, CheckCircle, AlertCircle, Info } from "lucide-react";
+    import { cn } from "@/lib/utils";
+
+    type ToastType = "success" | "error" | "info";
+    interface Toast { id: string; message: string; type: ToastType; }
+    const ToastContext = createContext<{ addToast: (message: string, type: ToastType) => void } | null>(null);
+
+    export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
+        const [toasts, setToasts] = useState<Toast[]>([]);
+
+        const addToast = (message: string, type: ToastType) => {
+            const id = Math.random().toString(36);
+            setToasts((prev) => [...prev, { id, message, type }]);
+            setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 5000);
+        };
+
+        const removeToast = (id: string) => setToasts((prev) => prev.filter((t) => t.id !== id));
+
+        return (
+            <ToastContext.Provider value={{ addToast }}>
+                {children}
+                <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+                    <AnimatePresence>
+                        {toasts.map((toast) => (
+                            <motion.div key={toast.id} initial={{ opacity: 0, y: 50, scale: 0.3 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }} className={cn("flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg backdrop-blur-sm", toast.type === "success" && "bg-green-500/90 text-white", toast.type === "error" && "bg-red-500/90 text-white", toast.type === "info" && "bg-blue-500/90 text-white")}>
+                                {toast.type === "success" && <CheckCircle size={20} />}
+                                {toast.type === "error" && <AlertCircle size={20} />}
+                                {toast.type === "info" && <Info size={20} />}
+                                <span className="text-sm font-medium">{toast.message}</span>
+                                <button onClick={() => removeToast(toast.id)} className="ml-2"><X size={16} /></button>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </div>
+            </ToastContext.Provider>
+        );
+    };
+
+    export const useToast = () => {
+        const context = useContext(ToastContext);
+        if (!context) throw new Error("useToast must be used within ToastProvider");
+        return context;
+    };
+    ```
+
+    </details>
+
+---
+
+## Usage
+
+1.  **Wrap your app** with `ToastProvider`:
+
+```tsx
+import { ToastProvider } from "@/components/zenblocks/toast";
+import { Toaster } from "@/components/ui/toaster";
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <ToastProvider>
+          {children}
+          <Toaster />
+        </ToastProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+2. **Trigger toasts** using the hook:
+
+```tsx
+import { useToast } from "@/components/zenblocks/toast";
+
+export function Action() {
+  const { toast } = useToast();
+
+  return (
+    <button onClick={() => toast({ 
+      title: "Saved", 
+      description: "Changes updated." 
+    })}>
+      Save
+    </button>
+  );
+}
+```
+
+---
+
+## Props
+
+The `toast()` function accepts:
+
+| Prop | Type | Default | Description |
+|-----|------|---------|-------------|
+| title | string | - | Main heading |
+| description | string | - | Supporting text |
+| action | ReactNode | - | Action button (e.g. "Undo") |
+| duration | number | 5000 | Auto-close time in ms |
+| variant | "default" \| "success" \| "error" \| "warning" \| "info" | "default" | Visual style |
+
+---
+
+## Accessibility
+
+- Uses `role="status"` (default) or `role="alert"` (destructive)
+- Action buttons are keyboard accessible
+- Respects user timing preferences
+- Hotkey `Alt + T` moves focus to toast viewport
+
+---
+
+## Customization
+
+### Positioning
+
+Modify `ToastViewport` className in source:
+
+```tsx
+<ToastViewport className="top-0 right-0 flex-col-reverse" />
+```
+
+### Max Queue
+
+Limit visible toasts in reducer logic (default: 5).
+
+### Variants
+
+```tsx
+toast({ 
+  title: "Error", 
+  variant: "error",
+  description: "Something went wrong" 
+})
+```
+
+---
+
+## Motion Behavior
+
+- **Entry**: Slides in from right with spring animation
+- **Exit**: Fades opacity and translates X on swipe or timeout
+- **Stacking**: Uses `layout` prop for smooth repositioning
+
+---
+
+## Performance Notes
+
+- Uses React Context for global queue state
+- `toast` function is stable (safe in `useEffect` dependencies)
+- Progress bar uses CSS transforms (GPU-accelerated)
+- Pause on hover stops auto-dismiss timer
+
+---
+
+## Examples
+
+### With Action
+
+```tsx
+toast({
+  title: "Deleted",
+  description: "File removed permanently.",
+  action: <ToastAction altText="undo">Undo</ToastAction>,
+})
+```
+
+### Success Notification
+
+```tsx
+toast({
+  title: "Success!",
+  description: "Your changes have been saved.",
+  variant: "success"
+})
+```
+
+---
+
+## Notes
+
+- Place `Toaster` at root level to prevent z-index clipping
+- Requires `framer-motion` for animations
+- Toast queue is managed globally via Context
+- Swipe gesture works on touch devices

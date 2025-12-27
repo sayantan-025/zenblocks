@@ -232,4 +232,5 @@ const FloatingDockDemo = () => {
     );
 };
 
+export { FloatingDockDemo };
 export default FloatingDockDemo;

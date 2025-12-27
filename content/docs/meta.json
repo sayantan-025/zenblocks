@@ -1,6 +1,6 @@
 {
   "title": "Components",
-  "description": "The headless library",
+  "description": "Premium UI components for modern web apps",
   "icon": "Dna",
   "root": true,
   "defaultOpen": true,
@@ -9,6 +9,7 @@
     "index",
     "---Blocks---",
     "blocks/navbar",
+    "blocks/animated-button",
     "blocks/pre-loader",
     "blocks/animated-clock",
     "blocks/bento-grid",
@@ -18,6 +19,9 @@
     "blocks/logo-loop",
     "blocks/orb-field",
     "blocks/pressure-test",
-    "blocks/shuffle"
+    "blocks/shuffle",
+    "blocks/theme-switcher",
+    "blocks/toast",
+    "blocks/modal-dialog"
   ]
 }

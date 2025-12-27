@@ -1,65 +1,44 @@
 ---
 title: "Bento Grid"
-description: "A responsive mosaic grid system with magnetic spotlights and spring-based hover interactions."
+description: "A responsive masonry-style grid layout with magnetic spotlight effects."
 icon: LayoutGrid
 ---
 
 import { BentoGrid, BentoCard } from "@/components/zenblocks/bento-grid";
 import { Preview } from "@/components/mdx/preview";
-import { Layers, Activity, Zap, Terminal, Box, Monitor } from "lucide-react";
+import { Layers } from "lucide-react";
 
 ## Overview
 
-The **Bento Grid** is a flexible, highly interactive layout system. It treats every item as a "card" with **magnetic spotlights**, **spring physics**, and **technical data overlays**.
-
-It is designed to handle varied content sizes (bento box style) while maintaining a strict, beautiful grid structure.
+A flexible grid system for creating Apple-style bento layouts with interactive cards. Each card features cursor-tracking spotlight effects and smooth hover animations.
 
 ---
 
 ## Features
 
--   **Magnetic Spotlights**: Radial gradients that follow the mouse cursor across cards.
--   **Spring Physics**: `framer-motion` scaling and opacity transitions that feel weighty and mechanical.
--   **Compositional Freedom**: Drop in any content, spanning any number of rows or columns.
--   **Responsive**: Automatically collapses to a single column on mobile.
--   **Visual Slots**: Dedicated slots for visual media (interactions, images, charts).
+- Responsive grid with automatic row sizing
+- Magnetic spotlight that follows cursor
+- Spring-based hover lift animations
+- Customizable card spans and layouts
+- Viewport-aware entrance animations
 
 ---
 
 ## Preview
 
 <Preview link="bento-grid">
-  <div className="relative w-full p-8 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-xl overflow-hidden">
-    <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03]  bg-[size:96px_96px]" style={{backgroundImage: "linear-gradient(to right, #808080 1px, transparent 1px), linear-gradient(to bottom, #808080 1px, transparent 1px)"}} />
-    
-    <div className="relative z-10 w-full max-w-4xl mx-auto">
-      <BentoGrid>
-          <BentoCard
-              title="Core Architecture"
-              description="The primary structural building block."
-              className="md:col-span-2 md:row-span-1"
-              icon={<Layers size={16} />}
-          />
-          <BentoCard
-              title="Telemetry"
-              description="Real-time data stream."
-              className="md:col-span-1 md:row-span-1"
-              icon={<Activity size={16} />}
-          />
-           <BentoCard
-              title="Motion Engine"
-              description="Spring-based physics interactions."
-              className="md:col-span-1 md:row-span-1"
-              icon={<Zap size={16} />}
-          />
-          <BentoCard
-              title="Terminals"
-              description="Low-level system config."
-              className="md:col-span-2 md:row-span-1"
-              icon={<Terminal size={16} />}
-          />
-      </BentoGrid>
-    </div>
+  <div className="relative w-full p-8 bg-white dark:bg-zinc-950 rounded-xl">
+    <BentoGrid>
+      <BentoCard 
+        title="Feature One" 
+        description="Description here"
+        className="md:col-span-2"
+      />
+      <BentoCard 
+        title="Feature Two" 
+        description="Another feature"
+      />
+    </BentoGrid>
   </div>
 </Preview>
 
@@ -80,7 +59,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/bento-grid.json
 1.  **Install Dependencies**
 
     ```bash
-    npm install framer-motion lucide-react clsx tailwind-merge
+    npm install framer-motion lucide-react
     ```
 
 2.  **Copy the Source Code**
@@ -95,14 +74,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/bento-grid.json
 
     import React from "react";
     import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-    import { ArrowRight, Box, LayoutGrid } from "lucide-react";
     import { cn } from "@/lib/utils";
-
-    const MotionDiv = motion.div as any;
-
-    /* -------------------------------------------------------------------------- */
-    /*                                 BENTOCARD                                  */
-    /* -------------------------------------------------------------------------- */
 
     export interface BentoCardProps {
         children?: React.ReactNode;
@@ -114,19 +86,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/bento-grid.json
         visual?: React.ReactNode;
     }
 
-    /**
-     * BentoCard: The foundational wrapper for each grid item.
-     * Includes magnetic spotlight, technical metadata, and spring-based interactions.
-     */
-    export const BentoCard: React.FC<BentoCardProps> = ({
-        children,
-        className = "",
-        title,
-        description,
-        icon,
-        delay = 0,
-        visual
-    }) => {
+    export const BentoCard: React.FC<BentoCardProps> = ({ children, className = "", title, description, icon, delay = 0, visual }) => {
         const mouseX = useMotionValue(0);
         const mouseY = useMotionValue(0);
 
@@ -140,84 +100,36 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/bento-grid.json
         const smoothY = useSpring(mouseY, { damping: 35, stiffness: 350 });
 
         return (
-            <MotionDiv
+            <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 whileHover={{ y: -8 }}
-                transition={{
-                    y: { type: "spring", stiffness: 200, damping: 20 },
-                    opacity: { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }
-                }}
+                transition={{ y: { type: "spring", stiffness: 200, damping: 20 }, opacity: { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] } }}
                 onMouseMove={handleMouseMove}
-                className={cn(
-                    "group relative flex flex-col overflow-visible rounded-[2.8rem] transition-all duration-500 cursor-pointer text-left",
-                    className
-                )}
+                className={cn("group relative flex flex-col overflow-visible rounded-[2.8rem] transition-all duration-500 cursor-pointer text-left", className)}
             >
-                {/* Dynamic Background Spotlight (Shared Logic) */}
-                <div className={cn(
-                    "relative z-10 flex flex-col flex-1 overflow-hidden rounded-[2.8rem] bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl border border-zinc-200 dark:border-zinc-800 transition-all duration-700",
-                    "group-hover:border-zinc-400 dark:group-hover:border-zinc-100/30",
-                    "group-hover:shadow-[0_48px_96px_-24px_rgba(0,0,0,0.15)] dark:group-hover:shadow-[0_48px_96px_-24px_rgba(255,255,255,0.03)]"
-                )}>
-
-                    {/* Spotlights */}
-                    <MotionDiv
-                        className="pointer-events-none absolute -inset-px z-10 opacity-0 transition-opacity duration-1000 group-hover:opacity-100"
-                        style={{
-                            background: useTransform(
-                                [smoothX, smoothY],
-                                ([x, y]: any[]) => `radial-gradient(400px circle at ${x}px ${y}px, rgba(0,0,0,0.03), transparent 70%)`
-                            ),
-                        }}
-                    />
-                    <MotionDiv
-                        className="pointer-events-none absolute -inset-px z-10 opacity-0 transition-opacity duration-1000 group-hover:dark:opacity-100 hidden dark:block"
-                        style={{
-                            background: useTransform(
-                                [smoothX, smoothY],
-                                ([x, y]: any[]) => `radial-gradient(400px circle at ${x}px ${y}px, rgba(255,255,255,0.04), transparent 70%)`
-                            ),
-                        }}
-                    />
-
-                    {/* Main Content Body */}
+                <div className={cn("relative z-10 flex flex-col flex-1 overflow-hidden rounded-[2.8rem] bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl border border-zinc-200 dark:border-zinc-800 transition-all duration-700", "group-hover:border-zinc-400 dark:group-hover:border-zinc-100/30", "group-hover:shadow-[0_48px_96px_-24px_rgba(0,0,0,0.15)] dark:group-hover:shadow-[0_48px_96px_-24px_rgba(255,255,255,0.03)]")}>
+                    <motion.div className="pointer-events-none absolute -inset-px z-10 opacity-0 transition-opacity duration-1000 group-hover:opacity-100" style={{ background: useTransform([smoothX, smoothY], ([x, y]: any[]) => `radial-gradient(400px circle at ${x}px ${y}px, rgba(0,0,0,0.03), transparent 70%)`) }} />
+                    <motion.div className="pointer-events-none absolute -inset-px z-10 opacity-0 transition-opacity duration-1000 group-hover:dark:opacity-100 hidden dark:block" style={{ background: useTransform([smoothX, smoothY], ([x, y]: any[]) => `radial-gradient(400px circle at ${x}px ${y}px, rgba(255,255,255,0.04), transparent 70%)`) }} />
                     <div className="relative z-20 flex-1 flex flex-col p-8 pt-12">
-                        {/* Visual Placeholder Area */}
                         <div className="flex-1 w-full overflow-hidden rounded-[2rem] mb-6 border border-zinc-200/40 dark:border-zinc-800/40 bg-zinc-100/30 dark:bg-zinc-900/30 relative flex items-center justify-center min-h-[140px]">
-                            {visual || (
-                                <div className="flex flex-col items-center gap-2 opacity-20">
-                                    <LayoutGrid size={32} />
-                                    <span className="text-[8px] font-black uppercase tracking-widest">Visual Module</span>
-                                </div>
-                            )}
-                            <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent -translate-x-full group-hover:translate-x-full transition-transform ease-in-out" />
+                            {visual}
                         </div>
-
-                        {/* Labeling & Iconography */}
                         <div className="flex items-center gap-5 text-left">
                             <div className="p-3.5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shrink-0 shadow-sm text-zinc-500 group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-zinc-950 transition-all duration-500">
-                                {icon || <Box size={14} />}
+                                {icon}
                             </div>
                             <div className="space-y-1 overflow-hidden">
-                                <h3 className="text-[13px] font-black text-zinc-900 dark:text-zinc-100 uppercase tracking-tight truncate">
-                                    {title}
-                                </h3>
-                                <p className="text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500 line-clamp-1 font-medium opacity-80">
-                                    {description}
-                                </p>
+                                <h3 className="text-[13px] font-black text-zinc-900 dark:text-zinc-100 uppercase tracking-tight truncate">{title}</h3>
+                                <p className="text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500 line-clamp-1 font-medium opacity-80">{description}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </MotionDiv>
+            </motion.div>
         );
     };
-
-    /* -------------------------------------------------------------------------- */
-    /*                                 BENTOGRID                                  */
-    /* -------------------------------------------------------------------------- */
 
     export interface BentoGridProps {
         children: React.ReactNode;
@@ -225,17 +137,8 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/bento-grid.json
     }
 
     export const BentoGrid: React.FC<BentoGridProps> = ({ children, className }) => {
-        return (
-            <div className={cn(
-                "grid grid-cols-1 md:grid-cols-3 gap-8 md:auto-rows-[22rem]",
-                className
-            )}>
-                {children}
-            </div>
-        );
+        return <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-8 md:auto-rows-[22rem]", className)}>{children}</div>;
     };
-
-    export default BentoGrid;
     ```
 
     </details>
@@ -244,95 +147,115 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/bento-grid.json
 
 ## Usage
 
-### Basic Structure
-
-Wrap your `BentoCard` components inside the `BentoGrid` wrapper. Use the `className` prop on cards to control their span.
-
 ```tsx
 import { BentoGrid, BentoCard } from "@/components/zenblocks/bento-grid";
-import { Layers, Activity } from "lucide-react";
+import { Zap } from "lucide-react";
 
-export default function FeaturesPage() {
-  return (
-    <BentoGrid>
-      
-      {/* 2x1 Card */}
-      <BentoCard
-        title="Core Architecture"
-        description="Scalable infrastructure foundation."
-        className="md:col-span-2 md:row-span-1"
-        icon={<Layers size={16} />}
-      />
-
-      {/* 1x1 Card */}
-      <BentoCard
-        title="Telemetry"
-        description="Real-time analytics stream."
-        className="md:col-span-1 md:row-span-1"
-        icon={<Activity size={16} />}
-      />
-
-    </BentoGrid>
-  );
-}
+<BentoGrid>
+  <BentoCard 
+    title="Fast Performance"
+    description="Optimized for speed"
+    icon={<Zap size={14} />}
+    className="md:col-span-2"
+  />
+  <BentoCard 
+    title="Easy Setup"
+    description="Get started quickly"
+    icon={<Zap size={14} />}
+  />
+</BentoGrid>
 ```
 
-### Adding Visual Content
+---
 
-Pass any React component to the `visual` prop to render it inside the card's media area.
+## Props
+
+### BentoGrid
+
+| Prop | Type | Default | Description |
+|-----|------|---------|-------------|
+| children | ReactNode | - | BentoCard components |
+| className | string | - | Additional CSS classes |
+
+### BentoCard
+
+| Prop | Type | Default | Description |
+|-----|------|---------|-------------|
+| title | string | - | Card heading text |
+| description | string | - | Card description |
+| icon | ReactNode | - | Icon component to display |
+| visual | ReactNode | - | Custom visual content area |
+| delay | number | 0 | Entrance animation delay |
+| className | string | - | Grid span and styling classes |
+
+---
+
+## Accessibility
+
+- Semantic heading structure with `<h3>` for titles
+- Keyboard focusable cards
+- Proper contrast ratios in light and dark modes
+- Motion animations respect `prefers-reduced-motion`
+
+---
+
+## Customization
+
+### Grid Spans
 
 ```tsx
-<BentoCard
-    title="Interactive Map"
-    description="Live location tracking."
-    className="md:col-span-2 md:row-span-2"
-    visual={<MyMapComponent />} 
+<BentoCard 
+  className="md:col-span-2 md:row-span-2"
+  title="Large Feature"
+  description="Takes more space"
+/>
+```
+
+### Custom Visual
+
+```tsx
+<BentoCard 
+  visual={<YourComponent />}
+  title="Custom Content"
+  description="With your own visuals"
 />
 ```
 
 ---
 
-## Configuration
+## Motion Behavior
 
-### Customizing Grid Layout
+- **Spotlight**: Radial gradient follows cursor position using `useMotionValue` and `useTransform`
+- **Hover lift**: Cards translate -8px on Y-axis with spring physics
+- **Entrance**: Staggered fade-in with upward motion based on `delay` prop
 
-The `BentoGrid` is a simple wrapper around a CSS Grid. You can override the column count using the `className` prop.
+---
+
+## Performance Notes
+
+- Spotlight uses CSS `background` property updated via motion values (GPU-accelerated)
+- Viewport intersection observer triggers entrance animations once
+- Grid uses CSS Grid for efficient layout calculations
+
+---
+
+## Examples
+
+### Feature Grid
 
 ```tsx
-<BentoGrid className="md:grid-cols-4">
-  {/* Now a 4-column grid */}
-</BentoGrid>
-```
-
-### Row Height
-
-By default, cards auto-size to `22rem` (352px) height. You can change this via `md:auto-rows-[...]`.
-
-```tsx
-<BentoGrid className="md:auto-rows-[300px]">
-    ...
+<BentoGrid>
+  <BentoCard className="md:col-span-2 md:row-span-2" {...largeFeature} />
+  <BentoCard {...smallFeature1} />
+  <BentoCard {...smallFeature2} />
+  <BentoCard className="md:col-span-3" {...wideFeature} />
 </BentoGrid>
 ```
 
 ---
 
-## API Reference
+## Notes
 
-### BentoGrid
-
-| Prop | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `children` | `ReactNode` | - | The bento cards to render. |
-| `className` | `string` | - | CSS class overrides for the grid container. |
-
-### BentoCard
-
-| Prop | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `title` | `string` | - | The card's primary heading. |
-| `description` | `string` | - | A short description text (truncated). |
-| `icon` | `ReactNode` | `<Box />` | Icon displayed next to the text. |
-| `visual` | `ReactNode` | - | Content to render in the visual slot (top/main area). |
-| `className` | `string` | `""` | Used for grid spanning (e.g. `col-span-2`). |
-| `delay` | `number` | `0` | Animation delay in seconds. |
-| `children` | `ReactNode` | - | Optional children (can be used for custom overlays). |
+- Default grid is 1 column on mobile, 3 columns on desktop
+- Auto-rows are set to 22rem for consistent card heights
+- Spotlight effect is more visible in dark mode

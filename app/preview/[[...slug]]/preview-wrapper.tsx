@@ -15,12 +15,6 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
 
                 if (!mounted) return;
 
-                // Check for default export first
-                if (mod.default) {
-                    setComponent(() => mod.default);
-                    return;
-                }
-
                 // Fallback to PascalCase (named export)
                 const pascalName = componentName
                     .split("/")
@@ -28,6 +22,24 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
                     .split("-")
                     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                     .join("");
+
+                // Prioritize Demo/Preview exports if they exist
+                const demoName = `${pascalName}Demo`;
+                const previewName = `${pascalName}Preview`;
+
+                if (mod[demoName]) {
+                    setComponent(() => mod[demoName]);
+                    return;
+                }
+                if (mod[previewName]) {
+                    setComponent(() => mod[previewName]);
+                    return;
+                }
+
+                if (mod.default) {
+                    setComponent(() => mod.default);
+                    return;
+                }
 
                 if (mod[pascalName]) {
                     setComponent(() => mod[pascalName]);

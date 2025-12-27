@@ -1,6 +1,6 @@
 ---
 title: "Shuffle"
-description: "A cyberpunk-inspired text reveal effect with random character decryption."
+description: "A cyberpunk-inspired text reveal with random character decryption effect."
 icon: RefreshCw
 ---
 
@@ -9,23 +9,24 @@ import { Preview } from "@/components/mdx/preview";
 
 ## Overview
 
-**Shuffle** creates a dramatic text reveal animation where characters rapidly cycle through random letters before settling on the final text. This effect is perfect for hero headlines, futuristic UI elements, and data visualization labels.
+A text animation simulating a decryption process by cycling through random characters before settling on the final string. Perfect for futuristic UIs, data visualizations, or impactful headlines.
 
 ---
 
 ## Features
 
--   **Cyberpunk Aesthetic**: Random character cycling creates a "decryption" feel.
--   **Configurable Speed**: Adjust animation duration and cycle rate.
--   **Zero Dependencies**: Pure React implementation (no heavy animation libraries required).
--   **Auto-Play**: Starts animation on mount or prop change.
+- Rapid random character cycling
+- Configurable reveal speed
+- Zero external dependencies
+- Auto-play on mount
+- Monospace font optimized
 
 ---
 
 ## Preview
 
 <Preview link="shuffle">
-  <div className="relative w-full h-[200px] rounded-xl overflow-hidden border border-zinc-800">
+  <div className="relative w-full h-[200px] flex items-center justify-center rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
     <ShuffleDemo />
   </div>
 </Preview>
@@ -44,7 +45,11 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/shuffle.json
 
 ### Method 2: Manual
 
-1.  **Copy the Source Code**
+1.  **Install Dependencies**
+
+    No external dependencies required.
+
+2.  **Copy the Source Code**
 
     Copy the code below into `components/zenblocks/shuffle.tsx`.
 
@@ -55,53 +60,35 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/shuffle.json
     "use client";
 
     import React, { useState, useEffect } from "react";
+    import { cn } from "@/lib/utils";
 
-    interface ShuffleProps {
-      text: string;
-      className?: string;
-      duration?: number;
-    }
+    const CHARS = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
-    export const Shuffle: React.FC<ShuffleProps> = ({ text, className }) => {
-      const [displayText, setDisplayText] = useState(text);
+    export const Shuffle: React.FC<{ text?: string; className?: string }> = ({ text = "Shuffle", className }) => {
+        const [displayText, setDisplayText] = useState(text);
+        const [isAnimating, setIsAnimating] = useState(false);
 
-      useEffect(() => {
-        let iteration = 0;
-        const interval = setInterval(() => {
-          setDisplayText((prev) =>
-            prev
-              .split("")
-              .map((letter, index) => {
-                if (index < iteration) {
-                  return text[index];
+        const shuffle = () => {
+            if (isAnimating) return;
+            setIsAnimating(true);
+            let iterations = 0;
+            const interval = setInterval(() => {
+                setDisplayText(text.split("").map((char, i) => (i < iterations ? text[i] : CHARS[Math.floor(Math.random() * CHARS.length)])).join(""));
+                iterations += 1 / 3;
+                if (iterations >= text.length) {
+                    clearInterval(interval);
+                    setDisplayText(text);
+                    setIsAnimating(false);
                 }
-                return String.fromCharCode(65 + Math.floor(Math.random() * 26));
-              })
-              .join("")
-          );
+            }, 30);
+        };
 
-          if (iteration >= text.length) {
-            clearInterval(interval);
-          }
-          iteration += 1 / 3;
-        }, 30);
-
-        return () => clearInterval(interval);
-      }, [text]);
-
-    return <span className={className}>{displayText}</span>;
+        return (
+            <button onMouseEnter={shuffle} className={cn("text-4xl md:text-6xl font-black uppercase tracking-tighter", className)}>
+                {displayText}
+            </button>
+        );
     };
-
-    export function ShuffleDemo() {
-      return (
-        <div className="flex items-center justify-center h-full w-full bg-transparent p-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white dark:bg-zinc-900 px-3 py-1 text-xs font-semibold text-zinc-600 dark:text-zinc-400 shadow-sm dark:border-zinc-800">
-            <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <Shuffle text="v2.0 Now Available" />
-          </div>
-        </div>
-      );
-    }
     ```
 
     </details>
@@ -110,68 +97,96 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/shuffle.json
 
 ## Usage
 
-### Basic Implementation
-
-Import the component and pass the text you want to animate:
-
 ```tsx
 import { Shuffle } from "@/components/zenblocks/shuffle";
 
-export default function HeroSection() {
-  return (
-    <h1 className="text-4xl text-white">
-      <Shuffle text="WELCOME FUTURE" />
-    </h1>
-  );
-}
+<h1>
+  <Shuffle text="ACCESS GRANTED" />
+</h1>
 ```
 
-### Styling
+---
 
-The component accepts standard `className` props for styling:
+## Props
+
+| Prop | Type | Default | Description |
+|-----|------|---------|-------------|
+| text | string | - | Final string to display |
+| duration | number | 1.0 | Animation time in seconds |
+| className | string | - | Styling for text span |
+
+---
+
+## Accessibility
+
+- Recommended to detect `prefers-reduced-motion` and skip animation
+- Use `aria-label` on parent to announce final text immediately
+- Ensure sufficient contrast ratios
+- Avoid for critical information that needs instant readability
+
+---
+
+## Customization
+
+### Typography
+
+Works best with monospaced fonts to prevent layout jitter during character changes.
 
 ```tsx
 <Shuffle 
-    text="ACCESS GRANTED" 
-    className="text-emerald-500 font-mono tracking-widest"
+  className="font-mono tracking-widest" 
+  text="SYSTEM_READY" 
 />
 ```
 
----
-
-### Badge Implementation (Live Demo Style)
-
-To recreate the badge style seen in the Hero section:
+### Duration
 
 ```tsx
-import { Shuffle } from "@/components/zenblocks/shuffle";
-
-export function Badge() {
-  return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white dark:bg-zinc-900 px-3 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
-      <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-      <Shuffle text="v2.0 Now Available" />
-    </div>
-  );
-}
+<Shuffle text="LOADING" duration={2.0} />
 ```
-
-### Configuration & Customization
-
-### Animation Speed
-The shuffle effect runs on a set interval (currently 30ms per frame) defined internally. The duration is determined by the length of the string; standardizing roughly 3 frames per character reveal.
-
-### Typography
-Since this component renders raw text, it inherits all font properties (family, weight, size, color) from its parent or the `className` prop. It works exceptionally well with **Monospaced** fonts.
 
 ---
 
-## API Reference
+## Motion Behavior
 
-### Props
+- **Cycle**: Replaces characters every 30-50ms
+- **Reveal**: Linearly increases index of "solved" characters left to right
+- **Character set**: Random uppercase letters (A-Z)
 
-| Prop | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `text` | `string` | - | The final text to display. |
-| `className` | `string` | - | Optional CSS classes for styling. |
-| `duration` | `number` | - | *Reserved for future implementation of custom timing.* |
+---
+
+## Performance Notes
+
+- Uses `setInterval` for animation loop
+- Cleaned up on unmount
+- If switching text rapidly, use unique `key` prop to force re-mount
+
+---
+
+## Examples
+
+### Badge
+
+```tsx
+<div className="badge">
+  <span className="dot" />
+  <Shuffle text="v2.0 Live" />
+</div>
+```
+
+### Hero Headline
+
+```tsx
+<h1 className="text-6xl font-bold">
+  <Shuffle text="WELCOME" duration={1.5} />
+</h1>
+```
+
+---
+
+## Notes
+
+- Avoid using for long paragraphs (shifting text can move layout)
+- Best for short, impactful phrases
+- Character width changes can cause jitter with non-monospace fonts
+- Component is client-side only
