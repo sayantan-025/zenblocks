@@ -57,9 +57,15 @@ export const Integration = () => {
 
                     {/* Terminal Content */}
                     <div className="p-8 font-mono text-sm space-y-6">
-                        <div className="flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
-                            <span className="text-emerald-500 font-bold">$</span>
-                            <span className="break-all">npx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json</span>
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
+                                <span className="text-emerald-500 font-bold">$</span>
+                                <span>npx shadcn@latest init</span>
+                            </div>
+                            <div className="flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
+                                <span className="text-emerald-500 font-bold">$</span>
+                                <span className="break-all">npx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json</span>
+                            </div>
                         </div>
 
                         <div className="space-y-2">

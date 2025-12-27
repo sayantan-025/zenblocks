@@ -66,7 +66,15 @@ Ensure your project has:
 
 ### Installation
 
-#### 1. Initialize Utils
+#### 1. Initialize shadcn/ui
+
+ZenBlocks is built on top of shadcn/ui. Ensure it is initialized in your project:
+
+```bash
+npx shadcn@latest init
+```
+
+#### 2. Initialize Utils
 
 Some ZenBlocks components rely on shared utilities. Run this command **once**:
 
@@ -74,7 +82,7 @@ Some ZenBlocks components rely on shared utilities. Run this command **once**:
 npx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json
 ```
 
-#### 2. Install Components
+#### 3. Install Components
 
 Install components individually using the CLI:
 

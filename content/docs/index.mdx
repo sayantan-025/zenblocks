@@ -26,12 +26,39 @@ It is **not** a traditional dependency-based library. Instead, it leverages the 
 Ensure your project is set up with the following:
 
 -   **React 18+** or **Next.js 14+** (App Router recommended)
--   **Tailwind CSS v4** (or v3 with appropriate config)
--   **shadcn/ui** initialized in your project
+-   **Tailwind CSS v4** (or v3 with appropriate configuration)
+-   **TypeScript** (Recommended)
 
 ---
 
-## 2. Initialize Utils
+## 2. Initialize shadcn/ui
+
+ZenBlocks is built on top of the **shadcn/ui** architecture. You **must** have shadcn/ui initialized in your project first.
+
+If you haven't done this yet, run the following command:
+
+<Tabs items={["npx", "pnpm", "bun"]}>
+
+```bash tab="npx"
+npx shadcn@latest init
+```
+
+```bash tab="pnpm"
+pnpm dlx shadcn@latest init
+```
+
+```bash tab="bun"
+bunx shadcn@latest init
+```
+
+</Tabs>
+
+> [!NOTE]
+> During initialization, you can choose your preferred style, base color, and CSS variables. ZenBlocks will automatically adapt to your `components.json` configuration.
+
+---
+
+## 3. Initialize ZenBlocks Utils
 
 Some ZenBlocks components rely on a shared set of utilities (like `clsx` and `tailwind-merge` wrappers).
 Run this command **once** to set up the necessary infrastructure.
@@ -54,7 +81,7 @@ bunx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json
 
 ---
 
-## 3. Install Components
+## 4. Install Components
 
 Components can be installed individually using the CLI. This automatically handles dependencies and file placement.
 
@@ -80,7 +107,7 @@ Just like that, `Navbar.tsx` is now part of your codebase in `components/zenbloc
 
 ---
 
-## 4. Usage
+## 5. Usage
 
 Import standard components directly from your components folder:
 
@@ -94,7 +121,7 @@ export default function Layout() {
 
 ---
 
-## 5. Advanced Configuration
+## 6. Advanced Configuration
 
 ### Monorepo Support
 
