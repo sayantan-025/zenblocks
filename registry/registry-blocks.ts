@@ -2,6 +2,18 @@ import type { Registry } from "./schema";
 
 export const block: Registry = [
   {
+    name: "utils",
+    type: "registry:lib",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: [],
+    files: [
+      {
+        path: "lib/utils.ts",
+        type: "registry:lib",
+      },
+    ],
+  },
+  {
     name: "navbar",
     type: "registry:block",
     dependencies: ["lucide-react", "framer-motion", "next-themes"],
