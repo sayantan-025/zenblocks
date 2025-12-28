@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   },
 };
 
+const navItems = [
+  { label: "Components", href: "/docs" },
+  { label: "Template", href: "" }
+];
+
 export default function HomeLayout({
   children,
 }: Readonly<{
@@ -15,7 +20,7 @@ export default function HomeLayout({
 }>) {
   return (
     <>
-      <Navbar />
+      <Navbar items={navItems} />
 
       <main className="relative w-full pt-10 md:pt-0 bg-background text-foreground transition-colors duration-300 min-h-screen">
         {children}

@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-// import Link from "next/link"; // Replaced for SPA compatibility
-
 import { Moon, Sun, Menu, X } from "lucide-react";
-// import { useTheme } from "next-themes"; // Replaced for SPA compatibility
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+
 
 
 
@@ -191,7 +189,7 @@ function ThemeButton() {
           animate={{
             y: isDark ? 0 : 25,
             opacity: isDark ? 1 : 0,
-            rotate: isDark ? 0 : -45
+            rotate: isDark ? 0 : -45,
           }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
           className="absolute inset-0 flex items-center justify-center"
@@ -203,7 +201,7 @@ function ThemeButton() {
           animate={{
             y: isDark ? -25 : 0,
             opacity: isDark ? 0 : 1,
-            rotate: isDark ? 45 : 0
+            rotate: isDark ? 45 : 0,
           }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
           className="absolute inset-0 flex items-center justify-center"
@@ -215,13 +213,15 @@ function ThemeButton() {
       {/* Subtle Glow */}
       <motion.div
         animate={{
-          opacity: isDark ? 0.5 : 0
+          opacity: isDark ? 0.5 : 0,
         }}
         className="absolute inset-0 rounded-xl bg-amber-400/20 blur-md pointer-events-none"
       />
     </button>
   );
 }
+
+
 
 
 
