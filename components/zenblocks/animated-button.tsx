@@ -11,7 +11,7 @@ import { LucideIcon, ArrowRight } from "lucide-react";
  */
 export interface AnimatedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     /** Optional icon component to display after the label */
-    icon?: LucideIcon;
+    icon?: LucideIcon | React.ReactNode;
     /** Accent color for the glow and border effects (e.g., #6366f1) */
     accentColor?: string;
     /** Intensity of the magnetic pull (0 to 1) */
@@ -114,7 +114,15 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
             >
                 <span className="relative">{children}</span>
                 {Icon && (
-                    <Icon className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                    typeof Icon === "function" ? (
+                        React.createElement(Icon as LucideIcon, {
+                            className: "w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5"
+                        })
+                    ) : (
+                        <span className="inline-flex items-center justify-center w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 [&_svg]:w-full [&_svg]:h-full">
+                            {Icon}
+                        </span>
+                    )
                 )}
             </motion.div>
 
@@ -126,16 +134,5 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
         </motion.button>
     );
 };
-
-export function AnimatedButtonDemo() {
-    return (
-        <div className="flex flex-col items-center justify-center p-24 rounded-xl border bg-zinc-50 dark:bg-zinc-950 overflow-hidden min-h-[500px] w-full">
-            <AnimatedButton icon={ArrowRight}>Experience Aura</AnimatedButton>
-            <div className="mt-8 text-[10px] uppercase tracking-widest text-zinc-400 font-bold opacity-50">
-                Hover to feel the pull
-            </div>
-        </div>
-    );
-}
 
 export default AnimatedButton;
