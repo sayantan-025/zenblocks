@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Home, Terminal, LayoutGrid } from "lucide-react";
 
 export default function PreviewWrapper({ componentName }: { componentName: string }) {
     const [Component, setComponent] = useState<React.ComponentType<any> | null>(null);
@@ -91,6 +91,14 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
             <div className="relative z-10 w-full h-full flex items-center justify-center">
                 {componentName === "animated-button" ? (
                     <Component icon={<ArrowRight />}>Experience Aura</Component>
+                ) : componentName === "floating-dock" ? (
+                    <Component
+                        items={[
+                            { title: "Home", icon: <Home className="h-full w-full" />, href: "#" },
+                            { title: "Products", icon: <Terminal className="h-full w-full" />, href: "#" },
+                            { title: "Components", icon: <LayoutGrid className="h-full w-full" />, href: "#" },
+                        ]}
+                    />
                 ) : (
                     <Component />
                 )}

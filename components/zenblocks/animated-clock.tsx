@@ -94,7 +94,7 @@ export const AnimatedClock = ({ className, use24HourFormat = true }: AnimatedClo
     if (!mounted) {
         return (
             <div className={cn(
-                "group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/40 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-2xl transition-all duration-500 w-[350px] h-[150px] mx-auto",
+                "group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/40 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-2xl transition-all duration-500 w-[350px] h-[150px]",
                 className
             )} />
         );
@@ -122,7 +122,7 @@ export const AnimatedClock = ({ className, use24HourFormat = true }: AnimatedClo
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className={cn(
-                "group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/40 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-2xl transition-all duration-500 w-fit mx-auto cursor-default",
+                "group relative flex items-center justify-center gap-1 p-12 rounded-[3.5rem] bg-white/40 dark:bg-zinc-950/20 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-2xl transition-all duration-500 w-fit cursor-default",
                 className
             )}
         >

@@ -8,15 +8,7 @@ import {
     useSpring,
     useTransform,
 } from "framer-motion";
-import {
-    LayoutGrid,
-    Home,
-    Terminal, // Added Terminal
-    Layers,
-    Settings,
-    Github,
-    Twitter
-} from "lucide-react";
+import { LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -54,7 +46,7 @@ const FloatingDockMobile = ({
 }) => {
     const [open, setOpen] = useState(false);
     return (
-        <div className={cn("relative block md:hidden", className)}>
+        <div className={cn("relative block md:hidden w-fit mx-auto", className)}>
             <AnimatePresence>
                 {open && (
                     <motion.div
@@ -114,7 +106,7 @@ const FloatingDockDesktop = ({
             onMouseMove={(e) => mouseX.set(e.pageX)}
             onMouseLeave={() => mouseX.set(Infinity)}
             className={cn(
-                "mx-auto hidden md:flex h-20 gap-4 items-end rounded-[2.5rem] bg-white/40 dark:bg-zinc-950/40 backdrop-blur-3xl px-6 pb-4 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]",
+                "mx-auto hidden md:flex h-20 gap-4 items-end rounded-[2.5rem] bg-white/40 dark:bg-zinc-950/40 backdrop-blur-3xl px-6 pb-4 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] w-fit",
                 className
             )}
         >
@@ -210,27 +202,3 @@ function IconContainer({
         </Link>
     );
 }
-
-/* -------------------------------------------------------------------------- */
-/*                                DEMO EXPORT                                 */
-/* -------------------------------------------------------------------------- */
-
-const DEFAULT_ITEMS: FloatingDockItem[] = [
-    { title: "Home", icon: <Home className="h-full w-full" />, href: "#" },
-    { title: "Products", icon: <Terminal className="h-full w-full" />, href: "#" },
-    { title: "Components", icon: <LayoutGrid className="h-full w-full" />, href: "#" },
-];
-
-const FloatingDockDemo = () => {
-    return (
-        <div className="flex items-center justify-center w-full h-[400px] p-6 bg-zinc-50 dark:bg-zinc-950 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]" />
-            <div className="relative z-10">
-                <FloatingDock items={DEFAULT_ITEMS} desktopClassName="translate-y-20" mobileClassName="translate-y-20" />
-            </div>
-        </div>
-    );
-};
-
-export { FloatingDockDemo };
-export default FloatingDockDemo;
