@@ -1,4 +1,4 @@
-import Header from "@/components/landing/header";
+import Navbar from "@/components/zenblocks/navbar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,11 +15,12 @@ export default function HomeLayout({
 }>) {
   return (
     <>
-      <Header />
+      <Navbar />
 
-      <main className="relative w-full pt-10 md:pt-0 bg-background text-foreground transition-colors duration-300 min h-screen">
+      <main className="relative w-full pt-10 md:pt-0 bg-background text-foreground transition-colors duration-300 min-h-screen">
         {children}
       </main>
     </>
   );
 }
+
