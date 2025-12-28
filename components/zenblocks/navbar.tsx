@@ -24,6 +24,9 @@ type NavbarProps = {
   position?: "fixed" | "relative";
   items?: NavbarItem[];
   className?: string;
+  logo?: React.ReactNode;
+  brandText?: React.ReactNode;
+  brandClassName?: string;
 };
 
 const DEFAULT_NAV_ITEMS: NavbarItem[] = [
@@ -37,7 +40,14 @@ const DEFAULT_NAV_ITEMS: NavbarItem[] = [
 /*                                   NAVBAR                                   */
 /* -------------------------------------------------------------------------- */
 
-export default function Navbar({ position = "fixed", items = DEFAULT_NAV_ITEMS, className }: NavbarProps) {
+export default function Navbar({
+  position = "fixed",
+  items = DEFAULT_NAV_ITEMS,
+  className,
+  logo,
+  brandText = "ZENBLOCKS",
+  brandClassName
+}: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const prefersReduced = useReducedMotion();
@@ -77,9 +87,9 @@ export default function Navbar({ position = "fixed", items = DEFAULT_NAV_ITEMS, 
           {/* LOGO */}
           <div className="absolute left-0 flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2">
-              <CompactLogo prefersReduced={!!prefersReduced} />
-              <span className="text-sm font-semibold tracking-tight text-current">
-                ZENBLOCKS
+              {logo ?? <CompactLogo prefersReduced={!!prefersReduced} />}
+              <span className={cn("text-sm font-semibold tracking-tight text-current", brandClassName)}>
+                {brandText}
               </span>
             </Link>
           </div>

@@ -121,6 +121,9 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
       position?: "fixed" | "relative";
       items?: NavbarItem[];
       className?: string;
+      logo?: React.ReactNode;
+      brandText?: React.ReactNode;
+      brandClassName?: string;
     };
 
     const DEFAULT_NAV_ITEMS: NavbarItem[] = [
@@ -134,7 +137,14 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
     /*                                   NAVBAR                                   */
     /* -------------------------------------------------------------------------- */
 
-    export default function Navbar({ position = "fixed", items = DEFAULT_NAV_ITEMS, className }: NavbarProps) {
+    export default function Navbar({
+      position = "fixed",
+      items = DEFAULT_NAV_ITEMS,
+      className,
+      logo,
+      brandText = "ZENBLOCKS",
+      brandClassName
+    }: NavbarProps) {
       const [scrolled, setScrolled] = useState(false);
       const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
       const prefersReduced = useReducedMotion();
@@ -174,9 +184,9 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
               {/* LOGO */}
               <div className="absolute left-0 flex items-center gap-2">
                 <Link href="/" className="flex items-center gap-2">
-                  <CompactLogo prefersReduced={!!prefersReduced} />
-                  <span className="text-sm font-semibold tracking-tight text-current">
-                    ZENBLOCKS
+                  {logo ?? <CompactLogo prefersReduced={!!prefersReduced} />}
+                  <span className={cn("text-sm font-semibold tracking-tight text-current", brandClassName)}>
+                    {brandText}
                   </span>
                 </Link>
               </div>
@@ -458,6 +468,9 @@ const navItems = [
 | items | NavbarItem[] | [] | Navigation link items |
 | position | "fixed" \| "relative" | "fixed" | Positioning mode |
 | className | string | - | Additional CSS classes |
+| logo | ReactNode | - | Custom logo component |
+| brandText | ReactNode | "ZENBLOCKS" | Brand text to display |
+| brandClassName | string | - | Classes for brand text styling |
 
 ### NavbarItem
 
@@ -486,7 +499,19 @@ const navItems = [
 <Navbar position="relative" items={navItems} />
 ```
 
+### Custom Brand
+<br/>
+
+```tsx
+<Navbar 
+  logo={<MyLogo className="w-6 h-6" />} 
+  brandText="MY COMPANY" 
+  brandClassName="text-blue-600 font-bold"
+/>
+```
+
 ### Custom Styling
+<br/>
 
 ```tsx
 <Navbar className="bg-white/90" items={navItems} />
