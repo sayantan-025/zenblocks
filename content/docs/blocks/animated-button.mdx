@@ -176,14 +176,14 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-button.json
                 >
                     <span className="relative">{children}</span>
                     {Icon && (
-                        React.isValidElement(Icon) ? (
-                            React.cloneElement(Icon as React.ReactElement<any>, {
-                                className: cn("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5", (Icon.props as any).className)
-                            })
-                        ) : (
+                        typeof Icon === "function" ? (
                             React.createElement(Icon as LucideIcon, {
                                 className: "w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5"
                             })
+                        ) : (
+                            <span className="inline-flex items-center justify-center w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 [&_svg]:w-full [&_svg]:h-full">
+                                {Icon}
+                            </span>
                         )
                     )}
                 </motion.div>
@@ -210,7 +210,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-button.json
 import { AnimatedButton } from "@/components/zenblocks/animated-button";
 import { ArrowRight } from "lucide-react";
 
-<AnimatedButton icon={ArrowRight}>
+<AnimatedButton icon={<ArrowRight />}>
   Click Me
 </AnimatedButton>
 ```
@@ -289,7 +289,7 @@ Springs use `stiffness: 150, damping: 15, mass: 0.1` for responsive yet smooth m
 ### With Icon
 
 ```tsx
-<AnimatedButton icon={ArrowRight}>
+<AnimatedButton icon={<ArrowRight />}>
   Get Started
 </AnimatedButton>
 ```
