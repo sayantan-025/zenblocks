@@ -3,7 +3,8 @@
   "type": "registry:block",
   "dependencies": [
     "framer-motion",
-    "gsap"
+    "gsap",
+    "@gsap/react"
   ],
   "registryDependencies": [],
   "files": [

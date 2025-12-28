@@ -56,7 +56,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pre-loader.json
 1.  **Install Dependencies**
 
     ```bash
-    npm install gsap
+    npm install gsap @gsap/react
     ```
 
 2.  **Copy the Source Code**
@@ -69,34 +69,171 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pre-loader.json
     ```tsx
     "use client";
 
-    import React, { useRef, useEffect } from "react";
+    import React, { useRef } from "react";
+    import { useGSAP } from "@gsap/react";
     import gsap from "gsap";
     import { cn } from "@/lib/utils";
 
-    export default function PreLoader({ text = "Z", onComplete, embedded = false, className }: { text?: string; onComplete?: () => void; embedded?: boolean; className?: string }) {
-        const containerRef = useRef<HTMLDivElement>(null);
-        const textRef = useRef<HTMLDivElement>(null);
-        const counterRef = useRef<HTMLDivElement>(null);
+    /* -------------------------------------------------------------------------- */
+    /*                                   TYPES                                    */
+    /* -------------------------------------------------------------------------- */
 
-        useEffect(() => {
-            if (!containerRef.current || !textRef.current || !counterRef.current) return;
 
-            const tl = gsap.timeline({ onComplete });
-            tl.fromTo(textRef.current, { scale: 0, rotation: -180 }, { scale: 1, rotation: 0, duration: 1.2, ease: "back.out(1.7)" })
-              .to(counterRef.current, { innerText: 100, duration: 2.5, snap: { innerText: 1 }, ease: "power2.inOut" }, "-=0.5")
-              .to(textRef.current, { rotation: 180, scale: 0, duration: 0.8, ease: "back.in(1.7)" })
-              .to(containerRef.current, { opacity: 0, duration: 0.5 }, "-=0.3");
+    export type PreLoaderProps = {
+      onComplete?: () => void;
+      /**
+       * The text to display during the loading animation.
+       * @default "S"
+       */
+      text?: string;
+      /**
+       * When true, renders inside a container instead of fullscreen.
+       * Used for docs / previews.
+       */
+      embedded?: boolean;
+      className?: string;
+    };
 
-            return () => { tl.kill(); };
-        }, [onComplete]);
+    /* -------------------------------------------------------------------------- */
+    /*                                PRELOADER                                   */
+    /* -------------------------------------------------------------------------- */
 
-        return (
-            <div ref={containerRef} className={cn(embedded ? "absolute inset-0" : "fixed inset-0", "z-50 flex flex-col items-center justify-center bg-white dark:bg-zinc-950", className)}>
-                <div ref={textRef} className="text-9xl font-black text-zinc-900 dark:text-zinc-100">{text}</div>
-                <div ref={counterRef} className="text-2xl font-bold text-zinc-400 mt-8">0</div>
-            </div>
-        );
-    }
+    const PreLoader: React.FC<PreLoaderProps> = ({
+      onComplete,
+      text = "Z",
+      embedded = false,
+      className,
+    }) => {
+      const screenRef = useRef<HTMLDivElement | null>(null);
+      const textRef = useRef<HTMLDivElement | null>(null);
+      const percentRef = useRef<HTMLDivElement | null>(null);
+
+      useGSAP(
+        () => {
+          if (!screenRef.current || !textRef.current || !percentRef.current) return;
+
+          /* ---------------------------- Initial State ---------------------------- */
+
+          gsap.set(textRef.current, {
+            scale: 0,
+            rotation: 180,
+          });
+
+          gsap.set(percentRef.current, {
+            opacity: 0,
+            y: 20,
+          });
+
+          /* ------------------------------ Animate In ----------------------------- */
+
+          gsap.to(textRef.current, {
+            scale: 1,
+            rotation: 0,
+            duration: 1,
+            ease: "back.out(1.7)",
+          });
+
+          gsap.to(percentRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            delay: 0.5,
+            ease: "power2.out",
+          });
+
+          /* ------------------------- Percentage Counter -------------------------- */
+
+          gsap.to(percentRef.current, {
+            innerHTML: 100,
+            duration: 2.5,
+            delay: 1,
+            ease: "power2.inOut",
+            snap: { innerHTML: 1 },
+            onUpdate() {
+              const el = this.targets()[0] as HTMLElement;
+              const value = Math.round(Number(el.innerHTML));
+              el.innerHTML = `${value}%`;
+            },
+          });
+
+          /* ------------------------------ Pulse Hold ----------------------------- */
+
+          gsap.to(textRef.current, {
+            scale: 1.1,
+            duration: 0.5,
+            delay: 1,
+            yoyo: true,
+            repeat: 1,
+            ease: "power2.inOut",
+          });
+
+          /* ------------------------------ Animate Out ----------------------------- */
+
+          gsap.to(textRef.current, {
+            scale: 0,
+            rotation: -180,
+            duration: 0.8,
+            delay: 2.5,
+            ease: "back.in(1.7)",
+          });
+
+          /* ---------------------------- Screen Fade ------------------------------ */
+
+          gsap.to(screenRef.current, {
+            opacity: 0,
+            duration: 0.5,
+            delay: 3.3,
+            ease: "power1.inOut",
+            onComplete: () => {
+              onComplete?.();
+            },
+          });
+        },
+        { dependencies: [onComplete] }
+      );
+
+      return (
+        <div
+          ref={screenRef}
+          className={cn(
+            "z-50 pointer-events-none flex items-center justify-center",
+            embedded ? "absolute inset-0" : "fixed inset-0",
+
+            /* Surface */
+            "bg-white text-zinc-900",
+            "dark:bg-black dark:text-white",
+            className
+          )}
+        >
+          {/* Main Letter */}
+          <div
+            ref={textRef}
+            className={cn(
+              "text-[100px] sm:text-[150px] md:text-[200px]",
+              "font-black tracking-tight",
+              "text-zinc-900 dark:text-white"
+            )}
+          >
+            {text}
+          </div>
+
+          {/* Percentage counter */}
+          <div
+            ref={percentRef}
+            className={cn(
+              "absolute bottom-6 right-6",
+              "text-4xl sm:text-5xl md:text-6xl",
+              "font-light italic",
+              "text-zinc-600 dark:text-white/80"
+            )}
+          >
+            0%
+          </div>
+        </div>
+      );
+    };
+
+    export default PreLoader;
     ```
 
     </details>
