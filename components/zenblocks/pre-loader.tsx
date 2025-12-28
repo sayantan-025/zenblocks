@@ -142,7 +142,7 @@ const PreLoader: React.FC<PreLoaderProps> = ({
         className={cn(
           "text-[100px] sm:text-[150px] md:text-[200px]",
           "font-black tracking-tight",
-          "text-zinc-900 dark:text-white"
+          "text-current" // Force inheritance
         )}
       >
         {text}
@@ -155,7 +155,7 @@ const PreLoader: React.FC<PreLoaderProps> = ({
           "absolute bottom-6 right-6",
           "text-4xl sm:text-5xl md:text-6xl",
           "font-light italic",
-          "text-zinc-600 dark:text-white/80"
+          "opacity-60" // Use opacity instead of explicit color
         )}
       >
         0%

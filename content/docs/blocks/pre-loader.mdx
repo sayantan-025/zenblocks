@@ -27,7 +27,7 @@ A polished full-screen loading sequence that orchestrates a typographic reveal w
 
 <Preview link="pre-loader">
   <div className="relative w-full min-h-[400px] bg-zinc-100 dark:bg-zinc-950 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center gap-4">
-    <PreLoader embedded text="Z" />
+    <PreLoader embedded text="Z"/>
     <div className="absolute bottom-8 left-0 right-0 text-center px-4">
       <div className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
         💡 Reload the page to see the animation again
@@ -211,7 +211,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pre-loader.json
             className={cn(
               "text-[100px] sm:text-[150px] md:text-[200px]",
               "font-black tracking-tight",
-              "text-zinc-900 dark:text-white"
+              "text-current" // Force inheritance
             )}
           >
             {text}
@@ -224,7 +224,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pre-loader.json
               "absolute bottom-6 right-6",
               "text-4xl sm:text-5xl md:text-6xl",
               "font-light italic",
-              "text-zinc-600 dark:text-white/80"
+              "opacity-60" // Use opacity instead of explicit color
             )}
           >
             0%
