@@ -9,6 +9,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 
+
+
 /* -------------------------------------------------------------------------- */
 /*                                   TYPES                                    */
 /* -------------------------------------------------------------------------- */
@@ -161,17 +163,16 @@ function CompactLogo({ prefersReduced }: { prefersReduced: boolean }) {
 /* -------------------------------------------------------------------------- */
 
 function ThemeButton() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Prevent hydration mismatch
   if (!mounted) {
     return (
-      <div className="w-8 h-8 rounded-md border border-black/10 dark:border-white/10" />
+      <div className="w-8 h-8 rounded-md border border-zinc-200 dark:border-zinc-800" />
     );
   }
 
@@ -180,17 +181,50 @@ function ThemeButton() {
   return (
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="relative w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-300
+        bg-zinc-100 dark:bg-zinc-800/50 hover:bg-zinc-200 dark:hover:bg-zinc-800 
+        border border-zinc-200 dark:border-zinc-700/50"
       aria-label="Toggle theme"
-      className="p-1.5 rounded-md border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition"
     >
-      {isDark ? (
-        <Sun className="w-4 h-4 text-white" />
-      ) : (
-        <Moon className="w-4 h-4 text-zinc-900" />
-      )}
+      <div className="relative w-5 h-5 overflow-hidden">
+        <motion.div
+          animate={{
+            y: isDark ? 0 : 25,
+            opacity: isDark ? 1 : 0,
+            rotate: isDark ? 0 : -45
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <Sun className="w-5 h-5 text-amber-400 fill-amber-400/20" />
+        </motion.div>
+
+        <motion.div
+          animate={{
+            y: isDark ? -25 : 0,
+            opacity: isDark ? 0 : 1,
+            rotate: isDark ? 45 : 0
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <Moon className="w-5 h-5 text-zinc-900 fill-zinc-900/10" />
+        </motion.div>
+      </div>
+
+      {/* Subtle Glow */}
+      <motion.div
+        animate={{
+          opacity: isDark ? 0.5 : 0
+        }}
+        className="absolute inset-0 rounded-xl bg-amber-400/20 blur-md pointer-events-none"
+      />
     </button>
   );
 }
+
+
+
 
 /* -------------------------------------------------------------------------- */
 /*                                SLIDE TABS                                  */
