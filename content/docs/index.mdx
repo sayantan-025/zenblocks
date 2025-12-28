@@ -85,25 +85,25 @@ bunx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json
 
 Components can be installed individually using the CLI. This automatically handles dependencies and file placement.
 
-### Example: Installing the Navbar
+### Example: Installing the Animated Clock
 
 <Tabs items={["npx", "pnpm", "bun"]}>
 
 ```bash tab="npx"
-npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
 ```
 
 ```bash tab="pnpm"
-pnpm dlx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
+pnpm dlx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
 ```
 
 ```bash tab="bun"
-bunx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
+bunx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json
 ```
 
 </Tabs>
 
-Just like that, `Navbar.tsx` is now part of your codebase in `components/zenblocks/`.
+Just like that, `animated-clock.tsx` is now part of your codebase in `components/zenblocks/`.
 
 ---
 
@@ -112,10 +112,10 @@ Just like that, `Navbar.tsx` is now part of your codebase in `components/zenbloc
 Import standard components directly from your components folder:
 
 ```tsx
-import Navbar from "@/components/zenblocks/navbar";
+import { AnimatedClock } from "@/components/zenblocks/animated-clock";
 
 export default function Layout() {
-  return <Navbar />;
+  return <AnimatedClock />;
 }
 ```
 
@@ -128,7 +128,7 @@ export default function Layout() {
 If you are working inside a monorepo, use the `-c` flag to specify your workspace path.
 
 ```bash
-npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json -c ./apps/web
+npx shadcn@latest add https://zenblocks-three.vercel.app/r/animated-clock.json -c ./apps/web
 ```
 
 ### Custom Directories
