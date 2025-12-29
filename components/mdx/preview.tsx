@@ -1,5 +1,8 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import PreviewContent from "./preview-content";
+import { useEffect, useState } from "react";
 
 interface PreviewProps {
   children: React.ReactNode;
@@ -13,18 +16,6 @@ interface PreviewProps {
   isBlock?: boolean;
 }
 
-// const prePath = process.env.VERCEL_PROJECT_PRODUCTION_URL
-//   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-//   : "https://zenblocks-three.vercel.app";
-
-const prePath = process.env.NODE_ENV === "development"
-  ? "http://localhost:3000"
-  : (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://zenblocks-three.vercel.app");
-
-
-
 export function Preview({
   children,
   className = "",
@@ -34,6 +25,17 @@ export function Preview({
   comment = [],
   isBlock = false,
 }: PreviewProps) {
+  const [prePath, setPrePath] = useState("http://localhost:3000");
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      setPrePath(window.location.origin);
+    } else {
+      const prodUrl = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL;
+      setPrePath(prodUrl ? `https://${prodUrl}` : "https://zenblocks-three.vercel.app");
+    }
+  }, []);
+
   console.log(prePath + link);
   return (
     <>

@@ -28,7 +28,7 @@ export const block: Registry = [
   {
     name: "pre-loader",
     type: "registry:block",
-    dependencies: ["framer-motion", "gsap", "@gsap/react"],
+    dependencies: ["gsap", "@gsap/react"],
     registryDependencies: [],
     files: [
       {
@@ -76,7 +76,7 @@ export const block: Registry = [
   {
     name: "image-gallery",
     type: "registry:block",
-    dependencies: ["framer-motion", "gsap"],
+    dependencies: ["framer-motion", "gsap", "@gsap/react"],
     registryDependencies: [],
     files: [
       {

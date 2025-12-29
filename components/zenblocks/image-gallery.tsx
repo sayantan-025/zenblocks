@@ -238,12 +238,4 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
 
 
 
-const ImageGalleryDemo = () => {
-    return (
-        <section className="w-full bg-zinc-50 dark:bg-zinc-950 py-24">
-            <ImageGallery />
-        </section>
-    );
-}
 
-export default ImageGalleryDemo;

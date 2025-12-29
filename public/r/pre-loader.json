@@ -2,7 +2,6 @@
   "name": "pre-loader",
   "type": "registry:block",
   "dependencies": [
-    "framer-motion",
     "gsap",
     "@gsap/react"
   ],
