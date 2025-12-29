@@ -72,7 +72,7 @@ export const Hero = () => {
                         width={true}
                         weight={true}
                         italic={true}
-                        textColor={isLight ? "#18181b" : "#ffffff"}
+                        className="text-zinc-900 dark:text-white"
                         minFontSize={24}
                     />
                 </div>

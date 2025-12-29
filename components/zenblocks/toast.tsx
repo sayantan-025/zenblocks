@@ -193,41 +193,6 @@ function ToastItem({ toast }: { toast: ToastData }) {
     );
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                   DEMO                                     */
-/* -------------------------------------------------------------------------- */
 
-export function ToastDemo() {
-    return (
-        <ToastProvider>
-            <ToastDemoContent />
-        </ToastProvider>
-    );
-}
 
-function ToastDemoContent() {
-    const { toast } = useToast();
 
-    return (
-        <div className="flex flex-wrap gap-4 items-center justify-center p-8 border rounded-xl bg-zinc-50/50 dark:bg-zinc-900/50 border-dashed border-zinc-200 dark:border-zinc-800">
-            <button
-                onClick={() => toast({ title: "Success", description: "Your file has been uploaded.", variant: "success" })}
-                className="px-4 py-2 text-sm font-medium bg-emerald-100/50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 rounded-lg hover:bg-emerald-200/50 transition-colors"
-            >
-                Success
-            </button>
-            <button
-                onClick={() => toast({ title: "Error", description: "Something went wrong.", variant: "error" })}
-                className="px-4 py-2 text-sm font-medium bg-rose-100/50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300 rounded-lg hover:bg-rose-200/50 transition-colors"
-            >
-                Error
-            </button>
-            <button
-                onClick={() => toast({ title: "New Message", description: "Can we schedule a call?", variant: "default" })}
-                className="px-4 py-2 text-sm font-medium bg-white text-zinc-900 border shadow-sm dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700 rounded-lg hover:bg-zinc-50 transition-colors"
-            >
-                Default
-            </button>
-        </div>
-    );
-}

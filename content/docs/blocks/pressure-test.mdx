@@ -4,7 +4,7 @@ description: "Experimental variable font interaction responding to cursor proxim
 icon: MoveHorizontal
 ---
 
-import { PressureTest, PressureTestDemo } from "@/components/zenblocks/pressure-test";
+import { PressureTest } from "@/components/zenblocks/pressure-test";
 import { Preview } from "@/components/mdx/preview";
 
 ## Overview
@@ -26,8 +26,8 @@ An experimental typographic component leveraging variable fonts to create a phys
 ## Preview
 
 <Preview link="pressure-test">
-  <div className="relative w-full h-[300px] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
-    <PressureTestDemo />
+  <div className="relative w-full h-[300px] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex items-center justify-center p-4">
+    <PressureTest text="ZENBLOCKS" flex={true} className="text-black dark:text-white" />
   </div>
 </Preview>
 
@@ -53,52 +53,323 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pressure-test.json
 
     Copy the code below into `components/zenblocks/pressure-test.tsx`.
 
-    <details>
-    <summary>Click to expand source</summary>
+<details>
+<summary>Click to expand source</summary>
 
-    ```tsx
-    "use client";
+```tsx
+"use client";
 
-    import React, { useState, useRef, useEffect } from "react";
-    import { cn } from "@/lib/utils";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
+import { cn } from "@/lib/utils";
 
-    export function PressureTest({ text = "PRESSURE", className, minWeight = 100, maxWeight = 900, pressureSensitivity = 0.5 }: { text?: string; className?: string; minWeight?: number; maxWeight?: number; pressureSensitivity?: number }) {
-        const [weight, setWeight] = useState(minWeight);
-        const [isPressed, setIsPressed] = useState(false);
-        const containerRef = useRef<HTMLDivElement>(null);
+/* -------------------------------------------------------------------------- */
+/*                                   TYPES                                    */
+/* -------------------------------------------------------------------------- */
 
-        useEffect(() => {
-            const handlePointerMove = (e: PointerEvent) => {
-                if (!isPressed || !containerRef.current) return;
-                const rect = containerRef.current.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const distance = Math.hypot(x - centerX, y - centerY);
-                const maxDistance = Math.hypot(centerX, centerY);
-                const pressure = Math.max(0, 1 - (distance / maxDistance)) * pressureSensitivity;
-                const newWeight = minWeight + (maxWeight - minWeight) * pressure;
-                setWeight(Math.round(newWeight / 100) * 100);
-            };
+interface Vec2 {
+  x: number;
+  y: number;
+}
 
-            if (isPressed) {
-                window.addEventListener("pointermove", handlePointerMove);
-                return () => window.removeEventListener("pointermove", handlePointerMove);
-            }
-        }, [isPressed, minWeight, maxWeight, pressureSensitivity]);
+interface PressureTestProps {
+  text?: string;
+  fontFamily?: string;
+  fontUrl?: string;
+  width?: boolean;
+  weight?: boolean;
+  italic?: boolean;
+  alpha?: boolean;
+  flex?: boolean;
+  stroke?: boolean;
+  scale?: boolean;
+  strokeColor?: string;
+  strokeWidth?: number;
+  className?: string;
+  minFontSize?: number;
+}
 
-        return (
-            <div ref={containerRef} onPointerDown={() => setIsPressed(true)} onPointerUp={() => { setIsPressed(false); setWeight(minWeight); }} className={cn("cursor-pointer select-none", className)}>
-                <div className="text-6xl md:text-9xl font-black text-center transition-all duration-100" style={{ fontVariationSettings: `"wght" ${weight}` }}>
-                    {text}
-                </div>
-            </div>
-        );
+/* -------------------------------------------------------------------------- */
+/*                                  HELPERS                                   */
+/* -------------------------------------------------------------------------- */
+
+const dist = (a: Vec2, b: Vec2): number => {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  return Math.sqrt(dx * dx + dy * dy);
+};
+
+const getAttr = (
+  distance: number,
+  maxDist: number,
+  minVal: number,
+  maxVal: number
+): number => {
+  const val = maxVal - Math.abs((maxVal * distance) / maxDist);
+  return Math.max(minVal, val + minVal);
+};
+
+function debounce<T extends (...args: never[]) => void>(
+  fn: T,
+  delay: number
+): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  return (...args: Parameters<T>) => {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delay);
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               COMPONENT                                    */
+/* -------------------------------------------------------------------------- */
+
+export function PressureTest({
+  text = "ZENBLOCKS",
+  fontFamily = "Compressa VF",
+  fontUrl = "https://res.cloudinary.com/dr6lvwubh/raw/upload/v1529908256/CompressaPRO-GX.woff2",
+  width = true,
+  weight = true,
+  italic = true,
+  alpha = false,
+  flex = true,
+  stroke = false,
+  scale = false,
+  strokeColor,
+  strokeWidth = 2,
+  className = "",
+  minFontSize = 24,
+  ...props
+}: PressureTestProps & React.HTMLAttributes<HTMLHeadingElement>) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const spansRef = useRef<Array<HTMLSpanElement | null>>([]);
+
+  const mouseRef = useRef<Vec2>({ x: 0, y: 0 });
+  const cursorRef = useRef<Vec2>({ x: 0, y: 0 });
+
+  const [fontSize, setFontSize] = useState(minFontSize);
+  const [scaleY, setScaleY] = useState(1);
+  const [lineHeight, setLineHeight] = useState(1);
+  const [mounted, setMounted] = useState(false);
+
+  const chars = useMemo(() => text.split(""), [text]);
+
+  /* ------------------------------ MOUNT ----------------------------------- */
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  /* ------------------------------ POINTER -------------------------------- */
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const onMouseMove = (e: MouseEvent) => {
+      cursorRef.current.x = e.clientX;
+      cursorRef.current.y = e.clientY;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      const t = e.touches[0];
+      cursorRef.current.x = t.clientX;
+      cursorRef.current.y = t.clientY;
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      mouseRef.current = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+      };
+      cursorRef.current = { ...mouseRef.current };
     }
-    ```
 
-    </details>
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("touchmove", onTouchMove);
+    };
+  }, [mounted]);
+
+  /* ------------------------------ RESIZE ---------------------------------- */
+
+  const setSize = useCallback(() => {
+    if (!containerRef.current || !titleRef.current) return;
+
+    const { width: cw, height: ch } =
+      containerRef.current.getBoundingClientRect();
+
+    let nextFontSize = cw / (chars.length / 2);
+    nextFontSize = Math.max(nextFontSize, minFontSize);
+
+    setFontSize(nextFontSize);
+    setScaleY(1);
+    setLineHeight(1);
+
+    requestAnimationFrame(() => {
+      if (!titleRef.current) return;
+      const textRect = titleRef.current.getBoundingClientRect();
+
+      if (scale && textRect.height > 0) {
+        const yRatio = ch / textRect.height;
+        setScaleY(yRatio);
+        setLineHeight(yRatio);
+      }
+    });
+  }, [chars.length, minFontSize, scale]);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const onResize = debounce(setSize, 100);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [mounted, setSize]);
+
+  /* ------------------------------ ANIMATION ------------------------------- */
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    let rafId = 0;
+
+    const animate = () => {
+      mouseRef.current.x += (cursorRef.current.x - mouseRef.current.x) / 15;
+      mouseRef.current.y += (cursorRef.current.y - mouseRef.current.y) / 15;
+
+      if (titleRef.current) {
+        const titleRect = titleRef.current.getBoundingClientRect();
+        const maxDist = titleRect.width / 2;
+
+        spansRef.current.forEach((span) => {
+          if (!span) return;
+
+          const rect = span.getBoundingClientRect();
+          const center: Vec2 = {
+            x: rect.x + rect.width / 2,
+            y: rect.y + rect.height / 2,
+          };
+
+          const d = dist(mouseRef.current, center);
+
+          const wdth = width ? Math.floor(getAttr(d, maxDist, 5, 200)) : 100;
+          const wght = weight ? Math.floor(getAttr(d, maxDist, 100, 900)) : 400;
+          const ital = italic ? getAttr(d, maxDist, 0, 1).toFixed(2) : "0";
+          const a = alpha ? getAttr(d, maxDist, 0, 1).toFixed(2) : "1";
+
+          span.style.fontVariationSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'ital' ${ital}`;
+          if (alpha) span.style.opacity = a;
+        });
+      }
+
+      rafId = requestAnimationFrame(animate);
+    };
+
+    animate();
+    return () => cancelAnimationFrame(rafId);
+  }, [mounted, width, weight, italic, alpha]);
+
+  /* ------------------------------ STYLES ---------------------------------- */
+
+  const styleElement = useMemo(() => {
+    if (!mounted) return null;
+
+    return (
+      <style>{`
+        @font-face {
+          font-family: '\${fontFamily}';
+          src: url('\${fontUrl}');
+          font-style: normal;
+        }
+
+        .pressure-test-title span {
+          display: inline-block;
+          transform-origin: center center;
+        }
+
+        .stroke span {
+          position: relative;
+          color: currentColor;
+        }
+
+        .stroke span::after {
+          content: attr(data-char);
+          position: absolute;
+          inset: 0;
+          color: transparent;
+          z-index: -1;
+          -webkit-text-stroke-width: \${strokeWidth}px;
+          -webkit-text-stroke-color: \${strokeColor || "currentColor"};
+        }
+      `}</style>
+    );
+  }, [mounted, fontFamily, fontUrl, strokeColor, strokeWidth]);
+
+  /* ------------------------------ RENDER ---------------------------------- */
+
+  // 🔥 HARD GATE — NOTHING RENDERS ON SERVER
+  if (!mounted) {
+    return <div className="relative w-full h-full" aria-hidden="true" />;
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full h-full bg-transparent flex items-center justify-center"
+    >
+      {styleElement}
+
+      <h1
+        ref={titleRef}
+        className={cn(
+          "pressure-test-title",
+          flex && "flex justify-between w-full",
+          stroke && "stroke",
+          "uppercase text-center",
+          className
+        )}
+        style={{
+          fontFamily,
+          fontSize,
+          lineHeight,
+          transform: `scale(1, \${scaleY})`,
+          transformOrigin: "center top",
+          margin: 0,
+          fontWeight: 100,
+          whiteSpace: "nowrap",
+          width: "100%",
+        }}
+        {...props}
+      >
+        {chars.map((char: string, i: number) => (
+          <span
+            key={i}
+            ref={(el) => {
+              spansRef.current[i] = el;
+            }}
+            data-char={char}
+          >
+            {char}
+          </span>
+        ))}
+      </h1>
+    </div>
+  );
+};
+```
+
+</details>
 
 ---
 
@@ -107,23 +378,29 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/pressure-test.json
 ```tsx
 import { PressureTest } from "@/components/zenblocks/pressure-test";
 
-<PressureTest text="ZENBLOCKS" />
+<PressureTest 
+  text="ZENBLOCKS" 
+  className="text-4xl md:text-6xl font-black text-orange-500 hover:text-orange-400 transition-colors" 
+/>
 ```
 
 ---
 
 ## Props
 
+
 | Prop | Type | Default | Description |
 |-----|------|---------|-------------|
-| text | string | "Compressa" | Text content |
-| startWeight | number | 100 | Base font weight |
-| hoverWeight | number | 900 | Max weight at cursor |
-| flex | boolean | true | Scale text to fit container |
-| stroke | boolean | false | Outline style mode |
-| width | boolean | true | Enable width axis |
-| weight | boolean | true | Enable weight axis |
-| italic | boolean | true | Enable italic axis |
+| text | string | "ZENBLOCKS" | The text to display interactively |
+| className | string | "" | Tailwind classes for styling (colors, margin, etc.) |
+| flex | boolean | true | Scale text to fit container width |
+| stroke | boolean | false | Enable outline stroke mode |
+| width | boolean | true | Enable variable font width axis |
+| weight | boolean | true | Enable variable font weight axis |
+| italic | boolean | true | Enable variable font italic axis |
+| alpha | boolean | false | Enable opacity distance effect |
+| scale | boolean | false | Enable vertical scaling for tall fonts |
+| minFontSize | number | 24 | Minimum font size floor calculation |
 
 ---
 
@@ -176,13 +453,22 @@ Adjust `min` and `max` values in the `getAttr` helper to control distortion extr
 ### Custom Text
 
 ```tsx
-<PressureTest text="INTERACTIVE" />
+<PressureTest 
+  text="HOVER ME" 
+  className="text-blue-500 font-display text-8xl"
+/>
 ```
 
 ### Stroke Mode
 
 ```tsx
-<PressureTest text="OUTLINE" stroke={true} />
+<PressureTest 
+  text="OUTLINE" 
+  stroke={true} 
+  className="text-transparent stroke-white"
+  strokeColor="#ffffff"
+  strokeWidth={2}
+/>
 ```
 
 ---

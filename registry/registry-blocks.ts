@@ -124,7 +124,7 @@ export const block: Registry = [
   {
     name: "pressure-test",
     type: "registry:block",
-    dependencies: ["framer-motion"],
+    dependencies: ["clsx", "tailwind-merge"],
     registryDependencies: [],
     files: [
       {
@@ -136,7 +136,7 @@ export const block: Registry = [
   {
     name: "shuffle",
     type: "registry:block",
-    dependencies: ["framer-motion"],
+    dependencies: ["clsx", "tailwind-merge"],
     registryDependencies: [],
     files: [
       {
@@ -160,7 +160,7 @@ export const block: Registry = [
   {
     name: "modal-dialog",
     type: "registry:block",
-    dependencies: ["framer-motion", "lucide-react", "react-dom"],
+    dependencies: ["framer-motion", "lucide-react", "react-dom", "clsx", "tailwind-merge"],
     registryDependencies: [],
     files: [
       {
@@ -172,7 +172,7 @@ export const block: Registry = [
   {
     name: "theme-switcher",
     type: "registry:block",
-    dependencies: ["framer-motion", "next-themes", "lucide-react"],
+    dependencies: ["framer-motion", "next-themes", "lucide-react", "clsx", "tailwind-merge"],
     registryDependencies: [],
     files: [
       {
@@ -184,7 +184,7 @@ export const block: Registry = [
   {
     name: "toast",
     type: "registry:block",
-    dependencies: ["framer-motion", "lucide-react"],
+    dependencies: ["framer-motion", "lucide-react", "clsx", "tailwind-merge"],
     registryDependencies: [],
     files: [
       {

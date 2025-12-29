@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { cn } from "@/lib/utils";
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPES                                    */
@@ -28,12 +29,10 @@ interface PressureTestProps {
   flex?: boolean;
   stroke?: boolean;
   scale?: boolean;
-  textColor?: string;
   strokeColor?: string;
   strokeWidth?: number;
   className?: string;
   minFontSize?: number;
-  justify?: "start" | "center" | "end" | "between";
 }
 
 /* -------------------------------------------------------------------------- */
@@ -73,7 +72,7 @@ function debounce<T extends (...args: never[]) => void>(
 /* -------------------------------------------------------------------------- */
 
 export function PressureTest({
-  text = "Compressa",
+  text = "ZENBLOCKS",
   fontFamily = "Compressa VF",
   fontUrl = "https://res.cloudinary.com/dr6lvwubh/raw/upload/v1529908256/CompressaPRO-GX.woff2",
   width = true,
@@ -83,13 +82,12 @@ export function PressureTest({
   flex = true,
   stroke = false,
   scale = false,
-  textColor,
   strokeColor,
   strokeWidth = 2,
   className = "",
   minFontSize = 24,
-  justify = "between",
-}: PressureTestProps) {
+  ...props
+}: PressureTestProps & React.HTMLAttributes<HTMLHeadingElement>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const spansRef = useRef<Array<HTMLSpanElement | null>>([]);
@@ -243,7 +241,7 @@ export function PressureTest({
 
         .stroke span {
           position: relative;
-          color: ${textColor || "inherit"};
+          color: currentColor;
         }
 
         .stroke span::after {
@@ -257,7 +255,7 @@ export function PressureTest({
         }
       `}</style>
     );
-  }, [mounted, fontFamily, fontUrl, textColor, strokeColor, strokeWidth]);
+  }, [mounted, fontFamily, fontUrl, strokeColor, strokeWidth]);
 
   /* ------------------------------ RENDER ---------------------------------- */
 
@@ -275,8 +273,13 @@ export function PressureTest({
 
       <h1
         ref={titleRef}
-        className={`pressure-test-title ${className} ${flex ? "flex w-full" : ""
-          } ${stroke ? "stroke" : ""} uppercase text-center`}
+        className={cn(
+          "pressure-test-title",
+          flex && "flex justify-between w-full",
+          stroke && "stroke",
+          "uppercase text-center",
+          className
+        )}
         style={{
           fontFamily,
           fontSize,
@@ -285,13 +288,12 @@ export function PressureTest({
           transformOrigin: "center top",
           margin: 0,
           fontWeight: 100,
-          color: textColor,
           whiteSpace: "nowrap",
           width: "100%",
-          justifyContent: justify === "between" ? "space-between" : justify === "center" ? "center" : justify === "end" ? "flex-end" : "flex-start",
         }}
+        {...props}
       >
-        {chars.map((char, i) => (
+        {chars.map((char: string, i: number) => (
           <span
             key={i}
             ref={(el) => {
@@ -307,22 +309,3 @@ export function PressureTest({
   );
 };
 
-
-export function PressureTestDemo() {
-  return (
-    <div className="relative w-full h-full flex items-center justify-center p-4 bg-transparent">
-      <PressureTest
-        text="ZENBLOCKS"
-        className="text-zinc-950 dark:text-white"
-        flex={true}
-        alpha={false}
-        stroke={false}
-        width={true}
-        weight={true}
-        italic={true}
-      />
-    </div>
-  );
-}
-
-export default PressureTestDemo;

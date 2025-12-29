@@ -108,13 +108,4 @@ export function ThemeSwitcher({ className, ...props }: React.ButtonHTMLAttribute
     );
 }
 
-export function ThemeSwitcherDemo() {
-    return (
-        <div className="flex flex-col items-center justify-center gap-8 py-12">
-            <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">
-                Toggle Me
-            </h3>
-            <ThemeSwitcher />
-        </div>
-    );
-}
+

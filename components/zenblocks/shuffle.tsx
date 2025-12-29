@@ -1,52 +1,83 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
-interface ShuffleProps {
+interface ShuffleProps extends React.HTMLAttributes<HTMLSpanElement> {
   text: string;
-  className?: string;
   duration?: number;
+  delay?: number; // adding delay support as a nice-to-have, but mostly just standardizing
 }
 
-export const Shuffle: React.FC<ShuffleProps> = ({ text = "Shuffle", className }) => {
+export function Shuffle({
+  text = "Shuffle",
+  duration = 0.5, // 0.5s default for snappiness
+  className,
+  ...props
+}: ShuffleProps) {
   const [displayText, setDisplayText] = useState(text);
+  const [isHovered, setIsHovered] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Use a ref for text so we don't restart effect on every render if it's stable
+  const originalText = useRef(text);
 
   useEffect(() => {
+    originalText.current = text;
+    setDisplayText(text); // Reset if prop changes
+  }, [text]);
+
+  const startShuffle = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
     let iteration = 0;
-    const interval = setInterval(() => {
+    const steps = duration * 30; // Approx 30fps
+    const increment = text.length / steps;
+
+    intervalRef.current = setInterval(() => {
       setDisplayText((prev) =>
-        prev
+        originalText.current
           .split("")
           .map((letter, index) => {
             if (index < iteration) {
-              return text[index];
+              return originalText.current[index];
             }
             return String.fromCharCode(65 + Math.floor(Math.random() * 26));
           })
           .join("")
       );
 
-      if (iteration >= text.length) {
-        clearInterval(interval);
+      if (iteration >= originalText.current.length) {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        setDisplayText(originalText.current);
       }
-      iteration += 1 / 3;
+
+      iteration += increment;
     }, 30);
+  };
 
-    return () => clearInterval(interval);
-  }, [text]);
+  const handleMouseEnter = (e: React.MouseEvent<HTMLSpanElement>) => {
+    setIsHovered(true);
+    startShuffle();
+    props.onMouseEnter?.(e);
+  };
 
-  return <span className={className}>{displayText}</span>;
-};
+  // Initial play on mount
+  useEffect(() => {
+    startShuffle();
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    }
+  }, []);
 
-export function ShuffleDemo() {
   return (
-    <div className="flex items-center justify-center h-full w-full bg-transparent p-8">
-      <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white dark:bg-zinc-900 px-3 py-1 text-xs font-semibold text-zinc-600 dark:text-zinc-400 shadow-sm dark:border-zinc-800">
-        <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        <Shuffle text="v2.0 Now Available" />
-      </div>
-    </div>
+    <span
+      className={cn("inline-block whitespace-nowrap", className)}
+      onMouseEnter={handleMouseEnter}
+      {...props}
+    >
+      {displayText}
+    </span>
   );
 }
 
-export default ShuffleDemo;
