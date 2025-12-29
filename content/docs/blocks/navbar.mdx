@@ -43,7 +43,7 @@ Install via the ZenBlocks CLI to automatically handle dependencies:
 npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
 ```
 
-> **Note:** The CLI will install the component file, but it **does not** set up the global `ThemeProvider`. If you haven't set up `next-themes` yet, please follow **Step 2** from the Manual Installation below.
+> **Note:** The CLI does not set up the global `ThemeProvider`. Please see the [Configuration](/docs#4-configure-themes) guide to set up dark mode support.
 
 
 ### Method 2: Manual
@@ -56,38 +56,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/navbar.json
 
 2.  **Setup Theme Provider**
 
-    Wrap your application with the `ThemeProvider` to enable theme switching.
-
-    *Create `components/providers/theme-provider.tsx`*:
-
-    ```tsx
-    "use client";
-
-    import * as React from "react";
-    import { ThemeProvider as NextThemesProvider } from "next-themes";
-
-    export function ThemeProvider({ children, ...props }: React.ComponentProps<typeof NextThemesProvider>) {
-      return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
-    }
-    ```
-
-    *Update `app/layout.tsx`*:
-
-    ```tsx
-    import { ThemeProvider } from "@/components/providers/theme-provider";
-
-    export default function RootLayout({ children }) {
-      return (
-        <html lang="en" suppressHydrationWarning>
-          <body>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              {children}
-            </ThemeProvider>
-          </body>
-        </html>
-      );
-    }
-    ```
+    This component uses `next-themes`. Ensure your app is wrapped in a `ThemeProvider` as described in the [Global Installation](/docs#4-configure-themes) guide.
 
 3.  **Copy the Source Code**
 

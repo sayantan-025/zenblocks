@@ -43,6 +43,9 @@ Install via the ZenBlocks CLI to automatically handle dependencies:
 npx shadcn@latest add https://zenblocks-three.vercel.app/r/orb-field.json
 ```
 
+> **Note:** The CLI does not set up the global `ThemeProvider`. Please see the [Configuration](/docs#4-configure-themes) guide to set up dark mode support.
+
+
 ### Method 2: Manual
 
 1.  **Install Dependencies**
@@ -51,7 +54,11 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/orb-field.json
     npm install three @types/three gsap @gsap/react framer-motion next-themes
     ```
 
-2.  **Copy the Source Code**
+2.  **Setup Theme Provider**
+
+    This component uses `next-themes`. Ensure your app is wrapped in a `ThemeProvider` as described in the [Global Installation](/docs#4-configure-themes) guide.
+
+3.  **Copy the Source Code**
 
     Copy the code below into `components/zenblocks/orb-field.tsx`.
 

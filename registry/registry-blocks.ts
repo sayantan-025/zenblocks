@@ -52,7 +52,7 @@ export const block: Registry = [
   {
     name: "bento-grid",
     type: "registry:block",
-    dependencies: ["framer-motion"],
+    dependencies: ["framer-motion", "lucide-react", "clsx", "tailwind-merge"],
     registryDependencies: [],
     files: [
       {

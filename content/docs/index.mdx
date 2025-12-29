@@ -81,7 +81,62 @@ bunx shadcn@latest add https://zenblocks-three.vercel.app/r/utils.json
 
 ---
 
-## 4. Install Components
+## 4. Configure Themes
+
+Some ZenBlocks components rely on `next-themes` for dark mode support. The CLI cannot automatically wrap your application layout, so you must add this manually.
+
+1.  **Install next-themes**
+
+    ```bash
+    npm install next-themes
+    ```
+
+2.  **Create Custom Theme Provider**
+
+    Add this file to `components/providers/theme-provider.tsx`:
+
+    ```tsx
+    "use client"
+
+    import * as React from "react"
+    import { ThemeProvider as NextThemesProvider } from "next-themes"
+
+    export function ThemeProvider({
+      children,
+      ...props
+    }: React.ComponentProps<typeof NextThemesProvider>) {
+      return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+    }
+    ```
+
+3.  **Wrap Your Root Layout**
+
+    Update your `app/layout.tsx` to include the provider:
+
+    ```tsx
+    import { ThemeProvider } from "@/components/providers/theme-provider"
+
+    export default function RootLayout({ children }: RootLayoutProps) {
+      return (
+        <html lang="en" suppressHydrationWarning>
+          <body>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </body>
+        </html>
+      )
+    }
+    ```
+
+---
+
+## 5. Install Components
 
 Components can be installed individually using the CLI. This automatically handles dependencies and file placement.
 
@@ -107,7 +162,7 @@ Just like that, `animated-clock.tsx` is now part of your codebase in `components
 
 ---
 
-## 5. Usage
+## 6. Usage
 
 Import standard components directly from your components folder:
 
@@ -121,7 +176,7 @@ export default function Layout() {
 
 ---
 
-## 6. Advanced Configuration
+## 7. Advanced Configuration
 
 ### Monorepo Support
 

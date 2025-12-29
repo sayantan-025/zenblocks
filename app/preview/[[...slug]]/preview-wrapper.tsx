@@ -9,7 +9,7 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
 
     useEffect(() => {
         // Skip dynamic loading for components with manual harnesses
-        if (componentName === "toast" || componentName === "modal-dialog") return;
+        if (componentName === "toast" || componentName === "modal-dialog" || componentName === "bento-grid") return;
 
         let mounted = true;
         const loadComponent = async () => {
@@ -86,6 +86,15 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
         return (
             <div className="relative z-10 w-full h-full flex items-center justify-center">
                 <ModalDialogHarness />
+            </div>
+        )
+    }
+
+    // Special harness for BentoGrid
+    if (componentName === "bento-grid") {
+        return (
+            <div className="relative z-10 w-full min-h-screen bg-white dark:bg-zinc-950">
+                <BentoGridHarness />
             </div>
         )
     }
@@ -234,6 +243,94 @@ function ModalDialogHarness() {
                     </ModalDialog.Footer>
                 </ModalDialog.Content>
             </ModalDialog>
+        </div>
+    );
+}
+
+// ------------------------------------------------------------------
+// BentoGrid Harness
+// ------------------------------------------------------------------
+
+import { BentoGrid, BentoCard } from "@/components/zenblocks/bento-grid";
+import { Zap, Activity, Component as ComponentIcon, Layers, Monitor } from "lucide-react";
+
+function BentoGridHarness() {
+    return (
+        <div className="p-8 max-w-7xl mx-auto space-y-12">
+            <div>
+                <h2 className="text-2xl font-bold mb-6 text-zinc-900 dark:text-zinc-100">Simple Mode</h2>
+                <BentoGrid>
+                    <BentoCard
+                        title="Core Architecture"
+                        description="The primary structural foundation."
+                        className="md:col-span-2 md:row-span-2"
+                        icon={<Layers size={14} />}
+                    />
+                    <BentoCard
+                        title="Telemetry Data"
+                        description="Real-time process monitoring."
+                        className="md:col-span-1 md:row-span-1"
+                        icon={<Activity size={14} />}
+                    />
+                    <BentoCard
+                        title="Motion Engine"
+                        description="Advanced physics-based interaction."
+                        className="md:col-span-1 md:row-span-1"
+                        icon={<Zap size={14} />}
+                    />
+                </BentoGrid>
+            </div>
+
+            <div>
+                <h2 className="text-2xl font-bold mb-6 text-zinc-900 dark:text-zinc-100">Custom Content Mode</h2>
+                <BentoGrid>
+                    {/* Edge-to-Edge Image */}
+                    <BentoCard className="md:col-span-1 md:row-span-2 p-0 overflow-hidden">
+                        <div className="relative w-full h-full min-h-[300px]">
+                            <img
+                                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1000"
+                                alt="Abstract"
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                            <div className="absolute bottom-0 left-0 p-6">
+                                <h3 className="text-white font-bold text-lg mb-1">Visual Arts</h3>
+                                <p className="text-zinc-300 text-xs">Edge-to-edge media integration</p>
+                            </div>
+                        </div>
+                    </BentoCard>
+
+                    {/* Interactive Widget */}
+                    <BentoCard className="md:col-span-2 p-0">
+                        <div className="flex flex-col h-full bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent p-6">
+                            <div className="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Analytics Review</h3>
+                                    <p className="text-xs text-zinc-500">Live user tracking metrics</p>
+                                </div>
+                                <Monitor className="text-indigo-500" />
+                            </div>
+                            <div className="flex gap-2 items-end h-[60px] flex-1 pb-2">
+                                {[40, 70, 35, 90, 55, 80, 45].map((h, i) => (
+                                    <div key={i} className="flex-1 bg-indigo-500/20 rounded-sm relative group/bar overflow-hidden">
+                                        <div
+                                            className="absolute bottom-0 left-0 w-full bg-indigo-500 transition-all duration-500 group-hover/bar:bg-indigo-400"
+                                            style={{ height: `${h}%` }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </BentoCard>
+
+                    <BentoCard
+                        title="Component Library"
+                        description="Drag and drop ready."
+                        className="md:col-span-2"
+                        icon={<ComponentIcon size={14} />}
+                    />
+                </BentoGrid>
+            </div>
         </div>
     );
 }
