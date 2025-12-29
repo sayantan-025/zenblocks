@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const navItems = [
   { label: "Docs", href: "/docs" },
-  { label: "Components", href: "/docs/navbar" },
+  { label: "Components", href: "/docs/blocks/navbar" },
   { label: "Template", href: "" }
 ];
 
