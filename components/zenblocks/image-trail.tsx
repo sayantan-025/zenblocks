@@ -44,14 +44,7 @@ export const ImageTrail = ({
         });
     }, { scope: containerRef });
 
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (!containerRef.current) return;
-
-        const rect = containerRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        // Calculate distance from last drop
+    const spawnImage = (x: number, y: number) => {
         const dist = Math.hypot(x - lastX.current, y - lastY.current);
 
         if (dist > 60) {
@@ -102,12 +95,30 @@ export const ImageTrail = ({
         }
     };
 
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        spawnImage(x, y);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        spawnImage(x, y);
+    };
+
     return (
         <div
             ref={containerRef}
             onMouseMove={handleMouseMove}
+            onTouchMove={handleTouchMove}
             className={cn(
-                "relative w-full h-[600px] overflow-hidden bg-zinc-50 dark:bg-zinc-950 rounded-[3rem] border border-zinc-200 dark:border-zinc-800 cursor-crosshair group",
+                "relative w-full h-[400px] md:h-[600px] overflow-hidden bg-zinc-50 dark:bg-zinc-950 rounded-[3rem] border border-zinc-200 dark:border-zinc-800 cursor-crosshair group touch-none",
                 containerClassName
             )}
         >
@@ -116,10 +127,10 @@ export const ImageTrail = ({
                 style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none select-none">
-                <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-zinc-900 dark:text-white">
+                <h2 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-zinc-900 dark:text-white">
                     Visual <span className="text-blue-500">Echo</span>
                 </h2>
-                <p className="mt-4 text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500 opacity-60">
+                <p className="mt-4 text-[10px] sm:text-xs font-black uppercase tracking-[0.4em] text-zinc-500 opacity-60">
                     Trace the movement
                 </p>
             </div>

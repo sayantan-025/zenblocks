@@ -88,7 +88,7 @@ export const block: Registry = [
   {
     name: "image-trail",
     type: "registry:block",
-    dependencies: ["gsap"],
+    dependencies: ["gsap", "@gsap/react"],
     registryDependencies: [],
     files: [
       {
@@ -100,7 +100,7 @@ export const block: Registry = [
   {
     name: "logo-loop",
     type: "registry:block",
-    dependencies: ["framer-motion"],
+    dependencies: ["framer-motion", "lucide-react"],
     registryDependencies: [],
     files: [
       {

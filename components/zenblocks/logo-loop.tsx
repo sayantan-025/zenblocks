@@ -213,18 +213,4 @@ export const LogoLoop = ({
     );
 };
 
-/* -------------------------------------------------------------------------- */
-/*                                DEMO EXPORT                                 */
-/* -------------------------------------------------------------------------- */
 
-const LogoLoopDemo = () => {
-    return (
-        <div className="relative w-full h-[200px] flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
-            <div className="absolute inset-0 z-0 opacity-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]" />
-            <LogoLoop speed={50} />
-        </div>
-    );
-};
-
-export { LogoLoopDemo };
-export default LogoLoopDemo;
