@@ -4,7 +4,7 @@
 
 **A high-performance, ownership-based UI component library for modern web applications**
 
-[Documentation](https://zenblocks-three.vercel.app/docs) • [Components](https://zenblocks-three.vercel.app/docs/blocks) • [GitHub](https://github.com/sayantan-025/zenblocks)
+[Documentation](https://zenblocks-three.vercel.app/docs) • [Components](https://zenblocks-three.vercel.app/docs/navbar) • [GitHub](https://github.com/sayantan-025/zenblocks)
 
 </div>
 

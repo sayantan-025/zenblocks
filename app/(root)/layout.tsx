@@ -9,7 +9,8 @@ export const metadata: Metadata = {
 };
 
 const navItems = [
-  { label: "Components", href: "/docs" },
+  { label: "Docs", href: "/docs" },
+  { label: "Components", href: "/docs/navbar" },
   { label: "Template", href: "" }
 ];
 
