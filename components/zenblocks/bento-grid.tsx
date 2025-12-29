@@ -4,14 +4,7 @@ import React from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
     ArrowRight,
-    Box,
-    LayoutGrid,
-    Layers,
-    Activity,
-    Zap,
-    Terminal,
-    Monitor,
-    Component
+    Box
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 

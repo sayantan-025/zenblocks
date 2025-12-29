@@ -2,7 +2,6 @@
   "name": "image-gallery",
   "type": "registry:block",
   "dependencies": [
-    "framer-motion",
     "gsap",
     "@gsap/react"
   ],
