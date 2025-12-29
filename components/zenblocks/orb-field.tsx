@@ -28,6 +28,7 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { gsap, Observer } from "gsap/all";
 import { motion, useInView, MotionProps } from "framer-motion";
+import { useTheme } from "next-themes";
 import { JSX } from "react";
 
 gsap.registerPlugin(Observer);
@@ -722,23 +723,23 @@ class OrbFieldMeshes extends InstancedMesh {
 }
 
 const DefaultOrbFieldConfig: PhysicsConfig = {
-  count: 200,
-  colors: [0, 0, 0],
+  count: 60,
+  colors: [0x18181b, 0x71717a, 0xd4d4d8, 0xffffff], // Default to light theme colors
   ambientColor: 0xffffff,
-  ambientIntensity: 1,
-  lightIntensity: 200,
+  ambientIntensity: 0.5,
+  lightIntensity: 150,
   materialParams: {
-    metalness: 0.5,
-    roughness: 0.4,
-    clearcoat: 0.8,
+    metalness: 0.6,
+    roughness: 0.5,
+    clearcoat: 0.1,
     clearcoatRoughness: 0.2,
   },
   minSize: 0.5,
   maxSize: 1,
   size0: 1,
   gravity: 0.5,
-  friction: 0.9975,
-  wallBounce: 0.95,
+  friction: 0.99,
+  wallBounce: 0.8,
   maxVelocity: 0.15,
   maxX: 5,
   maxY: 5,
@@ -1079,10 +1080,19 @@ function createOrbField(
 export const OrbField: React.FC<OrbFieldProps> = ({
   className = "",
   followCursor = true,
+  colors: propColors,
   ...props
 }) => {
+  const { resolvedTheme } = useTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const orbsInstanceRef = useRef<CreateOrbFieldReturn | null>(null);
+
+  const isLight = resolvedTheme === "light";
+  const defaultColors = isLight
+    ? [0x18181b, 0x71717a, 0xd4d4d8, 0xffffff]
+    : [0xfafafa, 0xa1a1aa, 0x52525b, 0x09090b];
+
+  const colors = propColors || defaultColors;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1090,6 +1100,7 @@ export const OrbField: React.FC<OrbFieldProps> = ({
 
     orbsInstanceRef.current = createOrbField(canvas, {
       followCursor,
+      colors,
       ...props,
     });
 
@@ -1101,10 +1112,10 @@ export const OrbField: React.FC<OrbFieldProps> = ({
   }, []);
 
   useEffect(() => {
-    if (orbsInstanceRef.current && props.colors) {
-      orbsInstanceRef.current.updateConfig({ colors: props.colors });
+    if (orbsInstanceRef.current) {
+      orbsInstanceRef.current.updateConfig({ colors });
     }
-  }, [props.colors]);
+  }, [colors]);
 
   return (
     <canvas
@@ -1114,5 +1125,6 @@ export const OrbField: React.FC<OrbFieldProps> = ({
     />
   );
 };
+
 
 export default OrbField;

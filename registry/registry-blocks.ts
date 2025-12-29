@@ -112,7 +112,7 @@ export const block: Registry = [
   {
     name: "orb-field",
     type: "registry:block",
-    dependencies: ["three", "@react-three/fiber", "@react-three/drei"],
+    dependencies: ["three", "@types/three", "gsap", "@gsap/react", "framer-motion", "next-themes"],
     registryDependencies: [],
     files: [
       {
