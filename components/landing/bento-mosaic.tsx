@@ -186,7 +186,7 @@ const ITEMS = [
         description: "The infinite ribbon of atomic image building blocks.",
         className: "md:col-span-3 md:row-span-1",
         icon: <Component size={14} />,
-        visual: <ImageTrail containerClassName="!h-full w-full rounded-none border-none bg-transparent" />
+        visual: <ImageTrail containerClassName="md:!h-full w-full rounded-none border-none bg-transparent" />
     },
 ];
 
