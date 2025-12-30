@@ -129,6 +129,10 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
                             { title: "Components", icon: <LayoutGrid className="h-full w-full" />, href: "#" },
                         ]}
                     />
+                ) : componentName === "shuffle" ? (
+                    <h3 className="text-4xl md:text-5xl font-black tracking-tighter">
+                        <Component text="ZENBLOCKS" />
+                    </h3>
                 ) : (
                     <Component />
                 )}

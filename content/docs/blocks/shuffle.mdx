@@ -28,10 +28,9 @@ A text animation simulating a decryption process by cycling through random chara
 
 <Preview link="shuffle">
   <div className="relative w-full h-[200px] flex items-center justify-center rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
-    <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white dark:bg-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400 shadow-sm dark:border-zinc-800">
-      <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-      <Shuffle text="SYSTEM ONLINE" className="font-mono tracking-wide" />
-    </div>
+    <h3 className="text-4xl md:text-5xl font-black tracking-tighter">
+      <Shuffle text="ZENBLOCKS" />
+    </h3>
   </div>
 </Preview>
 
@@ -79,7 +78,9 @@ export function Shuffle({
   ...props
 }: ShuffleProps) {
   const [displayText, setDisplayText] = useState(text);
+  const [isHovered, setIsHovered] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const originalText = useRef(text);
 
   useEffect(() => {
@@ -89,9 +90,9 @@ export function Shuffle({
 
   const startShuffle = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-    
+
     let iteration = 0;
-    const steps = duration * 30; // Approx 30fps
+    const steps = duration * 30;
     const increment = text.length / steps;
 
     intervalRef.current = setInterval(() => {
@@ -111,27 +112,27 @@ export function Shuffle({
         if (intervalRef.current) clearInterval(intervalRef.current);
         setDisplayText(originalText.current);
       }
-      
+
       iteration += increment;
     }, 30);
   };
 
-  // Initial play on mount
-  useEffect(() => {
-    startShuffle();
-    return () => {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-    }
-  }, []);
-
   const handleMouseEnter = (e: React.MouseEvent<HTMLSpanElement>) => {
+    setIsHovered(true);
     startShuffle();
     props.onMouseEnter?.(e);
   };
 
+  useEffect(() => {
+    startShuffle();
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    }
+  }, []);
+
   return (
-    <span 
-      className={cn("inline-block whitespace-nowrap", className)} 
+    <span
+      className={cn("inline-block whitespace-nowrap", className)}
       onMouseEnter={handleMouseEnter}
       {...props}
     >
