@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Copy, CheckCheck, Terminal } from "lucide-react";
 import { copyComponent } from "@/lib/action";
 import { cn } from "@/lib/utils";
-import { OpenInV0Button } from "../open-in-v0-button";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function PreviewContent({
@@ -63,11 +62,7 @@ export default function PreviewContent({
     }, 1000);
   };
 
-  const openInV0 = () => {
-    const [folder, filename] = link.split("/");
 
-    return filename ? filename : folder;
-  };
 
   useEffect(() => {
     if (state.error) {
@@ -166,7 +161,7 @@ export default function PreviewContent({
           </a>
 
           <div className="flex items-center gap-2">
-            <OpenInV0Button name={openInV0()} />
+
             <Button
               ref={terminalButtonRef}
               onClick={handleTerminalClick}
