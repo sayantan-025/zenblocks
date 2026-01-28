@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import { ViewTransitions } from "next-view-transitions";
+import { Analytics } from "@vercel/analytics/next";
 
 /* -------------------------------------------------------------------------- */
 /*                                   FONTS                                    */
@@ -65,6 +66,7 @@ export default function RootLayout({
           >
             <RootProvider>{children}</RootProvider>
           </ThemeProvider>
+          <Analytics />
         </body>
       </html>
     </ViewTransitions>
