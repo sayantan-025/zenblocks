@@ -58,7 +58,10 @@ export function ThemeSwitcher({ className, ...props }: React.ButtonHTMLAttribute
 
                     {/* Mask for the Crescent Effect - Creates moon crescent */}
                     <motion.div
-                        className="absolute rounded-full bg-slate-900"
+                        className={cn(
+                            "absolute rounded-full transition-colors duration-500",
+                            isDark ? "bg-slate-900" : "bg-amber-100"
+                        )}
                         style={{
                             width: "75%",
                             height: "75%",
