@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
 import PreviewWrapper from "./preview-wrapper";
+import { ThemeSwitcher } from "@/components/zenblocks/theme-switcher";
 
 // Arrays to categorize components
 const CENTERED_COMPONENTS = [
@@ -35,12 +36,19 @@ export default async function PreviewPage({
       componentName.startsWith(component)
     );
 
-    return shouldCenter ? (
-      <div className="min-h-screen flex items-center justify-center">
-        <PreviewWrapper componentName={componentName} />
+    return (
+      <div className="relative min-h-screen">
+        {shouldCenter ? (
+          <div className="min-h-screen flex items-center justify-center">
+            <PreviewWrapper componentName={componentName} />
+          </div>
+        ) : (
+          <PreviewWrapper componentName={componentName} />
+        )}
+        <div className="fixed top-6 right-6 z-[100]">
+          <ThemeSwitcher />
+        </div>
       </div>
-    ) : (
-      <PreviewWrapper componentName={componentName} />
     );
   } catch (error) {
     console.error("Error loading component:", error);

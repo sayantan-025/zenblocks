@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 export function ThemeSwitcher({ className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     const [mounted, setMounted] = useState(false);
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme, resolvedTheme } = useTheme();
 
     useEffect(() => {
         setMounted(true);
@@ -19,7 +19,7 @@ export function ThemeSwitcher({ className, ...props }: React.ButtonHTMLAttribute
         );
     }
 
-    const isDark = theme === "dark";
+    const isDark = resolvedTheme === "dark";
 
     return (
         <button
