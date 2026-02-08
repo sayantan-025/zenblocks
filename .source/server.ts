@@ -1,10 +1,11 @@
 // @ts-nocheck
-import * as __fd_glob_16 from "../content/docs/blocks/toast.mdx?collection=docs"
-import * as __fd_glob_15 from "../content/docs/blocks/theme-switcher.mdx?collection=docs"
-import * as __fd_glob_14 from "../content/docs/blocks/shuffle.mdx?collection=docs"
-import * as __fd_glob_13 from "../content/docs/blocks/pressure-test.mdx?collection=docs"
-import * as __fd_glob_12 from "../content/docs/blocks/pre-loader.mdx?collection=docs"
-import * as __fd_glob_11 from "../content/docs/blocks/orb-field.mdx?collection=docs"
+import * as __fd_glob_17 from "../content/docs/blocks/toast.mdx?collection=docs"
+import * as __fd_glob_16 from "../content/docs/blocks/theme-switcher.mdx?collection=docs"
+import * as __fd_glob_15 from "../content/docs/blocks/shuffle.mdx?collection=docs"
+import * as __fd_glob_14 from "../content/docs/blocks/pressure-test.mdx?collection=docs"
+import * as __fd_glob_13 from "../content/docs/blocks/pre-loader.mdx?collection=docs"
+import * as __fd_glob_12 from "../content/docs/blocks/orb-field.mdx?collection=docs"
+import * as __fd_glob_11 from "../content/docs/blocks/neomorphic-file-upload.mdx?collection=docs"
 import * as __fd_glob_10 from "../content/docs/blocks/navbar.mdx?collection=docs"
 import * as __fd_glob_9 from "../content/docs/blocks/modal-dialog.mdx?collection=docs"
 import * as __fd_glob_8 from "../content/docs/blocks/logo-loop.mdx?collection=docs"
@@ -24,4 +25,4 @@ const create = server<typeof Config, import("fumadocs-mdx/runtime/types").Intern
   }
 }>({"doc":{"passthroughs":["extractedReferences"]}});
 
-export const docs = await create.docs("docs", "content\docs", {"meta.json": __fd_glob_0, }, {"index.mdx": __fd_glob_1, "blocks/animated-button.mdx": __fd_glob_2, "blocks/animated-clock.mdx": __fd_glob_3, "blocks/bento-grid.mdx": __fd_glob_4, "blocks/floating-dock.mdx": __fd_glob_5, "blocks/image-gallery.mdx": __fd_glob_6, "blocks/image-trail.mdx": __fd_glob_7, "blocks/logo-loop.mdx": __fd_glob_8, "blocks/modal-dialog.mdx": __fd_glob_9, "blocks/navbar.mdx": __fd_glob_10, "blocks/orb-field.mdx": __fd_glob_11, "blocks/pre-loader.mdx": __fd_glob_12, "blocks/pressure-test.mdx": __fd_glob_13, "blocks/shuffle.mdx": __fd_glob_14, "blocks/theme-switcher.mdx": __fd_glob_15, "blocks/toast.mdx": __fd_glob_16, });
+export const docs = await create.docs("docs", "content\docs", {"meta.json": __fd_glob_0, }, {"index.mdx": __fd_glob_1, "blocks/animated-button.mdx": __fd_glob_2, "blocks/animated-clock.mdx": __fd_glob_3, "blocks/bento-grid.mdx": __fd_glob_4, "blocks/floating-dock.mdx": __fd_glob_5, "blocks/image-gallery.mdx": __fd_glob_6, "blocks/image-trail.mdx": __fd_glob_7, "blocks/logo-loop.mdx": __fd_glob_8, "blocks/modal-dialog.mdx": __fd_glob_9, "blocks/navbar.mdx": __fd_glob_10, "blocks/neomorphic-file-upload.mdx": __fd_glob_11, "blocks/orb-field.mdx": __fd_glob_12, "blocks/pre-loader.mdx": __fd_glob_13, "blocks/pressure-test.mdx": __fd_glob_14, "blocks/shuffle.mdx": __fd_glob_15, "blocks/theme-switcher.mdx": __fd_glob_16, "blocks/toast.mdx": __fd_glob_17, });

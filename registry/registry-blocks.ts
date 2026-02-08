@@ -193,4 +193,16 @@ export const block: Registry = [
       },
     ],
   },
+  {
+    name: "neomorphic-file-upload",
+    type: "registry:block",
+    dependencies: ["framer-motion", "lucide-react", "clsx", "tailwind-merge"],
+    registryDependencies: [],
+    files: [
+      {
+        path: "components/zenblocks/neomorphic-file-upload.tsx",
+        type: "registry:component",
+      },
+    ],
+  },
 ];

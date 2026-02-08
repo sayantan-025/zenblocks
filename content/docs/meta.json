@@ -22,6 +22,7 @@
     "blocks/shuffle",
     "blocks/theme-switcher",
     "blocks/toast",
-    "blocks/modal-dialog"
+    "blocks/modal-dialog",
+    "blocks/neomorphic-file-upload"
   ]
 }
