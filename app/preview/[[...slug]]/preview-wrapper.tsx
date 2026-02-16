@@ -9,7 +9,7 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
 
     useEffect(() => {
         // Skip dynamic loading for components with manual harnesses
-        if (componentName === "toast" || componentName === "modal-dialog" || componentName === "bento-grid") return;
+        if (componentName === "toast" || componentName === "modal-dialog" || componentName === "bento-grid" || componentName === "get-started-modal") return;
 
         let mounted = true;
         const loadComponent = async () => {
@@ -95,6 +95,15 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
         return (
             <div className="relative z-10 w-full min-h-screen bg-white dark:bg-zinc-950">
                 <BentoGridHarness />
+            </div>
+        )
+    }
+
+    // Special harness for GetStartedModal
+    if (componentName === "get-started-modal") {
+        return (
+            <div className="relative z-10 w-full h-full flex items-center justify-center">
+                <GetStartedModalHarness />
             </div>
         )
     }
@@ -335,6 +344,27 @@ function BentoGridHarness() {
                     />
                 </BentoGrid>
             </div>
+        </div>
+    );
+}
+
+// ------------------------------------------------------------------
+// Get Started Modal Harness
+// ------------------------------------------------------------------
+
+import { GetStartedModal } from "@/components/zenblocks/get-started-modal";
+
+function GetStartedModalHarness() {
+    const [open, setOpen] = React.useState(false);
+    return (
+        <div className="flex items-center justify-center p-12">
+            <button
+                onClick={() => setOpen(true)}
+                className="px-8 py-3 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-full text-sm font-bold shadow-lg hover:scale-105 transition-all duration-300"
+            >
+                Launch Get Started Modal
+            </button>
+            <GetStartedModal open={open} onOpenChange={setOpen} />
         </div>
     );
 }

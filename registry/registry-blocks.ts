@@ -205,4 +205,16 @@ export const block: Registry = [
       },
     ],
   },
+  {
+    name: "get-started-modal",
+    type: "registry:block",
+    dependencies: ["framer-motion", "lucide-react", "react-dom", "clsx", "tailwind-merge"],
+    registryDependencies: ["modal-dialog"],
+    files: [
+      {
+        path: "components/zenblocks/get-started-modal.tsx",
+        type: "registry:component",
+      },
+    ],
+  },
 ];

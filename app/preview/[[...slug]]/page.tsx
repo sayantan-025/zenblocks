@@ -17,16 +17,20 @@ const CENTERED_COMPONENTS = [
   "animated-button",
   "theme-switcher",
   "toast",
+  "get-started-modal",
 ];
 
 // const FULL_WIDTH_COMPONENTS = ["hero"];
 
 export default async function PreviewPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string[] }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
+  const { hideTheme } = await searchParams;
   if (!slug.length) return notFound();
 
   const componentName = slug.join("/");
@@ -45,9 +49,11 @@ export default async function PreviewPage({
         ) : (
           <PreviewWrapper componentName={componentName} />
         )}
-        <div className="fixed top-6 right-6 z-[100]">
-          <ThemeSwitcher />
-        </div>
+        {!hideTheme && (
+          <div className="fixed top-6 right-6 z-[100]">
+            <ThemeSwitcher />
+          </div>
+        )}
       </div>
     );
   } catch (error) {

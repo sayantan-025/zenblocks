@@ -21,6 +21,7 @@ export function Preview({
   className = "",
   link,
   useIframe = false,
+  height,
   compact = false,
   comment = [],
   isBlock = false,
@@ -44,10 +45,13 @@ export function Preview({
 
         {useIframe ? (
           <div className="w-full my-4 border rounded-2xl border-zinc-400 dark:border-zinc-700">
-            <div className="relative w-full h-screen overflow-hidden">
+            <div
+              className="relative w-full overflow-hidden"
+              style={{ height: height || "400px" }}
+            >
               <iframe
                 title={link}
-                src={`${prePath}/preview/${link}`}
+                src={`${prePath}/preview/${link}?hideTheme=true`}
                 className="w-full h-full overflow-y-auto list-none"
                 style={{
                   border: "none",

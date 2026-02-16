@@ -23,6 +23,7 @@
     "blocks/theme-switcher",
     "blocks/toast",
     "blocks/modal-dialog",
+    "blocks/get-started-modal",
     "blocks/neomorphic-file-upload"
   ]
 }
