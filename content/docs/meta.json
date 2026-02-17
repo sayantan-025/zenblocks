@@ -23,7 +23,7 @@
     "blocks/theme-switcher",
     "blocks/toast",
     "blocks/modal-dialog",
-    "blocks/auth-modal",
+    "blocks/auth-model",
     "blocks/neomorphic-file-upload"
   ]
 }

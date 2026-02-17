@@ -9,7 +9,7 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
 
     useEffect(() => {
         // Skip dynamic loading for components with manual harnesses
-        if (componentName === "toast" || componentName === "modal-dialog" || componentName === "bento-grid" || componentName === "auth-modal") return;
+        if (componentName === "toast" || componentName === "modal-dialog" || componentName === "bento-grid" || componentName === "auth-model") return;
 
         let mounted = true;
         const loadComponent = async () => {
@@ -99,11 +99,11 @@ export default function PreviewWrapper({ componentName }: { componentName: strin
         )
     }
 
-    // Special harness for AuthModal
-    if (componentName === "auth-modal") {
+    // Special harness for AuthModel
+    if (componentName === "auth-model") {
         return (
-            <div className="relative z-10 w-full h-full flex items-center justify-center">
-                <AuthModalHarness />
+            <div className="relative z-10 w-full h-full flex items-center justify-center p-4">
+                <AuthModelHarness />
             </div>
         )
     }
@@ -349,15 +349,13 @@ function BentoGridHarness() {
 }
 
 // ------------------------------------------------------------------
-// Auth Modal Harness
+// Auth Model Harness
 // ------------------------------------------------------------------
 
-import { AuthModal } from "@/components/zenblocks/auth-modal";
-import { Github, Mail } from "lucide-react";
+import { AuthModel } from "@/components/zenblocks/auth-model";
+import { Github } from "lucide-react";
 
-function AuthModalHarness() {
-    const [open, setOpen] = React.useState(false);
-
+function AuthModelHarness() {
     const providers = [
         {
             id: "google",
@@ -393,21 +391,11 @@ function AuthModalHarness() {
     ];
 
     return (
-        <div className="flex items-center justify-center p-12">
-            <button
-                onClick={() => setOpen(true)}
-                className="px-8 py-3 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-full text-sm font-bold shadow-lg hover:scale-105 transition-all duration-300"
-            >
-                Launch Auth Modal
-            </button>
-            <AuthModal
-                open={open}
-                onOpenChange={setOpen}
-                providers={providers}
-                showDivider={true}
-                dividerText="or continue with"
-                onSecondaryAction={(val) => alert(`Continuing with: ${val}`)}
-            />
-        </div>
+        <AuthModel
+            providers={providers}
+            showDivider={true}
+            dividerText="or continue with"
+            onSecondaryAction={(val) => alert(`Continuing with: ${val}`)}
+        />
     );
 }

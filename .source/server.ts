@@ -13,7 +13,7 @@ import * as __fd_glob_8 from "../content/docs/blocks/image-trail.mdx?collection=
 import * as __fd_glob_7 from "../content/docs/blocks/image-gallery.mdx?collection=docs"
 import * as __fd_glob_6 from "../content/docs/blocks/floating-dock.mdx?collection=docs"
 import * as __fd_glob_5 from "../content/docs/blocks/bento-grid.mdx?collection=docs"
-import * as __fd_glob_4 from "../content/docs/blocks/auth-modal.mdx?collection=docs"
+import * as __fd_glob_4 from "../content/docs/blocks/auth-model.mdx?collection=docs"
 import * as __fd_glob_3 from "../content/docs/blocks/animated-clock.mdx?collection=docs"
 import * as __fd_glob_2 from "../content/docs/blocks/animated-button.mdx?collection=docs"
 import * as __fd_glob_1 from "../content/docs/index.mdx?collection=docs"
@@ -26,4 +26,4 @@ const create = server<typeof Config, import("fumadocs-mdx/runtime/types").Intern
   }
 }>({"doc":{"passthroughs":["extractedReferences"]}});
 
-export const docs = await create.docs("docs", "content\docs", {"meta.json": __fd_glob_0, }, {"index.mdx": __fd_glob_1, "blocks/animated-button.mdx": __fd_glob_2, "blocks/animated-clock.mdx": __fd_glob_3, "blocks/auth-modal.mdx": __fd_glob_4, "blocks/bento-grid.mdx": __fd_glob_5, "blocks/floating-dock.mdx": __fd_glob_6, "blocks/image-gallery.mdx": __fd_glob_7, "blocks/image-trail.mdx": __fd_glob_8, "blocks/logo-loop.mdx": __fd_glob_9, "blocks/modal-dialog.mdx": __fd_glob_10, "blocks/navbar.mdx": __fd_glob_11, "blocks/neomorphic-file-upload.mdx": __fd_glob_12, "blocks/orb-field.mdx": __fd_glob_13, "blocks/pre-loader.mdx": __fd_glob_14, "blocks/pressure-test.mdx": __fd_glob_15, "blocks/shuffle.mdx": __fd_glob_16, "blocks/theme-switcher.mdx": __fd_glob_17, "blocks/toast.mdx": __fd_glob_18, });
+export const docs = await create.docs("docs", "content\docs", {"meta.json": __fd_glob_0, }, {"index.mdx": __fd_glob_1, "blocks/animated-button.mdx": __fd_glob_2, "blocks/animated-clock.mdx": __fd_glob_3, "blocks/auth-model.mdx": __fd_glob_4, "blocks/bento-grid.mdx": __fd_glob_5, "blocks/floating-dock.mdx": __fd_glob_6, "blocks/image-gallery.mdx": __fd_glob_7, "blocks/image-trail.mdx": __fd_glob_8, "blocks/logo-loop.mdx": __fd_glob_9, "blocks/modal-dialog.mdx": __fd_glob_10, "blocks/navbar.mdx": __fd_glob_11, "blocks/neomorphic-file-upload.mdx": __fd_glob_12, "blocks/orb-field.mdx": __fd_glob_13, "blocks/pre-loader.mdx": __fd_glob_14, "blocks/pressure-test.mdx": __fd_glob_15, "blocks/shuffle.mdx": __fd_glob_16, "blocks/theme-switcher.mdx": __fd_glob_17, "blocks/toast.mdx": __fd_glob_18, });

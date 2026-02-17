@@ -206,14 +206,14 @@ export const block: Registry = [
     ],
   },
   {
-    name: "auth-modal",
+    name: "auth-model",
     type: "registry:block",
     dependencies: ["lucide-react"],
-    registryDependencies: ["button", "modal-dialog", "input"],
+    registryDependencies: ["button", "input"],
     files: [
       {
-        path: "components/zenblocks/auth-modal.tsx",
-        type: "registry:block",
+        path: "components/zenblocks/auth-model.tsx",
+        type: "registry:component",
       },
     ],
     category: "Authentication",
