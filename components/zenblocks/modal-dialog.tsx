@@ -254,7 +254,7 @@ export function ModalContent({
                                 exit={{ opacity: 0, scale: 0.8, y: 20, transition: { duration: 0.2 } }}
                                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                 className={cn(
-                                    "pointer-events-auto relative w-full max-w-lg overflow-hidden rounded-3xl bg-zinc-900 border border-white/10 shadow-2xl isolate",
+                                    "pointer-events-auto relative w-full max-w-lg rounded-3xl bg-zinc-900 border border-white/10 shadow-2xl isolate max-h-[calc(100vh-2rem)] overflow-y-auto",
                                     className
                                 )}
                                 onMouseMove={handleMouseMove}
@@ -268,7 +268,7 @@ export function ModalContent({
                                     }}
                                 />
 
-                                <div className="relative z-10 bg-zinc-950/90 h-full w-full">
+                                <div className="relative z-10 bg-zinc-950/90 w-full min-h-full">
                                     {children}
                                 </div>
 

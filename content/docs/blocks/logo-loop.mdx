@@ -61,19 +61,19 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/logo-loop.json
 
     ```tsx
     "use client";
-    
-    import React, {  useEffect, useRef, useState } from 'react';
-    import { motion, useSpring, useMotionValue, useTransform } from 'framer-motion';
+
+    import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+    import { motion, AnimatePresence, useSpring, useMotionValue, useTransform } from 'framer-motion';
     import { cn } from '@/lib/utils';
     import { Cpu, Globe, Zap, Shield, Database, Cloud } from "lucide-react";
-    
+
     export type LogoItem = {
         src?: string;
         node?: React.ReactNode;
         alt?: string;
         name?: string;
     };
-    
+
     export const DEFAULT_LOGOS: LogoItem[] = [
         { node: <Cpu size={20} className="text-blue-500" />, name: "Compute" },
         { node: <Globe size={20} className="text-emerald-500" />, name: "Edge" },
@@ -82,7 +82,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/logo-loop.json
         { node: <Database size={20} className="text-orange-500" />, name: "Storage" },
         { node: <Cloud size={20} className="text-cyan-500" />, name: "Cloud" },
     ];
-    
+
     interface LogoLoopProps {
         items?: LogoItem[];
         speed?: number;
@@ -92,23 +92,23 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/logo-loop.json
         pauseOnHover?: boolean;
         className?: string;
     }
-    
+
     const ANIMATION_CONFIG = {
         SMOOTH_TAU: 0.2, // Faster response than reference
         MIN_COPIES: 2,
     } as const;
-    
+
     /* -------------------------------------------------------------------------- */
     /*                               LOGO BOX COMPONENT                           */
     /* -------------------------------------------------------------------------- */
-    
+
     const LogoBox = ({ item, height }: { item: LogoItem; height: number }) => {
         const mouseX = useMotionValue(0);
         const mouseY = useMotionValue(0);
-    
+
         const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [15, -15]), { stiffness: 300, damping: 30 });
         const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-15, 15]), { stiffness: 300, damping: 30 });
-    
+
         const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
             const rect = e.currentTarget.getBoundingClientRect();
             const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -116,12 +116,12 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/logo-loop.json
             mouseX.set(x);
             mouseY.set(y);
         };
-    
+
         const handleMouseLeave = () => {
             mouseX.set(0);
             mouseY.set(0);
         };
-    
+
         return (
             <motion.div
                 onMouseMove={handleMouseMove}
@@ -135,7 +135,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/logo-loop.json
                 >
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out" />
                 </motion.div>
-    
+
                 {item.node ? (
                     <div className="flex items-center gap-3">
                         {item.node}
@@ -151,11 +151,11 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/logo-loop.json
             </motion.div>
         );
     };
-    
+
     /* -------------------------------------------------------------------------- */
     /*                                MAIN LOGO LOOP                              */
     /* -------------------------------------------------------------------------- */
-    
+
     export const LogoLoop = ({
         items = DEFAULT_LOGOS,
         speed = 100, // px per second
@@ -168,80 +168,80 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/logo-loop.json
         const containerRef = useRef<HTMLDivElement>(null);
         const trackRef = useRef<HTMLDivElement>(null);
         const seqRef = useRef<HTMLDivElement>(null);
-    
+
         const [seqWidth, setSeqWidth] = useState(0);
         const [copyCount, setCopyCount] = useState(2);
         const [isHovered, setIsHovered] = useState(false);
-    
+
         // Animation State
         const offsetRef = useRef(0);
         const lastTimeRef = useRef<number | null>(null);
         const velocityRef = useRef(speed * (direction === 'left' ? 1 : -1));
-    
+
         // Determine copies needed via ResizeObserver
         useEffect(() => {
             if (!containerRef.current || !seqRef.current) return;
-    
+
             const update = () => {
                 if (!containerRef.current || !seqRef.current) return;
                 const cWidth = containerRef.current.offsetWidth;
                 const sWidth = seqRef.current.offsetWidth + gap;
-    
+
                 if (sWidth > 0) {
                     setSeqWidth(sWidth);
                     const needed = Math.ceil(cWidth / sWidth) + 2;
                     setCopyCount(Math.max(2, needed));
                 }
             };
-    
+
             const observer = new ResizeObserver(() => {
                 // Debounce or just call update
                 requestAnimationFrame(update);
             });
-    
+
             observer.observe(containerRef.current);
             if (seqRef.current) observer.observe(seqRef.current);
-    
+
             // Initial call
             update();
-    
+
             return () => observer.disconnect();
         }, [items, gap]);
-    
+
         // Main RAF Loop
         useEffect(() => {
             let animationFrameId: number;
             lastTimeRef.current = null; // Reset time on effect restart
-    
+
             const animate = (time: number) => {
                 if (lastTimeRef.current === null) {
                     lastTimeRef.current = time;
                     animationFrameId = requestAnimationFrame(animate);
                     return;
                 }
-    
+
                 const delta = (time - lastTimeRef.current) / 1000;
                 lastTimeRef.current = time;
-    
+
                 // Smooth velocity transitions
                 const targetVel = isHovered && pauseOnHover ? 0 : speed * (direction === 'left' ? 1 : -1);
                 const easing = 1 - Math.exp(-delta / ANIMATION_CONFIG.SMOOTH_TAU);
                 velocityRef.current += (targetVel - velocityRef.current) * easing;
-    
+
                 if (seqWidth > 0 && trackRef.current) {
                     offsetRef.current += velocityRef.current * delta;
                     // Wrap offset
                     offsetRef.current = (offsetRef.current % seqWidth + seqWidth) % seqWidth;
                     trackRef.current.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`;
                 }
-    
+
                 animationFrameId = requestAnimationFrame(animate);
             };
-    
+
             animationFrameId = requestAnimationFrame(animate);
             return () => cancelAnimationFrame(animationFrameId);
         }, [seqWidth, isHovered, speed, direction, pauseOnHover]);
-    
+
         return (
             <div
                 ref={containerRef}
@@ -250,7 +250,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/logo-loop.json
                 {/* Masking Gradients */}
                 <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white dark:from-zinc-950 to-transparent z-10 pointer-events-none" />
                 <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white dark:from-zinc-950 to-transparent z-10 pointer-events-none" />
-    
+
                 <div
                     ref={trackRef}
                     className="flex w-max"

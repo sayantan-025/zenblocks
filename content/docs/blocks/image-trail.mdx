@@ -58,12 +58,12 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
 
     ```tsx
     "use client";
-    
+
     import React, { useRef, useEffect, useState } from "react";
     import { useGSAP } from "@gsap/react";
     import gsap from "gsap";
     import { cn } from "@/lib/utils";
-    
+
     export const DEFAULT_IMAGES = [
         "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=2000&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=2000&auto=format&fit=crop",
@@ -73,13 +73,13 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
         "https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2000&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1433086966358-54859d0ed716?q=80&w=2000&auto=format&fit=crop",
     ];
-    
+
     interface ImageTrailProps {
         images?: string[];
         className?: string;
         containerClassName?: string;
     }
-    
+
     export const ImageTrail = ({
         images = DEFAULT_IMAGES,
         className,
@@ -91,7 +91,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
         const lastY = useRef(0);
         const zIndex = useRef(1);
         const activeIndex = useRef(0);
-    
+
         // Initial setup: hide all images
         useGSAP(() => {
             gsap.set(imagesRef.current, {
@@ -102,18 +102,18 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
                 visibility: "hidden"
             });
         }, { scope: containerRef });
-    
+
         const spawnImage = (x: number, y: number) => {
             const dist = Math.hypot(x - lastX.current, y - lastY.current);
-    
+
             if (dist > 60) {
                 const img = imagesRef.current[activeIndex.current];
                 if (img) {
                     zIndex.current += 1;
-    
+
                     // Reset and clear any existing animation on this specific element
                     gsap.killTweensOf(img);
-    
+
                     // Animate from cursor position
                     gsap.fromTo(img,
                         {
@@ -145,7 +145,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
                             }
                         }
                     );
-    
+
                     // Update trackers
                     activeIndex.current = (activeIndex.current + 1) % images.length;
                     lastX.current = x;
@@ -153,7 +153,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
                 }
             }
         };
-    
+
         const handleMouseMove = (e: React.MouseEvent) => {
             if (!containerRef.current) return;
             const rect = containerRef.current.getBoundingClientRect();
@@ -161,7 +161,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
             const y = e.clientY - rect.top;
             spawnImage(x, y);
         };
-    
+
         const handleTouchMove = (e: React.TouchEvent) => {
             if (!containerRef.current) return;
             const rect = containerRef.current.getBoundingClientRect();
@@ -170,7 +170,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
             const y = touch.clientY - rect.top;
             spawnImage(x, y);
         };
-    
+
         return (
             <div
                 ref={containerRef}
@@ -184,7 +184,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
                 {/* Background Decor */}
                 <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
                     style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
-    
+
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none select-none">
                     <h2 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-zinc-900 dark:text-white">
                         Visual <span className="text-blue-500">Echo</span>
@@ -193,7 +193,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/image-trail.json
                         Trace the movement
                     </p>
                 </div>
-    
+
                 {/* Trail Elements */}
                 {images.map((src, i) => (
                     <div

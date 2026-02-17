@@ -21,50 +21,50 @@ export function GetStartedModal({ open, onOpenChange }: GetStartedModalProps) {
     return (
         <ModalDialog open={open} onOpenChange={onOpenChange}>
             <ModalContent className="max-w-md p-0 overflow-hidden border-zinc-800 bg-zinc-950">
-                <div className="p-8 flex flex-col items-center text-center">
+                <div className="p-6 sm:p-8 flex flex-col items-center text-center">
                     {/* Logo Section */}
-                    <div className="mb-8 mt-4 w-full flex flex-col items-center">
+                    <div className="mb-6 sm:mb-8 mt-2 sm:mt-4 w-full flex flex-col items-center">
                         <div className="flex gap-1 items-center justify-center">
-                            <div className="w-4 h-4 rounded-sm bg-white animate-pulse" />
-                            <div className="w-4 h-4 rounded-sm bg-zinc-500" />
-                            <div className="w-4 h-4 rounded-sm bg-zinc-700" />
+                            <div className="w-3.5 h-3.5 rounded-sm bg-white animate-pulse" />
+                            <div className="w-3.5 h-3.5 rounded-sm bg-zinc-500" />
+                            <div className="w-3.5 h-3.5 rounded-sm bg-zinc-700" />
                         </div>
-                        <h1 className="text-3xl font-black tracking-tighter text-white mt-4 italic">ZenBlocks</h1>
+                        <h1 className="text-2xl sm:text-3xl font-black tracking-tighter text-white mt-3 sm:mt-4 italic">ZenBlocks</h1>
                     </div>
 
-                    <ModalHeader className="p-0 mb-8">
-                        <ModalTitle className="text-zinc-200 text-lg font-medium text-center justify-center">
+                    <ModalHeader className="p-0 mb-6 sm:mb-8">
+                        <ModalTitle className="text-zinc-200 text-base sm:text-lg font-medium text-center justify-center leading-relaxed">
                             To use ZenBlocks you must log into an existing account or create one using one of the options below
                         </ModalTitle>
                     </ModalHeader>
 
-                    <div className="w-full space-y-3">
+                    <div className="w-full space-y-2.5 sm:space-y-3">
                         <Button
                             variant="outline"
-                            className="w-full h-12 bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800 hover:text-white transition-all rounded-xl gap-3 text-base font-semibold"
+                            className="w-full h-11 sm:h-12 bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800 hover:text-white transition-all rounded-xl gap-3 text-sm sm:text-base font-semibold"
                         >
-                            <GoogleIcon className="w-5 h-5" />
+                            <GoogleIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                             Sign in with Google
                         </Button>
 
                         <Button
                             variant="outline"
-                            className="w-full h-12 bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800 hover:text-white transition-all rounded-xl gap-3 text-base font-semibold"
+                            className="w-full h-11 sm:h-12 bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800 hover:text-white transition-all rounded-xl gap-3 text-sm sm:text-base font-semibold"
                         >
-                            <Github className="w-5 h-5" />
+                            <Github className="w-4 h-4 sm:w-5 sm:h-5" />
                             Sign in with GitHub
                         </Button>
 
                         <Button
                             variant="outline"
-                            className="w-full h-12 bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800 hover:text-white transition-all rounded-xl gap-3 text-base font-semibold"
+                            className="w-full h-11 sm:h-12 bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800 hover:text-white transition-all rounded-xl gap-3 text-sm sm:text-base font-semibold"
                         >
-                            <Mail className="w-5 h-5" />
+                            <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
                             Sign in with email and password
                         </Button>
                     </div>
 
-                    <div className="mt-8 text-xs text-zinc-500 max-w-[280px]">
+                    <div className="mt-6 sm:mt-8 text-[10px] sm:text-xs text-zinc-500 max-w-[280px]">
                         By signing in, you accept the{" "}
                         <a href="/terms" className="text-zinc-400 hover:text-white underline underline-offset-2 transition-colors">
                             Terms of Service
