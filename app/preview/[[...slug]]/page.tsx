@@ -17,7 +17,7 @@ const CENTERED_COMPONENTS = [
   "animated-button",
   "theme-switcher",
   "toast",
-  "get-started-modal",
+  "auth-modal",
 ];
 
 // const FULL_WIDTH_COMPONENTS = ["hero"];

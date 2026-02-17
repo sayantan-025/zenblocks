@@ -206,15 +206,16 @@ export const block: Registry = [
     ],
   },
   {
-    name: "get-started-modal",
+    name: "auth-modal",
     type: "registry:block",
-    dependencies: ["framer-motion", "lucide-react", "react-dom", "clsx", "tailwind-merge"],
-    registryDependencies: ["modal-dialog"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["button", "modal-dialog", "input"],
     files: [
       {
-        path: "components/zenblocks/get-started-modal.tsx",
-        type: "registry:component",
+        path: "components/zenblocks/auth-modal.tsx",
+        type: "registry:block",
       },
     ],
+    category: "Authentication",
   },
 ];
