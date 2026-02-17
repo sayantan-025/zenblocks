@@ -1,30 +1,44 @@
 ---
 title: Auth Model
-description: "A production-ready authentication card with ZenBlocks branding and polished multi-provider support."
+description: A production-grade authentication component featuring polished multi-provider support and a minimalist design.
 icon: LogIn
 ---
 
+import { AuthModel } from "@/components/zenblocks/auth-model";
 import { Preview } from "@/components/mdx/preview";
 
 ## Overview
 
-The `AuthModel` is a robust, production-level authentication component that retains the iconic ZenBlocks minimalist design. Unlike traditional modals, the `AuthModel` is a standalone card, providing flexibility to be used as a full-page login, a sidebar element, or wrapped inside a `ModalDialog`.
+The `AuthModel` is a refined, production-ready authentication component designed with the signature ZenBlocks minimalist aesthetic. It serves as a versatile building block for user onboarding, offering a clean layout that balances social authentication with secondary login methods like Email or Phone.
+
+Designed for flexibility, it can function as a standalone landing page card, a sidebar element, or be seamlessly integrated into a modal environment.
 
 ---
 
 ## Features
 
-- **Standalone Design**: A clean, card-based layout that works anywhere in your UI.
-- **Branded Design**: Signature ZenBlocks animated logo and minimalist aesthetics.
-- **Smart Logic**: Dedicates the bottom section to secondary auth (Email/Phone), removing redundancy from social providers.
-- **Loading States**: Full support for `loadingProviderId` (social) and `isSecondaryLoading` (bottom button).
-- **Customizable**: Control titles, descriptions, footers, and logo visibility.
+- **Production-Ready Aesthetics**: A clean, card-based layout with smooth transitions and subtle shadows.
+- **Multi-Provider Support**: Easily configurable social authentication buttons with individual loading states.
+- **Smart Logic**: Distinct separation between primary (social) and secondary (Email/Phone) authentication to reduce cognitive load.
+- **Standalone & Flexible**: Works anywhere in your UI; highly customizable for various layouts.
+- **Built-in Branding**: Optional ZenBlocks animated logo for a consistent brand experience.
+- **Accessible & Robust**: Fully accessible with ARIA support and proper keyboard navigation.
 
 ---
 
 ## Preview
 
-<Preview link="auth-model" useIframe height="600px" />
+<Preview link="auth-model">
+  <div className="relative w-full min-h-[500px] flex items-center justify-center rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-8">
+    <AuthModel
+      providers={[
+        { id: "github", label: "Continue with GitHub" },
+        { id: "google", label: "Continue with Google" },
+      ]}
+      showDivider
+    />
+  </div>
+</Preview>
 
 ---
 
@@ -32,7 +46,7 @@ The `AuthModel` is a robust, production-level authentication component that reta
 
 ### Method 1: CLI (Recommended)
 
-Install via the ZenBlocks CLI:
+Quickly add the component to your project:
 
 ```bash
 npx shadcn@latest add https://zenblocks-three.vercel.app/r/auth-model.json
@@ -40,17 +54,28 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/auth-model.json
 
 ### Method 2: Manual
 
-### 1. Install Dependencies
+1.  **Prerequisites**
 
-Ensure you have `button` and `input` (shadcn) installed.
+    The `AuthModel` relies on standard `shadcn/ui` components. Ensure these are installed first:
 
-```bash
-npm install lucide-react clsx tailwind-merge
-```
+    ```bash
+    npx shadcn@latest add button input
+    ```
 
-### 2. Copy the Source Code
+    > [!IMPORTANT]
+    > To use the `AuthModel` inside a modal, you **must** first install the [Modal Dialog](/docs/blocks/modal-dialog) component. This component is designed to be wrapped, not to include the modal logic itself.
 
-Copy this into `components/zenblocks/auth-model.tsx`.
+2.  **Install Dependencies**
+
+    Install additional utility dependencies:
+
+    ```bash
+    npm install lucide-react clsx tailwind-merge
+    ```
+
+3.  **Copy the Source Code**
+
+    Create `components/zenblocks/auth-model.tsx` and paste the following:
 
 <details>
 <summary>Click to expand source</summary>
@@ -249,8 +274,6 @@ export const AuthModel = React.forwardRef<HTMLDivElement, AuthModelProps>(
 
 ## Usage
 
-### Standalone Card
-
 ```tsx
 import { AuthModel } from "@/components/zenblocks/auth-model";
 import { Github } from "lucide-react";
@@ -276,52 +299,38 @@ export default function Example() {
 }
 ```
 
-### Within a Modal
-
-```tsx
-import { AuthModel } from "@/components/zenblocks/auth-model";
-import { ModalDialog, ModalContent } from "@/components/zenblocks/modal-dialog";
-
-export default function ModalExample({ open, setOpen }) {
-  return (
-    <ModalDialog open={open} onOpenChange={setOpen}>
-      <ModalContent className="max-w-md p-0 overflow-hidden border-none">
-        <AuthModel
-          providers={providers}
-          className="border-none shadow-none" // Remove card styles when inside modal
-        />
-      </ModalContent>
-    </ModalDialog>
-  );
-}
-```
-
 ---
 
 ## Props
 
-| Prop                 | Type                    | Default               | Description                                       |
-| -------------------- | ----------------------- | --------------------- | ------------------------------------------------- |
-| title                | ReactNode               | "To use ZenBlocks..." | Component title                                   |
-| description          | ReactNode               | -                     | Subtitle or description                           |
-| providers            | AuthProvider[]          | -                     | Array of social authentication providers          |
-| loadingProviderId    | string \| null          | -                     | The ID of the provider currently loading          |
-| showDivider          | boolean                 | false                 | Show a visual divider and secondary auth section  |
-| dividerText          | string                  | "or continue with"    | Text shown in the divider                         |
-| footer               | ReactNode               | -                     | Custom footer content (defaults to Terms/Privacy) |
-| showLogo             | boolean                 | true                  | Show the ZenBlocks brand logo                     |
-| secondaryPlaceholder | string                  | "Email or Phone"      | Placeholder for secondary input                   |
-| onSecondaryAction    | (value: string) => void | -                     | Callback for secondary button click               |
-| isSecondaryLoading   | boolean                 | false                 | Show loading state for secondary button           |
+| Prop                   | Type                      | Default                 | Description                              |
+| :--------------------- | :------------------------ | :---------------------- | :--------------------------------------- |
+| `title`                | `ReactNode`               | `"To use ZenBlocks..."` | Component title heading                  |
+| `description`          | `ReactNode`               | -                       | Subtitle or secondary instructions       |
+| `providers`            | `AuthProvider[]`          | -                       | Array of authentication providers        |
+| `loadingProviderId`    | `string \| null`          | -                       | The ID of the provider currently loading |
+| `showDivider`          | `boolean`                 | `false`                 | Show divider and secondary auth section  |
+| `dividerText`          | `string`                  | `"or continue with"`    | Text shown in the divider                |
+| `footer`               | `ReactNode`               | -                       | Custom footer content                    |
+| `showLogo`             | `boolean`                 | `true`                  | Show the ZenBlocks brand logo            |
+| `secondaryPlaceholder` | `string`                  | `"Email or Phone"`      | Placeholder for secondary input          |
+| `onSecondaryAction`    | `(value: string) => void` | -                       | Callback for secondary button            |
+| `isSecondaryLoading`   | `boolean`                 | `false`                 | Loading state for secondary button       |
 
 ---
 
-## Notes
+## Accessibility
 
-- The design is highly flexible: use it as a standalone piece or integrate it into any container.
-- Built with standard ZenBlocks aesthetics for a premium, production-ready feel.
-- Fully accessible with forwardRef and appropriate ARIA labels.
+- **ARIA Roles**: Uses `aria-busy` to communicate loading states to screen readers
+- **Keyboard Navigation**: Buttons and inputs are within the standard tab order
+- **Contrast**: High-contrast Zinc-based color palette for maximum readability
+- **Semantic HTML**: Proper use of headings and interactive elements
 
-```
+---
 
-```
+## Performance
+
+- **Lazy Loading**: Designed to work with dynamic imports for minimal bundle impact
+- **Memory Efficient**: Uses `forwardRef` for direct DOM access without overhead
+- **Optimized Assets**: CSS-based logo animation and shadows for GPU acceleration
+- **Clean States**: Controlled inputs with minimal re-render cycles
