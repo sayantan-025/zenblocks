@@ -71,6 +71,8 @@ async function buildFiles(files: File[], registryType: string) {
 /* -------------------------------------------------------------------------- */
 
 async function main() {
+  const index: any[] = [];
+
   for (const item of registry) {
     if (!item.files?.length) {
       throw new Error(`No files for ${item.name}`);
@@ -78,17 +80,21 @@ async function main() {
 
     const files = await buildFiles(item.files, item.type);
 
-    const output = JSON.stringify(
-      {
-        ...item,
-        files,
-      },
-      null,
-      2
-    );
+    const outputData = {
+      ...item,
+      files,
+    };
+
+    index.push(outputData);
+
+    const output = JSON.stringify(outputData, null, 2);
 
     await writeFile(`${OUT_DIR}/${item.name}.json`, output);
   }
+
+  // ✅ GENERATE INDEX.JSON
+  const indexOutput = JSON.stringify(index, null, 2);
+  await writeFile(`${OUT_DIR}/index.json`, indexOutput);
 
   console.log("✅ Registry built successfully");
 }
