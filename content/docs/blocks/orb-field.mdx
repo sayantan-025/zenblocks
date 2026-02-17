@@ -94,7 +94,6 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/orb-field.json
     } from "three";
     import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
     import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
-
     import { gsap, Observer } from "gsap/all";
     import { motion, useInView, MotionProps } from "framer-motion";
     import { useTheme } from "next-themes";
@@ -130,7 +129,6 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/orb-field.json
         ior?: number;
       };
     }
-
 
     interface OrbFieldConfig {
       canvas?: HTMLCanvasElement;
@@ -794,7 +792,7 @@ npx shadcn@latest add https://zenblocks-three.vercel.app/r/orb-field.json
 
     const DefaultOrbFieldConfig: PhysicsConfig = {
       count: 60,
-      colors: [0x18181b, 0x71717a, 0xd4d4d8, 0xffffff],
+      colors: [0x18181b, 0x71717a, 0xd4d4d8, 0xffffff], // Default to light theme colors
       ambientColor: 0xffffff,
       ambientIntensity: 0.5,
       lightIntensity: 150,
