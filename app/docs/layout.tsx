@@ -2,6 +2,9 @@ import { DocsLayout } from "fumadocs-ui/layouts/notebook";
 import { source } from "@/lib/source";
 import type { ReactNode } from "react";
 
+import { Github } from "lucide-react";
+import Link from "next/link";
+
 import type { Metadata } from "next";
 
 import "./docs-layout.css";
@@ -31,6 +34,17 @@ export default function Layout({ children }: { children: ReactNode }) {
           sidebar={{
             defaultOpenLevel: 1,
             collapsible: true,
+            footer: (
+              <div className="flex items-center gap-3 px-2 md:hidden">
+                <Link
+                  href="https://github.com/sayantan-025/zenblocks"
+                  target="_blank"
+                  className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors"
+                >
+                  <Github className="size-5" />
+                </Link>
+              </div>
+            ),
           }}
         >
           {children}
