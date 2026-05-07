@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { NavSection } from "@/config/navigation";
+import * as icons from "lucide-react";
+import React from "react";
 
 interface DesktopNavProps {
     sections: NavSection[];
@@ -34,6 +36,9 @@ export function DesktopNav({ sections, pathname }: DesktopNavProps) {
                                         : item.href === "/docs/components/block/"
                                             ? pathname.startsWith("/docs/components/block")
                                             : pathname === item.href;
+
+                                const Icon = item.icon ? (icons[item.icon as keyof typeof icons] as React.FC<{ size?: number; className?: string }>) : null;
+
                                 return (
                                     <Link
                                         key={item.id}
@@ -60,8 +65,11 @@ export function DesktopNav({ sections, pathname }: DesktopNavProps) {
                                                     : "text-zinc-600 dark:text-zinc-400"
                                             )}
                                         >
-                                            {isActive && (
-                                                <span className="text-[10px] opacity-70">→</span>
+                                            {Icon && (
+                                                <Icon size={16} className={cn(
+                                                    "transition-colors",
+                                                    isActive ? "text-current" : "text-zinc-400 dark:text-zinc-500"
+                                                )} />
                                             )}
                                             {item.title}
                                             {item.isNew && !isActive && (

@@ -24,6 +24,8 @@
     "blocks/toast",
     "blocks/modal-dialog",
     "blocks/auth-model",
-    "blocks/neomorphic-file-upload"
+    "blocks/neomorphic-file-upload",
+    "blocks/testimonials",
+    "blocks/faq"
   ]
 }

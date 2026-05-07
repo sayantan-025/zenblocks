@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const navItems = [
   { label: "Docs", href: "/docs" },
   { label: "Components", href: "/docs/blocks/navbar" },
-  { label: "Template", href: "" }
+  { label: "Templates", href: "/templates" },
 ];
 
 export default function HomeLayout({
@@ -29,4 +29,3 @@ export default function HomeLayout({
     </>
   );
 }
-

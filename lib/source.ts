@@ -1,6 +1,6 @@
 // lib/source.ts
 import { loader } from "fumadocs-core/source";
-import { icons } from "lucide-react";
+import * as icons from "lucide-react";
 import { createElement } from "react";
 import { docs } from "fumadocs-mdx:collections/server";
 
@@ -14,7 +14,7 @@ export const source = loader({
     }
 
     if (icon in icons) {
-      return createElement(icons[icon as keyof typeof icons]);
+      return createElement(icons[icon as keyof typeof icons] as any);
     }
   },
 });

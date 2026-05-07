@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
+import * as icons from "lucide-react";
 import type { NavSection } from "@/config/navigation";
+import React from "react";
 
 interface MobileNavProps {
     sections: NavSection[];
@@ -62,6 +64,9 @@ export function MobileNav({
                                                     : item.href === "/docs/components/block/"
                                                         ? pathname.startsWith("/docs/components/block")
                                                         : pathname === item.href;
+
+                                            const Icon = item.icon ? (icons[item.icon as keyof typeof icons] as React.FC<{ size?: number; className?: string }>) : null;
+
                                             return (
                                                 <Link
                                                     key={item.id}
@@ -80,7 +85,7 @@ export function MobileNav({
                                                 >
                                                     <span
                                                         className={cn(
-                                                            "text-sm font-medium",
+                                                            "text-sm font-medium flex items-center gap-2",
                                                             isActive
                                                                 ? item.isLab
                                                                     ? "text-purple-700 dark:text-purple-300"
@@ -88,14 +93,20 @@ export function MobileNav({
                                                                 : "text-zinc-600 dark:text-zinc-400"
                                                         )}
                                                     >
+                                                        {Icon && (
+                                                            <Icon size={16} className={cn(
+                                                                "transition-colors",
+                                                                isActive ? "text-current" : "text-zinc-400 dark:text-zinc-500"
+                                                            )} />
+                                                        )}
                                                         {item.title}
                                                         {item.isNew && !isActive && (
-                                                            <span className="ml-2 rounded-lg inline-flex items-center px-2 py-0.5 text-[9px] tracking-wide font-medium uppercase bg-linear-to-r from-emerald-400/5 via-emerald-500/5 to-teal-500/5 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-500/20 dark:ring-emerald-400/20">
+                                                            <span className="rounded-lg inline-flex items-center px-2 py-0.5 text-[9px] tracking-wide font-medium uppercase bg-linear-to-r from-emerald-400/5 via-emerald-500/5 to-teal-500/5 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-500/20 dark:ring-emerald-400/20">
                                                                 new
                                                             </span>
                                                         )}
                                                         {item.isLab && !isActive && (
-                                                            <span className="ml-2 rounded-xl inline-flex items-center px-2 py-0.5 text-[9px] tracking-wide font-medium uppercase bg-linear-to-r from-purple-400/5 via-purple-500/5 to-purple-500/5 text-purple-600 dark:text-purple-400 ring-1 ring-purple-500/20 dark:ring-purple-400/20">
+                                                            <span className="rounded-xl inline-flex items-center px-2 py-0.5 text-[9px] tracking-wide font-medium uppercase bg-linear-to-r from-purple-400/5 via-purple-500/5 to-purple-500/5 text-purple-600 dark:text-purple-400 ring-1 ring-purple-500/20 dark:ring-purple-400/20">
                                                                 lab
                                                             </span>
                                                         )}

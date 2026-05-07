@@ -114,14 +114,14 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
             >
                 <span className="relative">{children}</span>
                 {Icon && (
-                    typeof Icon === "function" ? (
-                        React.createElement(Icon as LucideIcon, {
-                            className: "w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5"
-                        })
-                    ) : (
+                    React.isValidElement(Icon) ? (
                         <span className="inline-flex items-center justify-center w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 [&_svg]:w-full [&_svg]:h-full">
                             {Icon}
                         </span>
+                    ) : (
+                        React.createElement(Icon as any, {
+                            className: "w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5"
+                        })
                     )
                 )}
             </motion.div>

@@ -7,7 +7,6 @@ import type { Metadata } from "next";
 import "./docs-layout.css";
 import { baseOptions } from "@/lib/layout.shared";
 
-
 export const metadata: Metadata = {
   title: {
     template: "%s | zenblocks - Free UI Components to build beautiful websites",
@@ -27,7 +26,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <DocsLayout
           tree={source.pageTree}
           tabMode="navbar"
-          nav={{ ...nav, mode: 'top' }}
+          nav={{ ...nav, mode: "top" }}
           {...base}
           sidebar={{
             defaultOpenLevel: 1,

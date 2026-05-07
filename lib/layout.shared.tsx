@@ -15,6 +15,21 @@ export const baseOptions: BaseLayoutProps = {
   },
   links: [
     {
+      text: "Docs",
+      url: "/docs",
+      active: "nested-url",
+    },
+    {
+      text: "Components",
+      url: "/docs/blocks/navbar",
+      active: "nested-url",
+    },
+    {
+      text: "Templates",
+      url: "/templates",
+      active: "nested-url",
+    },
+    {
       type: "custom",
       children: (
         <Link

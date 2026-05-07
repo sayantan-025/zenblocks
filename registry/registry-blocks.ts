@@ -218,4 +218,28 @@ export const block: Registry = [
     ],
     category: "Authentication",
   },
+  {
+    name: "testimonials",
+    type: "registry:block",
+    dependencies: ["framer-motion", "lucide-react"],
+    registryDependencies: [],
+    files: [
+      {
+        path: "components/zenblocks/testimonials.tsx",
+        type: "registry:component",
+      },
+    ],
+  },
+  {
+    name: "faq",
+    type: "registry:block",
+    dependencies: ["framer-motion", "lucide-react"],
+    registryDependencies: [],
+    files: [
+      {
+        path: "components/zenblocks/faq.tsx",
+        type: "registry:component",
+      },
+    ],
+  },
 ];
