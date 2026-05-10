@@ -1,4 +1,4 @@
-import { ZenBlocksLogo } from "../components/branding/zenblocks-logo";
+import { ZenBlocksLogo } from "../../../../components/branding/zenblocks-logo";
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 import { Github } from "lucide-react";
 import Link from "next/link";
