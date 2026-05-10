@@ -79,6 +79,18 @@ const FeatureCard = ({ feature, index }: { feature: any; index: number }) => {
 
 const FEATURES = [
   {
+    title: "Component Registry",
+    description:
+      "A centralized, version-controlled repository for all your shared UI primitives.",
+    icon: <Box className="w-4 h-4" />,
+  },
+  {
+    title: "Updated Docs",
+    description:
+      "Comprehensive, search-optimized documentation for every component and utility.",
+    icon: <Layers className="w-4 h-4" />,
+  },
+  {
     title: "Weightless Physics",
     description:
       "Spring-based interactions that feel completely natural and responsive.",
@@ -94,16 +106,6 @@ const FEATURES = [
     title: "Mobile First",
     description: "Touch-optimized gestures ensuring 60fps on all devices.",
     icon: <Smartphone className="w-4 h-4" />,
-  },
-  {
-    title: "Framework Agnostic",
-    description: "Core logic decoupled from rendering for maximum portability.",
-    icon: <Box className="w-4 h-4" />,
-  },
-  {
-    title: "Composition Ready",
-    description: "Designed to be composed into complex, nested UIs easily.",
-    icon: <Layers className="w-4 h-4" />,
   },
   {
     title: "Theme Aware",

@@ -115,11 +115,11 @@ export const Hero = () => {
           transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
           className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-500 dark:text-zinc-400 max-w-sm sm:max-w-xl md:max-w-2xl mb-8 sm:mb-12 leading-relaxed px-4 sm:px-0"
         >
-          The enterprise-grade UI library for modern web applications.
+          The high-performance <span className="text-foreground font-semibold">Component Build Registry</span>.
           <br className="hidden sm:block" />
           Ship faster with{" "}
           <span className="text-foreground font-semibold">
-            robust, physics-enabled components
+            updated docs and physics-enabled primitives
           </span>
           .
         </motion.p>
@@ -133,7 +133,7 @@ export const Hero = () => {
         >
           {/* Primary Button */}
           <Link
-            href="/docs"
+            href="/docs/blocks/navbar"
             className="group relative w-full sm:w-64 h-12 rounded-full bg-zinc-900 dark:bg-white px-8 text-white dark:text-zinc-900 shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-95 flex items-center justify-center gap-2"
           >
             <Layout className="w-4 h-4" />

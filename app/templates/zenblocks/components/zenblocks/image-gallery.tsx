@@ -1,0 +1,241 @@
+"use client";
+
+import React, { useRef, useMemo } from 'react';
+import { gsap, Observer } from 'gsap/all';
+import { useGSAP } from '@gsap/react';
+import { cn } from "../../lib/utils";
+
+/**
+ * ImageGallery Component
+ * "Production-Level" Infinite Scroll Carousel
+ * 
+ * Features:
+ * - Seamless infinite loop (using 2x dupe + wrapping)
+ * - Premium, contained styling (no overflow mess)
+ */
+
+export const DEFAULT_IMAGES = [
+    {
+        url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
+        title: "Ethereal Valley",
+        tag: "Nature"
+    },
+    {
+        url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1200&auto=format&fit=crop",
+        title: "Mist Peaks",
+        tag: "Atmosphere"
+    },
+    {
+        url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1200&auto=format&fit=crop",
+        title: "Infinite Forest",
+        tag: "Serenity"
+    },
+    {
+        url: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200&auto=format&fit=crop",
+        title: "Glass Lake",
+        tag: "Reflection"
+    },
+    {
+        url: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=1200&auto=format&fit=crop",
+        title: "Zen Bridge",
+        tag: "Path"
+    },
+    {
+        url: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1200&auto=format&fit=crop",
+        title: "Crimson Horizon",
+        tag: "Twilight"
+    },
+];
+
+gsap.registerPlugin(Observer);
+
+export interface ImageGalleryItem {
+    url: string;
+    title: string;
+    tag: string;
+}
+
+export interface ImageGalleryProps {
+    className?: string;
+    items?: ImageGalleryItem[];
+}
+
+export const ImageGallery: React.FC<ImageGalleryProps> = ({
+    className,
+    items = DEFAULT_IMAGES
+}) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+
+    // Duplicate items for seamless loop (triple buffer is safest for wide screens)
+    // If items is empty/undefined, handle gracefully
+    const displayItems = useMemo(() => {
+        if (!items || items.length === 0) return [];
+        return [...items, ...items, ...items];
+    }, [items]);
+
+    useGSAP(() => {
+        if (!containerRef.current || !trackRef.current) return;
+        if (displayItems.length === 0) return;
+
+        const track = trackRef.current;
+        const allItems = gsap.utils.toArray<HTMLElement>('.gallery-item');
+
+        if (allItems.length === 0) return;
+
+        // Layout Config (Dynamic)
+        // We need to wait for layout or use hardcoded assumptions if rendered yet
+        // Since we are in useGSAP, elements should be mounted.
+        const itemWidth = allItems[0].offsetWidth;
+        const gap = parseFloat(window.getComputedStyle(track).gap) || 32;
+        const totalItemWidth = itemWidth + gap;
+        const groupWidth = items.length * totalItemWidth;
+
+        // Initialize position
+        // Center the initial view in the middle set of images
+        let xPos = -groupWidth;
+        gsap.set(track, { x: xPos });
+
+        let isDragging = false;
+        let velocity = 0;
+
+        const updateLoop = () => {
+            // Friction
+            velocity *= 0.92;
+            xPos += velocity;
+
+            // Seamless Wrapping Logic
+            // If we've scrolled past the first set, wrap back to end
+            if (xPos > 0) {
+                xPos = -groupWidth;
+            }
+            // If we've scrolled past the second set, wrap back to start
+            else if (xPos < -groupWidth * 2) {
+                xPos = -groupWidth;
+            }
+
+            gsap.set(track, { x: xPos });
+
+            // Apply Parallax to inner images based on velocity
+            // More velocity = more skew/parallax
+            const skewAmount = gsap.utils.clamp(-5, 5, velocity * 0.5);
+            gsap.set(allItems, { skewX: skewAmount });
+        };
+
+        const loop = gsap.to({}, { duration: 1 / 60, repeat: -1, onRepeat: updateLoop });
+
+        // Auto-scroll drift
+        let driftStrength = -0.5;
+
+        // GSAP Observer for Touch/Wheel/Drag
+        const observer = Observer.create({
+            target: containerRef.current,
+            type: "wheel,touch,pointer",
+            onPress: () => {
+                isDragging = true;
+                driftStrength = 0; // Pause auto-drift while interacting
+                document.body.style.cursor = 'grabbing';
+            },
+            onRelease: () => {
+                isDragging = false;
+                driftStrength = -0.5; // Resume drift
+                document.body.style.cursor = 'default';
+            },
+            onChange: (self) => {
+                const delta = self.deltaX || self.deltaY; // vertical scroll wheel -> horizontal drift
+                velocity += -delta * 0.05;
+            }
+        });
+
+        // Add constant drift to velocity
+        gsap.ticker.add(() => {
+            if (!isDragging) {
+                velocity += driftStrength * 0.05;
+            }
+        });
+
+        // Local Interactions (Hover, Tilt)
+        allItems.forEach((el) => {
+            const item = el as HTMLElement;
+            const img = item.querySelector('img');
+            const overlay = item.querySelector('.overlay');
+
+            item.addEventListener('mouseenter', () => {
+                if (isDragging) return;
+                gsap.to(item, { scale: 1.02, duration: 0.4, ease: "power2.out" });
+                gsap.to(img, { scale: 1.15, duration: 0.4, ease: "power2.out" });
+                gsap.to(overlay, { opacity: 1, duration: 0.4 });
+            });
+
+            item.addEventListener('mouseleave', () => {
+                gsap.to(item, { scale: 1, duration: 0.4, ease: "power2.out" });
+                gsap.to(img, { scale: 1.05, duration: 0.4, ease: "power2.out" }); // Keep slightly scaled for parallax
+                gsap.to(overlay, { opacity: 0, duration: 0.4 });
+            });
+        });
+
+        return () => {
+            loop.kill();
+            observer.kill();
+            gsap.ticker.remove(containerRef.current as any); // cleanup ticker listener
+        };
+
+    }, { scope: containerRef, dependencies: [displayItems] });
+
+    return (
+        <div
+            ref={containerRef}
+            className={cn(
+                "relative w-full h-[400px] md:h-[600px] overflow-hidden bg-zinc-50 dark:bg-transparent flex flex-col justify-center select-none cursor-grab active:cursor-grabbing",
+                className
+            )}
+        >
+            {/* Cinematic Fade Edges */}
+            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-zinc-50 to-transparent dark:from-transparent z-20 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-zinc-50 to-transparent dark:from-transparent z-20 pointer-events-none" />
+
+            {/* Title / Header (Optional) */}
+            <div className="absolute top-4 left-0 w-full text-center z-10 pointer-events-none opacity-40">
+                <p className="text-[10px] uppercase tracking-[0.4em] font-bold">Infinite Series</p>
+            </div>
+
+            {/* TRACK */}
+            <div
+                ref={trackRef}
+                className="flex gap-4 md:gap-8 px-4 md:px-8 items-center"
+                style={{ width: 'max-content' }}
+            >
+                {displayItems.map((item, i) => (
+                    <div
+                        key={i}
+                        className="gallery-item relative w-[220px] md:w-[320px] aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-200 dark:bg-zinc-800 shadow-xl border border-white/20 dark:border-white/5 WillChangeTransform"
+                    >
+                        {/* Image Container */}
+                        <div className="absolute inset-0 overflow-hidden">
+                            <img
+                                src={item.url}
+                                alt={item.title}
+                                className="w-full h-full object-cover scale-105 transition-transform duration-700 will-change-transform"
+                            />
+                        </div>
+
+                        {/* Minimalist Overlay */}
+                        <div className="overlay absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <p className="text-[10px] text-white/70 uppercase tracking-widest">{item.tag}</p>
+                            <h3 className="text-xl text-white font-medium mt-1">{item.title}</h3>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Progress / Hint */}
+            <div className="absolute bottom-4 left-0 w-full text-center z-10 pointer-events-none opacity-40">
+                <p className="text-[10px] uppercase tracking-[0.2em]">Drag to Explore</p>
+            </div>
+        </div>
+    );
+};
+
+
+
+

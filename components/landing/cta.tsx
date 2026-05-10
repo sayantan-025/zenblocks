@@ -40,7 +40,7 @@ export const CTA = () => {
 
             <p className="text-base text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-xl font-medium">
               Join thousands of developers building high-performance interfaces 
-              with ZenBlocks primitives. Zero friction. Pure results.
+              with the ZenBlocks Registry. Optimized docs. Pure results.
             </p>
           </div>
 
@@ -52,7 +52,7 @@ export const CTA = () => {
           >
             {/* Primary Button - Browse Components */}
             <Link
-              href="/docs"
+              href="/docs/blocks/navbar"
               className="group relative w-full sm:w-64 h-12 rounded-full bg-zinc-900 dark:bg-white px-8 text-white dark:text-zinc-900 shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-95 flex items-center justify-center gap-3"
             >
               <Layout className="w-4 h-4" />

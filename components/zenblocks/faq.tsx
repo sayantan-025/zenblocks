@@ -30,44 +30,34 @@ export interface FAQProps {
 
 export const DEFAULT_FAQ_ITEMS: FAQItem[] = [
   {
+    question: "What is the ZenBlocks Component Build Registry?",
+    answer: "It's a specialized distribution system built on top of shadcn/ui that allows you to fetch production-ready, physics-enabled components directly into your own codebase with a single command.",
+    category: "Core Concept",
+  },
+  {
+    question: "How do the 'Updated Docs' help me ship faster?",
+    answer: "Our documentation is automatically synchronized with the registry. When we release a performance patch or a new physics preset, the docs reflect the changes instantly, providing you with the exact code snippets you need.",
+    category: "Documentation",
+  },
+  {
     question: "Is ZenBlocks free?",
-    answer: "Core library is MIT licensed and completely free forever. Pro plan unlocks premium blocks, templates, and the Figma kit.",
+    answer: "The core registry and all base primitives are MIT licensed and free. We offer a Pro plan for advanced enterprise templates and specialized animation blocks.",
     category: "Pricing",
   },
   {
-    question: "Does it work with Vite and Remix?",
-    answer: "Works with any React-based framework including Next.js, Vite, Remix, and Gatsby. The shadcn CLI handles all setup automatically.",
-    category: "Compatibility",
-  },
-  {
     question: "Can I use it alongside shadcn/ui?",
-    answer: "Fully compatible — both use Tailwind CSS so you can freely mix ZenBlocks animation components with shadcn functional primitives.",
-    category: "Compatibility",
-  },
-  {
-    question: "Does it work on mobile?",
-    answer: "Mobile-first is a core principle. Every component is touch-optimized and tested for 60fps on iOS and Android.",
+    answer: "Yes, ZenBlocks is designed to be a companion to shadcn/ui. You can use shadcn for functional primitives (buttons, inputs) and ZenBlocks for high-impact, animated sections.",
     category: "Compatibility",
   },
   {
     question: "What animation libraries are required?",
-    answer: "GSAP and Framer Motion are the main dependencies. They are installed automatically when you run the CLI install command.",
+    answer: "ZenBlocks leverages Framer Motion and GSAP for its physics-based interactions. These are automatically detected or installed during the component addition process.",
     category: "Installation",
   },
   {
-    question: "Is there a Figma kit?",
-    answer: "Yes — a complete Figma design kit with all components, variants, and design tokens is included in the Pro plan.",
-    category: "Pricing",
-  },
-  {
-    question: "Can I customize components after installing?",
-    answer: "Absolutely. The CLI copies source code directly into your project. You own it completely and can modify anything freely.",
+    question: "Can I customize the registry components?",
+    answer: "Absolutely. Once a component is added to your project via the CLI, it's yours. You have full ownership of the source code to modify the animations, styles, or logic.",
     category: "Customization",
-  },
-  {
-    question: "How do I update a component to the latest version?",
-    answer: "Re-run the CLI install command for that component. It will overwrite the existing file with the latest version.",
-    category: "Installation",
   },
 ];
 
@@ -239,24 +229,6 @@ export const FAQSection = ({
   return (
     <div className={cn("w-full", className)}>
       {renderItems()}
-
-      {/* BOTTOM CTA */}
-      <div className="mt-16 text-center">
-        <h4 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-          Still have questions?
-        </h4>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-          Join our Discord or open a GitHub issue.
-        </p>
-        <div className="flex gap-3 justify-center mt-5">
-          <button className="border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-xl px-5 py-2 text-sm font-medium transition-colors duration-200">
-            Join Discord
-          </button>
-          <button className="border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-xl px-5 py-2 text-sm font-medium transition-colors duration-200">
-            GitHub Issues
-          </button>
-        </div>
-      </div>
     </div>
   );
 };

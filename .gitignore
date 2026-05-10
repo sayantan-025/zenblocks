@@ -36,6 +36,14 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local scripts
+fix_paths.py
+fix_paths_v2.js
+fix_paths_v2.py
+
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+GEMINI.md

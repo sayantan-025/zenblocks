@@ -1,6 +1,8 @@
 import Navbar from "@/components/zenblocks/navbar";
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
+import { Footer } from "@/components/landing/footer";
+
 
 export const metadata: Metadata = {
   title: {
@@ -23,6 +25,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main className="flex-1 relative">
         {children}
       </main>
+      <Footer/>
     </div>
   );
 }
