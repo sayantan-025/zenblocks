@@ -12,8 +12,11 @@ All UI development must strictly adhere to the ZenBlocks Design System located i
 ### Architecture Rules
 - Follow the **Focus Funnel** pattern for conversion pages (e.g., templates/docs).
 - Maintain consistent spacing using Tailwind's standard scales as defined in the master file.
+- **Template Management:** Template metadata for the gallery page is managed modularly in `./config/templates/`. Each template has its own file, and the registry is centralized in `./config/templates/index.ts`.
 
 ## Quality Standards
 - No emojis as icons (use Lucide).
 - `cursor-pointer` on all interactive elements.
 - Ensure full dark mode compatibility using Zinc-950 for backgrounds.
+
+
