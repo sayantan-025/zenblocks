@@ -82,6 +82,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          aria-label="View our developer community"
           className="pointer-events-auto inline-flex items-center gap-4 rounded-full border border-zinc-200 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm pl-1 pr-5 py-1.5 text-sm font-medium shadow-sm dark:border-zinc-800 mb-8 isolate cursor-pointer group transition-all"
         >
           <div className="flex flex-row items-center justify-center">
@@ -103,7 +104,7 @@ export const Hero = () => {
             weight={true}
             italic={true}
             className="text-zinc-900 dark:text-white"
-            minFontSize={24}
+            minFontSize={20}
           />
         </div>
 
@@ -113,7 +114,7 @@ export const Hero = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-          className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-500 dark:text-zinc-400 max-w-sm sm:max-w-xl md:max-w-2xl mb-8 sm:mb-12 leading-relaxed px-4 sm:px-0"
+          className="text-base sm:text-lg md:text-xl text-zinc-500 dark:text-zinc-400 max-w-sm sm:max-w-2xl md:max-w-3xl mb-8 sm:mb-12 leading-normal px-4 sm:px-0"
         >
           The high-performance <span className="text-foreground font-semibold">Component Build Registry</span>.
           <br className="hidden sm:block" />
@@ -143,6 +144,7 @@ export const Hero = () => {
           {/* Secondary Button */}
           <button
             onClick={handleCopy}
+            aria-label="Copy installation command"
             className="group relative w-full sm:w-64 h-12 rounded-full bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 px-8 text-zinc-800 dark:text-zinc-200 shadow-sm transition-all hover:bg-white/60 dark:hover:bg-zinc-900/60 hover:border-zinc-300 dark:hover:border-zinc-700 flex items-center justify-center gap-3 active:scale-95"
           >
             <span className="font-mono text-sm opacity-50 select-none">$</span>

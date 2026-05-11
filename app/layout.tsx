@@ -32,9 +32,32 @@ export const metadata: Metadata = {
     default: "ZenBlocks",
     template: "%s · ZenBlocks",
   },
-  description: "ZenBlocks is a modern, animated component library for Next.js.",
+  description: "ZenBlocks is a modern, animated component library for Next.js. High-performance, physics-enabled primitives for builders.",
   icons: {
     icon: "/logo.svg",
+  },
+  openGraph: {
+    title: "ZenBlocks",
+    description: "High-performance component building blocks for the modern web.",
+    url: "https://zenblocks-three.vercel.app",
+    siteName: "ZenBlocks",
+    images: [
+      {
+        url: "https://zenblocks-three.vercel.app/og.png",
+        width: 1200,
+        height: 630,
+        alt: "ZenBlocks Preview",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ZenBlocks",
+    description: "High-performance component building blocks for the modern web.",
+    creator: "@sayantan",
+    images: ["https://zenblocks-three.vercel.app/og.png"],
   },
 };
 

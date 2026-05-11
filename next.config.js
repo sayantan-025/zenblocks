@@ -12,7 +12,7 @@ const config = {
         source: "/r/:path",
         headers: [
           {
-            key: "Catche-Control",
+            key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
           },
         ],
