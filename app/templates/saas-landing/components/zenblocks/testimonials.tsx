@@ -14,10 +14,10 @@ import { cn } from "../../lib/utils";
 /* -------------------------------------------------------------------------- */
 
 export type Testimonial = {
-  text: string;
+  content: string;
   name: string;
   role: string;
-  image?: string;
+  avatar?: string;
   rating?: number;
 };
 
@@ -43,66 +43,66 @@ export interface TestimonialsProps {
 
 export const DEFAULT_TESTIMONIALS: Testimonial[] = [
   {
-    text: "ZenBlocks cut our development time by 40%. The physics-enabled components are a game changer for our UX.",
+    content: "ZenBlocks cut our development time by 40%. The physics-enabled components are a game changer for our UX.",
     name: "Alex Rivera",
     role: "Senior Frontend Engineer",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
     rating: 5,
   },
   {
-    text: "The copy-paste DX is incredible. We launched our landing page 3 days early thanks to these motion primitives.",
+    content: "The copy-paste DX is incredible. We launched our landing page 3 days early thanks to these motion primitives.",
     name: "Sarah Chen",
     role: "Product Designer @ TechFlow",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face",
     rating: 5,
   },
   {
-    text: "Our conversion rate increased by 15% after implementing the Orb Field and Testimonials mosaic. Pure results.",
+    content: "Our conversion rate increased by 15% after implementing the Orb Field and Testimonials mosaic. Pure results.",
     name: "Marcus Johnson",
     role: "Creative Developer",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
     rating: 5,
   },
   {
-    text: "Type safety and documentation are top-notch. Integration took less than 10 minutes from start to finish.",
+    content: "Type safety and documentation are top-notch. Integration took less than 10 minutes from start to finish.",
     name: "Emily Rodriguez",
     role: "Lead Developer @ Nexus",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face",
     rating: 4,
   },
   {
-    text: "Mobile performance is flawless. Even with heavy animations, our Lighthouse score stayed at a solid 100.",
+    content: "Mobile performance is flawless. Even with heavy animations, our Lighthouse score stayed at a solid 100.",
     name: "David Park",
     role: "Mobile App Architect",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face",
     rating: 5,
   },
   {
-    text: "The ownership model is why I chose ZenBlocks. No subscriptions, just high-quality code that I own.",
+    content: "The ownership model is why I chose ZenBlocks. No subscriptions, just high-quality code that I own.",
     name: "Aisha Patel",
     role: "Fullstack Developer",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face",
     rating: 5,
   },
   {
-    text: "We scaled our SaaS from 1k to 10k MRR with ZenBlocks. The industrial aesthetic gives us an elite edge.",
+    content: "We scaled our SaaS from 1k to 10k MRR with ZenBlocks. The industrial aesthetic gives us an elite edge.",
     name: "James Wilson",
     role: "CEO @ Velocity",
-    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&h=80&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&h=80&fit=crop&crop=face",
     rating: 5,
   },
   {
-    text: "Clean, minimal, and powerful. It is the only component library that understands industrial-grade design.",
+    content: "Clean, minimal, and powerful. It is the only component library that understands industrial-grade design.",
     name: "Lisa Thompson",
     role: "VP of Engineering",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face",
     rating: 5,
   },
   {
-    text: "The animation engine is robust. We have zero jank on low-end devices, which is critical for our global user base.",
+    content: "The animation engine is robust. We have zero jank on low-end devices, which is critical for our global user base.",
     name: "Michael Brown",
     role: "Startup Founder",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=face",
     rating: 4,
   },
 ];
@@ -135,9 +135,9 @@ const TestimonialCard = ({
       <div className="relative z-10 flex flex-col gap-4">
         <div className="flex items-center gap-3">
           <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-zinc-200 dark:border-zinc-800">
-            {testimonial.image ? (
+            {testimonial.avatar ? (
               <img 
-                src={testimonial.image} 
+                src={testimonial.avatar} 
                 alt={testimonial.name} 
                 className="h-full w-full object-cover" 
               />
@@ -175,7 +175,7 @@ const TestimonialCard = ({
         )}
 
         <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-          &ldquo;{testimonial.text}&rdquo;
+          &ldquo;{testimonial.content}&rdquo;
         </p>
       </div>
     </div>

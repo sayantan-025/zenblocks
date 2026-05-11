@@ -20,7 +20,7 @@ export function TestimonialsSection() {
       </div>
       
       {/* We pass our typed data to the primitive */}
-      <Testimonials items={TESTIMONIALS} />
+      <Testimonials testimonials={TESTIMONIALS} />
     </SectionWrapper>
   );
 }

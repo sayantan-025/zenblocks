@@ -27,6 +27,7 @@ type NavbarProps = {
   logo?: React.ReactNode;
   brandText?: React.ReactNode;
   brandClassName?: string;
+  children?: React.ReactNode;
 };
 
 const DEFAULT_NAV_ITEMS: NavbarItem[] = [
@@ -46,7 +47,8 @@ export default function Navbar({
   className,
   logo,
   brandText = "ZENBLOCKS",
-  brandClassName
+  brandClassName,
+  children
 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -121,6 +123,9 @@ export default function Navbar({
             </button>
           </div>
         </div>
+
+        {/* CUSTOM CONTENT (CHILDREN) */}
+        {children}
 
         {/* MOBILE MENU */}
         {mobileMenuOpen && (
