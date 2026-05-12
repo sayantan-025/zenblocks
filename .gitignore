@@ -46,4 +46,4 @@ fix_paths_v2.py
 *.tsbuildinfo
 next-env.d.ts
 
-GEMINI.md
+install.cmd*

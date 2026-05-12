@@ -65,6 +65,7 @@ const LogoBox = ({ item, height }: { item: LogoItem; height: number }) => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{ rotateX, rotateY, height, perspective: 1000 }}
+            data-logo-box
             className="relative flex items-center justify-center px-8 py-4 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl group/logo transition-colors hover:bg-white dark:hover:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 shadow-sm hover:shadow-xl group"
         >
             {/* Glint Effect */}

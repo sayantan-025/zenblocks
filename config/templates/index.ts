@@ -1,17 +1,18 @@
 import { Template, ComingSoonItem } from "./types";
-import { saasLandingTemplate } from "./saas-landing";
+import { quillTemplate } from "./quill";
 
 export * from "./types";
 
 export const TEMPLATES: Template[] = [
-  saasLandingTemplate,
+  quillTemplate,
+
 ];
 
 export const COMING_SOON: ComingSoonItem[] = [
-  { 
-    id: "T003", 
-    name: "Portfolio - Template ", 
-    codename: "Dev Portfolio", 
-    accent: "white" 
+  {
+    id: "T003",
+    name: "Portfolio - Template ",
+    codename: "Dev Portfolio",
+    accent: "white"
   },
 ];

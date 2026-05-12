@@ -114,10 +114,10 @@ export const Hero = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-          className="text-base sm:text-lg md:text-xl text-zinc-500 dark:text-zinc-400 max-w-sm sm:max-w-2xl md:max-w-3xl mb-8 sm:mb-12 leading-normal px-4 sm:px-0"
+          className="text-base sm:text-lg md:text-xl text-zinc-500 dark:text-zinc-400 max-w-xs sm:max-w-md md:max-w-xl mb-8 sm:mb-12 leading-relaxed px-4 sm:px-0"
         >
           The high-performance <span className="text-foreground font-semibold">Component Build Registry</span>.
-          <br className="hidden sm:block" />
+          <br />
           Ship faster with{" "}
           <span className="text-foreground font-semibold">
             updated docs and physics-enabled primitives
@@ -135,7 +135,7 @@ export const Hero = () => {
           {/* Primary Button */}
           <Link
             href="/docs/blocks/navbar"
-            className="group relative w-full sm:w-64 h-12 rounded-full bg-zinc-900 dark:bg-white px-8 text-white dark:text-zinc-900 shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-95 flex items-center justify-center gap-2"
+            className="group relative w-full sm:w-64 h-12 rounded-full bg-white dark:bg-white px-8 text-zinc-900 dark:text-zinc-900 shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all hover:bg-zinc-100 dark:hover:bg-zinc-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 flex items-center justify-center gap-2"
           >
             <Layout className="w-4 h-4" />
             <span className="font-semibold text-base">Browse Components</span>
@@ -145,7 +145,7 @@ export const Hero = () => {
           <button
             onClick={handleCopy}
             aria-label="Copy installation command"
-            className="group relative w-full sm:w-64 h-12 rounded-full bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 px-8 text-zinc-800 dark:text-zinc-200 shadow-sm transition-all hover:bg-white/60 dark:hover:bg-zinc-900/60 hover:border-zinc-300 dark:hover:border-zinc-700 flex items-center justify-center gap-3 active:scale-95"
+            className="group relative w-full sm:w-64 h-12 rounded-full bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 px-8 text-zinc-800 dark:text-zinc-200 shadow-sm transition-all hover:bg-white/60 dark:hover:bg-zinc-900/60 hover:border-zinc-300 dark:hover:border-zinc-700 flex items-center justify-center gap-3 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
           >
             <span className="font-mono text-sm opacity-50 select-none">$</span>
             <span className="font-mono text-sm font-medium truncate max-w-[200px]">

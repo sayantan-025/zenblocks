@@ -14,7 +14,6 @@ import { getMDXComponents } from "@/mdx-components";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { Preview } from "@/components/mdx/preview";
 import { PreviewClient } from "@/components/mdx/preview-client";
-import * as TabsComponents from 'fumadocs-ui/components/tabs';
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const params = await props.params;
@@ -31,10 +30,9 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
         <MDX
           components={getMDXComponents({
             ...defaultMdxComponents,
-            ...TabsComponents,
             Preview,
             PreviewClient,
-          })}
+          } as Parameters<typeof getMDXComponents>[0])}
         />
       </DocsBody>
     </DocsPage>

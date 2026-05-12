@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(New-Item *)",
+      "Bash(Get-ChildItem -Path \"app/templates/quill\" -Recurse)",
+      "Bash(Select-Object FullName, Mode)"
+    ]
+  }
+}

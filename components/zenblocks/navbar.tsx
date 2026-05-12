@@ -286,7 +286,7 @@ function SlideTabs({
             ? { duration: 0 }
             : { type: "spring", stiffness: 380, damping: 32 }
         }
-        className="absolute top-0 h-9 rounded-full bg-zinc-900 dark:bg-zinc-100/10"
+        className="absolute top-0 h-9 rounded-full bg-white dark:bg-zinc-100/10"
       />
     </ul>
   );

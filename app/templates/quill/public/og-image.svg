@@ -1,0 +1,27 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#09090B"/>
+
+  <!-- Gradient orb -->
+  <ellipse cx="600" cy="315" rx="400" ry="300" fill="url(#gradient)" opacity="0.3"/>
+
+  <!-- Quill logo -->
+  <rect x="560" y="240" width="80" height="80" rx="16" fill="#27272A"/>
+  <path d="M580 290C580 290 575 270 585 260C590 255 600 250 610 245C610 245 605 260 595 270C585 280 580 290 580 290" fill="url(#quillGrad)"/>
+  <path d="M610 245C610 245 615 250 615 260C615 270 610 280 605 290L610 245Z" fill="#FAFAFA"/>
+  <circle cx="580" cy="290" r="4" fill="#A1A1AA"/>
+
+  <!-- Text -->
+  <text x="600" y="380" font-family="system-ui, sans-serif" font-size="48" font-weight="700" fill="#FAFAFA" text-anchor="middle">Quill</text>
+  <text x="600" y="420" font-family="system-ui, sans-serif" font-size="24" fill="#A1A1AA" text-anchor="middle">AI Writing Platform</text>
+
+  <defs>
+    <linearGradient id="gradient" x1="600" y1="15" x2="600" y2="615" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3F3F46"/>
+      <stop offset="1" stop-color="#09090B" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="quillGrad" x1="580" y1="290" x2="610" y2="245" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#52525B"/>
+      <stop offset="100%" stop-color="#FAFAFA"/>
+    </linearGradient>
+  </defs>
+</svg>
