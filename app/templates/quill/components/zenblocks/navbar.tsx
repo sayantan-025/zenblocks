@@ -37,9 +37,6 @@ function QuillLogo({ className }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Background */}
-      <rect width="32" height="32" rx="8" fill="#09090B" />
-
       {/* Quill pen - elegant feather shape */}
       <path
         d="M10 24C10 24 8 18 12 14C14 12 18 10 22 8C22 8 20 12 18 16C16 20 14 24 14 24"
@@ -133,7 +130,7 @@ export function QuillNavbar({
 
             <button
               onClick={() => setMobileMenuOpen((s) => !s)}
-              className="sm:hidden p-2.5 rounded-md hover:bg-zinc-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+              className="sm:hidden p-2.5 rounded-md  transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
@@ -153,7 +150,7 @@ export function QuillNavbar({
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors"
+                className="px-3 py-2.5 rounded-md text-sm font-medium text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors"
               >
                 {link.label}
               </Link>
