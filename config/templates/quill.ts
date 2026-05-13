@@ -7,18 +7,22 @@ export const quillTemplate: Template = {
   codename: "Premium AI Writing — v1.0",
   description:
     "A sophisticated dark-themed landing page for AI writing tools. Features smooth Lenis scroll, elegant animations, and a complete conversion-focused structure.",
-  price: 79,
+  price: 29,
   originalPrice: 129,
   badge: "Featured",
   components: [
-    { name: "Hero", color: "bg-zinc-500" },
-    { name: "Pricing", color: "bg-emerald-500" },
+    { name: "NavBar", color: "bg-zinc-500" },
+    { name: "Hero", color: "bg-zinc-600" },
+    { name: "LogoBar", color: "bg-zinc-700" },
     { name: "Features", color: "bg-purple-500" },
     { name: "Testimonials", color: "bg-amber-500" },
+    { name: "Pricing", color: "bg-emerald-500" },
     { name: "FAQ", color: "bg-blue-500" },
+    { name: "CallToAction", color: "bg-indigo-500" },
+    { name: "Footer", color: "bg-zinc-800" },
   ],
   features: [
-    "8+ Premium Sections",
+    "9 Premium Sections",
     "Lenis Smooth Scroll",
     "Framer Motion Animations",
     "Dark Mode Optimized",
@@ -28,5 +32,5 @@ export const quillTemplate: Template = {
   demoPath: "/templates/quill",
   checkoutUrl: "https://your-store.lemonsqueezy.com/checkout/buy/quill",
   accent: "zinc",
-  screenshot: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80",
+  screenshot: "/templates/quill_preview.png",
 };
