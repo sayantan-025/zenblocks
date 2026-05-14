@@ -161,7 +161,7 @@ function TemplateCard({ template }: { template: Template }) {
               "shadow-[0_1px_2px_rgba(0,0,0,0.1)]"
             )}
           >
-            Get Access — ${template.price}
+            Get Access
             <ArrowRight className="w-4 h-4" />
           </a>
           <Link
