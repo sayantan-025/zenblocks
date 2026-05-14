@@ -71,7 +71,7 @@ function TemplateCard({ template }: { template: Template }) {
   const accent = accentMap[template.accent] ?? accentMap["zinc"]
 
   return (
-    <div className="relative flex flex-col lg:flex-row bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/10 rounded-3xl overflow-hidden cursor-pointer">
+    <div className="relative flex flex-col lg:flex-row bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/10 rounded-3xl overflow-hidden hover:border-zinc-300 dark:hover:border-white/20 transition-all duration-300 hover:shadow-2xl cursor-pointer">
 
       {/* ─── LEFT CONTENT ─── */}
       <div className="flex flex-col flex-1 p-8 lg:p-10 lg:max-w-[55%] relative z-10">

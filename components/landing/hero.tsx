@@ -134,7 +134,7 @@ export const Hero = () => {
           {/* Primary Button */}
           <Link
             href="/docs/blocks/navbar"
-            className="group relative w-full sm:w-64 h-12 rounded-full bg-white dark:bg-white px-8 text-zinc-900 dark:text-zinc-900 shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all hover:bg-zinc-100 dark:hover:bg-zinc-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 flex items-center justify-center gap-2"
+            className="group relative w-full sm:w-64 h-12 rounded-full bg-zinc-900 dark:bg-white px-8 text-white dark:text-zinc-900 shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all hover:bg-zinc-800 dark:hover:bg-zinc-100 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 flex items-center justify-center gap-2"
           >
             <Layout className="w-4 h-4" />
             <span className="font-semibold text-base">Browse Components</span>
