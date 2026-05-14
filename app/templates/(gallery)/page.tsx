@@ -155,7 +155,7 @@ function TemplateCard({ template }: { template: Template }) {
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "flex-1 py-3.5 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200",
+              "flex-1 py-3.5 px-6 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200",
               "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900",
               "hover:bg-zinc-800 dark:hover:bg-zinc-100 active:scale-[0.98]",
               "shadow-[0_1px_2px_rgba(0,0,0,0.1)]"
