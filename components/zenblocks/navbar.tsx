@@ -286,7 +286,7 @@ function SlideTabs({
             ? { duration: 0 }
             : { type: "spring", stiffness: 380, damping: 32 }
         }
-        className="absolute top-0 h-9 rounded-full bg-white dark:bg-zinc-100/10"
+        className="absolute top-0 h-9 rounded-full bg-zinc-900 dark:bg-white/10"
       />
     </ul>
   );
@@ -337,7 +337,7 @@ const CompactTab: React.FC<CompactTabProps> = ({
         className="group flex items-center h-9 px-4 rounded-full text-sm font-medium text-current focus:outline-none"
         role="menuitem"
       >
-        <span className="relative z-10 transition-colors text-black dark:text-white group-focus:text-white opacity-80 group-hover:opacity-100">
+        <span className="relative z-10 transition-colors text-zinc-900 dark:text-white group-hover:text-white opacity-80 group-hover:opacity-100">
           {children}
         </span>
       </Link>
