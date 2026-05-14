@@ -71,18 +71,23 @@ function TemplateCard({ template }: { template: Template }) {
   const accent = accentMap[template.accent] ?? accentMap["zinc"]
 
   return (
-    <div className="relative flex flex-col lg:flex-row bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/10 rounded-3xl overflow-hidden hover:border-zinc-300 dark:hover:border-white/20 transition-all duration-300 hover:shadow-2xl cursor-pointer">
+    <div className="relative flex flex-col lg:flex-row bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/10 rounded-3xl overflow-hidden cursor-pointer">
 
       {/* ─── LEFT CONTENT ─── */}
       <div className="flex flex-col flex-1 p-8 lg:p-10 lg:max-w-[55%] relative z-10">
-        {/* Top Row: Badge + Price */}
-        <div className="flex items-center justify-between mb-5">
+        {/* Top Row: Badge + Price + Savings */}
+        <div className="flex items-center flex-wrap gap-3 mb-5">
           {template.badge && (
             <span className={cn(
               "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border",
               accent.bg, accent.border, accent.text
             )}>
               {template.badge}
+            </span>
+          )}
+          {template.originalPrice && (
+            <span className="px-2.5 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold rounded-full border border-emerald-500/20">
+              Save {Math.round((1 - template.price / template.originalPrice) * 100)}%
             </span>
           )}
           <div className="flex items-baseline gap-2 ml-auto">
@@ -132,12 +137,12 @@ function TemplateCard({ template }: { template: Template }) {
         {/* Components Preview */}
         <div className="flex flex-wrap gap-1.5 mb-8">
           {template.components.slice(0, 6).map((comp) => (
-            <span key={comp.name} className="text-[10px] text-zinc-400 dark:text-zinc-500">
+            <span key={comp.name} className="text-xs text-zinc-400 dark:text-zinc-500">
               {comp.name}
             </span>
           ))}
           {template.components.length > 6 && (
-            <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
+            <span className="text-xs text-zinc-400 dark:text-zinc-500">
               +{template.components.length - 6} more
             </span>
           )}
@@ -153,10 +158,10 @@ function TemplateCard({ template }: { template: Template }) {
               "flex-1 py-3.5 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200",
               "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900",
               "hover:bg-zinc-800 dark:hover:bg-zinc-100 active:scale-[0.98]",
-              "shadow-lg hover:shadow-xl"
+              "shadow-[0_1px_2px_rgba(0,0,0,0.1)]"
             )}
           >
-            Get Access
+            Get Access — ${template.price}
             <ArrowRight className="w-4 h-4" />
           </a>
           <Link
@@ -165,9 +170,9 @@ function TemplateCard({ template }: { template: Template }) {
             rel="noopener noreferrer"
             className={cn(
               "py-3.5 px-5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200",
-              "bg-zinc-100 dark:bg-white/10 text-zinc-700 dark:text-white/90",
-              "hover:bg-zinc-200 dark:hover:bg-white/20 active:scale-[0.98]",
-              "border border-zinc-200 dark:border-white/10"
+              "bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200 dark:border-zinc-800",
+              "text-zinc-800 dark:text-zinc-200",
+              "hover:bg-white/60 dark:hover:bg-zinc-900/60 active:scale-[0.98]"
             )}
           >
             Live Demo
@@ -177,7 +182,7 @@ function TemplateCard({ template }: { template: Template }) {
       </div>
 
       {/* ─── RIGHT IMAGE ─── */}
-      <div className="relative flex-1 min-h-[350px] lg:min-h-[420px] overflow-hidden bg-zinc-100 dark:bg-zinc-900">
+      <div className="relative flex-1 min-h-[280px] lg:min-h-[320px] overflow-hidden bg-zinc-100 dark:bg-zinc-900">
         {imgError ? (
           <div className="w-full h-full flex items-center justify-center">
             <Layout className="w-16 h-16 text-zinc-300 dark:text-zinc-700" />
