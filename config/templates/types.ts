@@ -1,3 +1,9 @@
+export interface TechStackItem {
+  name: string;
+  icon: string;
+  invert?: boolean;
+}
+
 export interface ComponentTag {
   name: string;
   color: string;
@@ -18,6 +24,7 @@ export interface Template {
   checkoutUrl: string;
   accent: string;
   screenshot: string;
+  techStack: TechStackItem[];
 }
 
 export interface ComingSoonItem {

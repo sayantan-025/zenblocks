@@ -117,7 +117,6 @@ export const Hero = () => {
           className="text-base sm:text-lg md:text-xl text-zinc-500 dark:text-zinc-400 max-w-xs sm:max-w-md md:max-w-xl mb-8 sm:mb-12 leading-relaxed px-4 sm:px-0"
         >
           The high-performance <span className="text-foreground font-semibold">Component Build Registry</span>.
-          <br />
           Ship faster with{" "}
           <span className="text-foreground font-semibold">
             updated docs and physics-enabled primitives

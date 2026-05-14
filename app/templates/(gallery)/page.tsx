@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  Github, 
-  Layout, 
-  ChevronDown, 
+import {
+  Github,
+  ChevronDown,
   ArrowRight,
   ChevronRight,
-  Zap
+  Zap,
+  Layout
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -58,103 +58,139 @@ const FAQS = [
 /*                                COMPONENTS                                  */
 /* -------------------------------------------------------------------------- */
 
-function WireframePreview() {
-  return (
-    <div className="w-full h-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center">
-      <div className="flex flex-col items-center gap-4 opacity-20 text-center">
-        <Layout className="w-12 h-12 text-zinc-400" />
-        <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-zinc-400">Preview Unavailable</p>
-      </div>
-    </div>
-  );
-}
-
 function TemplateCard({ template }: { template: Template }) {
   const [imgError, setImgError] = useState(false);
 
+  const accentMap: Record<string, { bg: string; border: string; text: string }> = {
+    zinc:   { bg: "bg-zinc-500/10", border: "border-zinc-500/20", text: "text-zinc-400" },
+    purple: { bg: "bg-purple-500/10", border: "border-purple-500/20", text: "text-purple-400" },
+    blue:   { bg: "bg-blue-500/10", border: "border-blue-500/20", text: "text-blue-400" },
+    emerald:{ bg: "bg-emerald-500/10", border: "border-emerald-500/20", text: "text-emerald-400" },
+    amber:  { bg: "bg-amber-500/10", border: "border-amber-500/20", text: "text-amber-400" },
+  }
+  const accent = accentMap[template.accent] ?? accentMap["zinc"]
+
   return (
-    <div className="relative flex flex-col lg:flex-row bg-white/70 dark:bg-zinc-900/40 backdrop-blur-xl border border-zinc-200/50 dark:border-white/10 rounded-[32px] overflow-hidden shadow-sm min-h-[420px]">
-      
-      {/* ─── LEFT PANEL ─── */}
-      <div className="flex flex-col flex-1 p-10 lg:p-14 relative z-10 lg:max-w-[45%]">
-        
-        {/* Name Row */}
-        <div className="flex items-center gap-3 mb-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-white tracking-tighter leading-tight font-sans">
-            {template.name}
-          </h2>
+    <div className="relative flex flex-col lg:flex-row bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/10 rounded-3xl overflow-hidden hover:border-zinc-300 dark:hover:border-white/20 transition-all duration-300 hover:shadow-2xl cursor-pointer">
+
+      {/* ─── LEFT CONTENT ─── */}
+      <div className="flex flex-col flex-1 p-8 lg:p-10 lg:max-w-[55%] relative z-10">
+        {/* Top Row: Badge + Price */}
+        <div className="flex items-center justify-between mb-5">
+          {template.badge && (
+            <span className={cn(
+              "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border",
+              accent.bg, accent.border, accent.text
+            )}>
+              {template.badge}
+            </span>
+          )}
+          <div className="flex items-baseline gap-2 ml-auto">
+            <span className="text-3xl font-black text-zinc-900 dark:text-white">${template.price}</span>
+            {template.originalPrice && (
+              <span className="text-base text-zinc-400 line-through">${template.originalPrice}</span>
+            )}
+          </div>
         </div>
 
-        {/* Description - High Contrast & Muted */}
-        <p className="text-base text-zinc-500 dark:text-zinc-400 leading-relaxed font-medium mb-8 max-sm line-clamp-3 font-sans">
+        {/* Title */}
+        <h2 className="text-2xl lg:text-3xl font-bold text-zinc-900 dark:text-white tracking-tight leading-tight mb-3">
+          {template.name}
+        </h2>
+
+        {/* Description */}
+        <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed mb-6">
           {template.description}
         </p>
 
-        {/* Tech Stack - Grayscale Minimal */}
-        {/* Tech Stack - Professional Integration */}
-        <div className="flex items-center gap-5 mb-10">
-          {[
-            { name: "Next.js", icon: "https://cdn.simpleicons.org/nextdotjs/black" },
-            { name: "Tailwind", icon: "https://cdn.simpleicons.org/tailwindcss/06B6D4" },
-            { name: "Framer", icon: "https://cdn.simpleicons.org/framer/black" },
-            { name: "GSAP", icon: "https://cdn.simpleicons.org/greensock/88CE02" },
-            { name: "Three.js", icon: "https://cdn.simpleicons.org/threedotjs/black" },
-          ].map((tech) => (
-            <div key={tech.name} className="relative">
-              <img 
-                src={tech.icon} 
-                alt={tech.name} 
-                className={cn(
-                  "w-5 h-5",
-                  (tech.name === "Next.js" || tech.name === "Framer" || tech.name === "Three.js") && "dark:invert"
-                )} 
+        {/* Features */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {template.features.map((feature) => (
+            <span key={feature} className="px-2.5 py-1 bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 text-[11px] font-medium rounded-lg border border-zinc-200 dark:border-white/10">
+              {feature}
+            </span>
+          ))}
+        </div>
+
+        {/* Tech Stack */}
+        <div className="flex items-center gap-3 mb-6">
+          {template.techStack.map((tech) => (
+            <div
+              key={tech.name}
+              className="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/10"
+              title={tech.name}
+            >
+              <img
+                src={tech.icon}
+                alt={tech.name}
+                className={cn("w-5 h-5", tech.invert && "dark:invert")}
               />
             </div>
           ))}
         </div>
 
-        {/* Buttons - High Contrast CTAs */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 mt-auto">
-          <Link
+        {/* Components Preview */}
+        <div className="flex flex-wrap gap-1.5 mb-8">
+          {template.components.slice(0, 6).map((comp) => (
+            <span key={comp.name} className="text-[10px] text-zinc-400 dark:text-zinc-500">
+              {comp.name}
+            </span>
+          ))}
+          {template.components.length > 6 && (
+            <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
+              +{template.components.length - 6} more
+            </span>
+          )}
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="flex items-center gap-3 mt-auto">
+          <a
             href={template.checkoutUrl}
-            className="w-full sm:w-auto px-8 h-12 rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-bold text-sm shadow-md transition-transform active:scale-95 flex items-center justify-center gap-2"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              "flex-1 py-3.5 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200",
+              "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900",
+              "hover:bg-zinc-800 dark:hover:bg-zinc-100 active:scale-[0.98]",
+              "shadow-lg hover:shadow-xl"
+            )}
           >
-            Get Access — ${template.price}
-          </Link>
+            Get Access
+            <ArrowRight className="w-4 h-4" />
+          </a>
           <Link
             href={`${template.demoPath}`}
             target="_blank"
-            className="w-full sm:w-auto px-8 h-12 rounded-full bg-zinc-100 dark:bg-white/10 border border-zinc-200 dark:border-white/20 text-zinc-900 dark:text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2"
+            rel="noopener noreferrer"
+            className={cn(
+              "py-3.5 px-5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200",
+              "bg-zinc-100 dark:bg-white/10 text-zinc-700 dark:text-white/90",
+              "hover:bg-zinc-200 dark:hover:bg-white/20 active:scale-[0.98]",
+              "border border-zinc-200 dark:border-white/10"
+            )}
           >
-            Preview <ArrowRight className="w-4 h-4" />
+            Live Demo
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>
 
-      {/* ─── RIGHT PANEL — FULL VIEW INTEGRATED IMAGE ─── */}
-      <div className="flex-1 relative overflow-hidden min-h-[400px] lg:min-h-full">
-        {/* Flagship Badge - Top Right of Visual Area */}
-        {template.badge && (
-          <div className="absolute top-8 right-8 z-20 pointer-events-none">
-            <span className="px-3 py-1 rounded-full bg-black/40 border border-purple-500/30 text-[9px] font-bold text-purple-400 uppercase tracking-widest backdrop-blur-md shadow-2xl">
-              ✦ {template.badge}
-            </span>
-          </div>
-        )}
-
+      {/* ─── RIGHT IMAGE ─── */}
+      <div className="relative flex-1 min-h-[350px] lg:min-h-[420px] overflow-hidden bg-zinc-100 dark:bg-zinc-900">
         {imgError ? (
-          <WireframePreview />
-        ) : (
-          <div className="absolute inset-0 w-full h-full">
-            <Image
-              src={template.screenshot}
-              fill
-              className="object-cover"
-              alt={`${template.name} preview`}
-              priority
-              onError={() => setImgError(true)}
-            />
+          <div className="w-full h-full flex items-center justify-center">
+            <Layout className="w-16 h-16 text-zinc-300 dark:text-zinc-700" />
           </div>
+        ) : (
+          <Image
+            src={template.screenshot}
+            fill
+            className="object-cover object-top"
+            alt={`${template.name} preview`}
+            priority
+            onError={() => setImgError(true)}
+          />
         )}
       </div>
     </div>
@@ -366,7 +402,7 @@ export default function TemplatesGallery() {
         <Hero />
         
         <section className="container mx-auto px-6 pb-32 max-w-7xl">
-          <div className={`space-y-12 transition-all duration-1000 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}>
+          <div className={`space-y-8 transition-all duration-1000 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}>
             {TEMPLATES.map((template) => (
               <TemplateCard key={template.id} template={template} />
             ))}
