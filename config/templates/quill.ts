@@ -37,8 +37,8 @@ export const quillTemplate: Template = {
       { "name": "Three.js", "icon": "https://cdn.simpleicons.org/threedotjs/black", "invert": true },
       { "name": "Lenis", "icon": "https://lenis.dev/favicon.ico" }
     ],
-    "demoPath": "#",
-    "checkoutUrl": "#",
+    "demoPath": "https://quill-zenblocks-three.vercel.app/",
+    "checkoutUrl": "https://dodo.pe/quill",
     "accent": "zinc",
     "screenshot": "/templates/quill_preview_v3.png"
   };

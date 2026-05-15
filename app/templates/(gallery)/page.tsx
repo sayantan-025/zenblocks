@@ -149,19 +149,25 @@ function TemplateCard({ template }: { template: Template }) {
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex items-center gap-3 mt-auto">
+        <div className="flex flex-col sm:flex-row items-stretch gap-3 mt-auto">
           <a
             href={template.checkoutUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "flex-1 py-3.5 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200",
+              "w-full sm:flex-1 py-3.5 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200",
               "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900",
               "hover:bg-zinc-800 dark:hover:bg-zinc-100 active:scale-[0.98]",
               "shadow-[0_1px_2px_rgba(0,0,0,0.1)]"
             )}
           >
-            Get Access — ${template.price}
+            <span>Get Access</span>
+            <span className="flex items-center gap-2">
+              <span className="font-black">${template.price}</span>
+              {template.originalPrice && (
+                <span className="text-xs line-through opacity-60">${template.originalPrice}</span>
+              )}
+            </span>
             <ArrowRight className="w-4 h-4" />
           </a>
           <Link
@@ -169,7 +175,7 @@ function TemplateCard({ template }: { template: Template }) {
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "py-3.5 px-5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200",
+              "w-full sm:flex-1 py-3.5 px-5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200",
               "bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200 dark:border-zinc-800",
               "text-zinc-800 dark:text-zinc-200",
               "hover:bg-white/60 dark:hover:bg-zinc-900/60 active:scale-[0.98]"
