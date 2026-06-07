@@ -1,26 +1,38 @@
 /* ==========================================================================
-   ROOT VARIABLES
+   ROOT VARIABLES (Scoped to Docs)
    ========================================================================== */
 
-:root {
-    /* REQUIRED for Fumadocs layout math */
+.zenblocks-docs-layout {
     --fd-nav-height: 64px;
-
-    /* Sidebar background override */
+    --fd-layout-width: 100%;
     --fd-sidebar-bg: transparent;
+    width: 100% !important;
+}
+
+/* Ensure the layout wrapper doesn't have a max-width */
+.zenblocks-docs-layout,
+.zenblocks-docs-layout > div,
+.zenblocks-docs-layout .fd-layout,
+.zenblocks-docs-layout .fd-layout-container,
+.zenblocks-docs-layout .fd-notebook-layout,
+.zenblocks-docs-layout [data-fd-layout] {
+    max-width: none !important;
+    width: 100% !important;
 }
 
 /* ==========================================================================
    TOP NAV / HEADER (Docs Navbar)
    ========================================================================== */
 
-header,
-nav,
-[data-fd-nav],
-.fd-nav,
-[data-fd-layout="notebook"] header {
-    position: sticky !important;
+.zenblocks-docs-layout [data-fd-nav],
+.zenblocks-docs-layout .fd-nav,
+.zenblocks-docs-layout [data-fd-layout="notebook"] header {
+    position: fixed !important;
     top: 0;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
 
     background: rgba(255, 255, 255, 0.4) !important;
     backdrop-filter: blur(16px) !important;
@@ -28,24 +40,33 @@ nav,
 
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
 
-    z-index: 30 !important;
+    z-index: 50 !important;
 }
 
 /* Dark mode header */
-.dark header,
-.dark nav,
-.dark [data-fd-nav],
-.dark .fd-nav,
-.dark [data-fd-layout="notebook"] header {
+.dark .zenblocks-docs-layout [data-fd-nav],
+.dark .zenblocks-docs-layout .fd-nav,
+.dark .zenblocks-docs-layout [data-fd-layout="notebook"] header {
     background: rgba(24, 24, 27, 0.4) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Ensure the navbar container takes full width on large screens */
+.zenblocks-docs-layout [data-fd-nav] div,
+.zenblocks-docs-layout .fd-nav-container, 
+.zenblocks-docs-layout .fd-nav-content,
+.zenblocks-docs-layout [data-fd-nav] > div,
+.zenblocks-docs-layout [data-fd-layout="notebook"] header > div {
+    max-width: none !important;
+    width: 100% !important;
+    padding-inline: 1.5rem !important;
 }
 
 /* ==========================================================================
    SIDEBAR — Glassmorphism
    ========================================================================== */
 
-aside[data-fd-sidebar] {
+.zenblocks-docs-layout aside[data-fd-sidebar] {
     background: rgba(255, 255, 255, 0.4) !important;
 
     backdrop-filter: blur(16px) !important;
@@ -58,7 +79,7 @@ aside[data-fd-sidebar] {
 }
 
 /* Dark mode sidebar */
-.dark aside[data-fd-sidebar] {
+.dark .zenblocks-docs-layout aside[data-fd-sidebar] {
     background: rgba(24, 24, 27, 0.4) !important;
     border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
@@ -67,7 +88,7 @@ aside[data-fd-sidebar] {
    MAIN CONTENT LAYOUT
    ========================================================================== */
 
-main {
+.zenblocks-docs-layout main {
     padding-top: var(--fd-nav-height);
     margin-inline: auto !important;
     width: 100%;
@@ -77,7 +98,7 @@ main {
     z-index: 1;
 }
 
-.fd-page {
+.zenblocks-docs-layout .fd-page {
     margin-inline: auto !important;
 }
 
@@ -85,22 +106,10 @@ main {
    FUMADOCS TABS — FORCE BEHIND EVERYTHING
    ========================================================================== */
 
-[data-fd-tabs] {
-    position: relative !important;
-    z-index: -999 !important;
-}
-
-[data-fd-tabs-list] {
-    position: relative !important;
-    z-index: -999 !important;
-}
-
-[data-fd-tabs-trigger] {
-    position: relative !important;
-    z-index: -999 !important;
-}
-
-[data-fd-tabs-content] {
+.zenblocks-docs-layout [data-fd-tabs],
+.zenblocks-docs-layout [data-fd-tabs-list],
+.zenblocks-docs-layout [data-fd-tabs-trigger],
+.zenblocks-docs-layout [data-fd-tabs-content] {
     position: relative !important;
     z-index: -999 !important;
 }
@@ -110,7 +119,7 @@ main {
    ========================================================================== */
 
 @media (max-width: 768px) {
-    :root {
+    .zenblocks-docs-layout {
         --fd-nav-height: 56px;
     }
 }
