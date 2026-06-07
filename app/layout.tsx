@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, JetBrains_Mono } from "next/font/google";
+// @ts-ignore: Side-effect import for global CSS in Next.js app layout
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";

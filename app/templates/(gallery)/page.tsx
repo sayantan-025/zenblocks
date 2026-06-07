@@ -188,7 +188,7 @@ function TemplateCard({ template }: { template: Template }) {
       </div>
 
       {/* ─── RIGHT IMAGE ─── */}
-      <div className="relative flex-1 min-h-[280px] lg:min-h-[320px] overflow-hidden bg-zinc-100 dark:bg-zinc-900">
+      <div className="relative flex-1 min-h-[280px] lg:min-h-80 overflow-hidden bg-zinc-100 dark:bg-zinc-900">
         {imgError ? (
           <div className="w-full h-full flex items-center justify-center">
             <Layout className="w-16 h-16 text-zinc-300 dark:text-zinc-700" />
@@ -226,7 +226,7 @@ function ComingSoonCard({ item }: { item: ComingSoonItem }) {
 
   return (
     <div
-      className={`relative rounded-[28px] border border-dashed ${accentBorderDashed[item.accent]} bg-zinc-50 dark:bg-white/5 px-8 py-6 flex items-center justify-between gap-4 transition-all hover:bg-zinc-100 dark:hover:bg-white/[0.08] group cursor-default shadow-sm dark:shadow-none`}
+      className={`relative rounded-[28px] border border-dashed ${accentBorderDashed[item.accent]} bg-zinc-50 dark:bg-white/5 px-8 py-6 flex items-center justify-between gap-4 transition-all hover:bg-zinc-100 dark:hover:bg-white/8 group cursor-default shadow-sm dark:shadow-none`}
     >
       <div>
         <p className="text-[10px] font-mono tracking-[0.3em] text-zinc-400 dark:text-zinc-500 uppercase mb-1">
@@ -248,7 +248,7 @@ function ComingSoonCard({ item }: { item: ComingSoonItem }) {
 const Hero = () => (
   <section className="relative pt-48 pb-20 px-6 overflow-hidden">
     {/* Subtle Background Grids */}
-    <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.04] dark:opacity-[0.08] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:96px_96px]" />
+    <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.04] dark:opacity-[0.08] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[96px_96px]" />
     
     <div className="container mx-auto max-w-5xl text-center relative z-10">
       <motion.div
@@ -285,7 +285,7 @@ const FAQSection = () => {
   return (
     <section className="relative py-32 bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 border-dashed overflow-hidden">
       {/* Subtle Background Grids */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.04] dark:opacity-[0.08] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:96px_96px]" />
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.04] dark:opacity-[0.08] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[96px_96px]" />
 
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
         <div className="flex flex-col items-center gap-20">
@@ -332,7 +332,7 @@ const FAQSection = () => {
 const CTABanner = () => (
   <section className="relative py-32 bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 border-dashed overflow-hidden">
     {/* Subtle Background Grids */}
-    <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.04] dark:opacity-[0.08] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:96px_96px]" />
+    <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.04] dark:opacity-[0.08] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[96px_96px]" />
 
     <div className="container mx-auto px-6 max-w-7xl relative z-10">
       <div className="flex flex-col items-center gap-12">
