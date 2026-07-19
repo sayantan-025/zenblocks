@@ -49,7 +49,7 @@ const getAttr = (
   distance: number,
   maxDist: number,
   minVal: number,
-  maxVal: number
+  maxVal: number,
 ): number => {
   const val = maxVal - Math.abs((maxVal * distance) / maxDist);
   return Math.max(minVal, val + minVal);
@@ -57,7 +57,7 @@ const getAttr = (
 
 function debounce<T extends (...args: never[]) => void>(
   fn: T,
-  delay: number
+  delay: number,
 ): (...args: Parameters<T>) => void {
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
@@ -73,8 +73,8 @@ function debounce<T extends (...args: never[]) => void>(
 
 export function PressureTest({
   text = "ZENBLOCKS",
-  fontFamily = "Compressa VF",
-  fontUrl = "https://res.cloudinary.com/dr6lvwubh/raw/upload/v1529908256/CompressaPRO-GX.woff2",
+  fontFamily = "Roboto Flex",
+  fontUrl = "https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap",
   width = true,
   weight = true,
   italic = true,
@@ -204,13 +204,24 @@ export function PressureTest({
 
           const d = dist(mouseRef.current, center);
 
-          const wdth = width ? Math.floor(getAttr(d, maxDist, 5, 200)) : 100;
+          const wdth = width ? Math.floor(getAttr(d, maxDist, 25, 151)) : 100;
+
           const wght = weight ? Math.floor(getAttr(d, maxDist, 100, 900)) : 400;
-          const ital = italic ? getAttr(d, maxDist, 0, 1).toFixed(2) : "0";
+
+          const slnt = italic ? -(getAttr(d, maxDist, 0, 1) * 10) : 0;
+
           const a = alpha ? getAttr(d, maxDist, 0, 1).toFixed(2) : "1";
 
-          span.style.fontVariationSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'ital' ${ital}`;
-          if (alpha) span.style.opacity = a;
+          const settings = `'opsz' 144, 'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}`;
+
+          if (span.style.fontVariationSettings !== settings) {
+            span.style.fontVariationSettings = settings;
+          }
+          if (alpha) {
+            span.style.opacity = a;
+          } else {
+            span.style.opacity = "1";
+          }
         });
       }
 
@@ -228,16 +239,14 @@ export function PressureTest({
 
     return (
       <style>{`
-        @font-face {
-          font-family: '${fontFamily}';
-          src: url('${fontUrl}');
-          font-style: normal;
-        }
+       @import url('${fontUrl}');
 
         .pressure-test-title span {
-          display: inline-block;
-          transform-origin: center center;
-        }
+        display: inline-block;
+        transform-origin: center center;
+        transition: opacity .08s linear;
+        will-change: font-variation-settings;
+       }
 
         .stroke span {
           position: relative;
@@ -278,7 +287,7 @@ export function PressureTest({
           flex && "flex justify-between w-full",
           stroke && "stroke",
           "uppercase text-center",
-          className
+          className,
         )}
         style={{
           fontFamily,
@@ -307,5 +316,4 @@ export function PressureTest({
       </h1>
     </div>
   );
-};
-
+}
