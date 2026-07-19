@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -21,7 +21,7 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "fumadocs-mdx:collections/*": ["./.source/*"]
+      "fumadocs-mdx:collections/*": [".source/*"]
     }
   },
   "include": [
